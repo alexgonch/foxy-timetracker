@@ -1,2 +1,3 @@
-# foxy-timetracker
+# Foxy TimeTracker
+
 Open source timetracker app.
