@@ -1,7 +1,7 @@
 import React from 'react';
 
 import blueGrey from '@material-ui/core/colors/blueGrey';
-import orange from '@material-ui/core/colors/indigo';
+import deepOrange from '@material-ui/core/colors/deepOrange';
 
 import NoSsr from '@material-ui/core/NoSsr';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -18,11 +18,13 @@ const theme = createMuiTheme({
             dark: blueGrey[900],
             contrastText: '#fff'
         },
-        secondary: orange
+        secondary: deepOrange
     }
 });
 
 function App() {
+    console.log('theme', theme);
+    
     return (
         <NoSsr>
             <CssBaseline />

@@ -1,27 +1,38 @@
 import React from 'react';
 
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
+import Box from '@material-ui/core/Box';
+import Paper from '@material-ui/core/Paper';
 import { withTheme } from '@material-ui/core/styles';
 
-import { ReactComponent as FoxLogo } from 'resources/images/fox.svg';
+import LoginForm from 'components/LoginForm/LoginForm';
 
 function LandingPage(props) {
-	const { theme } = props;
-	
+    const { theme } = props;
+
     return (
         <>
-            <AppBar position="static">
-                <Toolbar>
-                    <FoxLogo width={32} />
-                    <Typography variant="h6" style={{ flexGrow: 1, marginLeft: theme.spacing(2) }}>
-                        Foxy TimeTracker
-                    </Typography>
-                    <Button color="inherit">Login</Button>
-                </Toolbar>
-            </AppBar>
+            <Box
+                display="flex"
+                justifyContent="center"
+				// alignItems="center"
+                height="100%"
+                style={{ background: 'linear-gradient(45deg, rgba(69, 90, 100, 0.25), rgba(255, 87, 34, 0.25))' }}
+            >
+                <Box id="box" style={{ width: '100%', maxWidth: 540 }}>
+                    <Paper
+						square
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+							alignItems: 'center',
+                            width: '100%',
+							height: '100%'
+                        }}
+                    >
+                        <LoginForm />
+                    </Paper>
+                </Box>
+            </Box>
         </>
     );
 }
