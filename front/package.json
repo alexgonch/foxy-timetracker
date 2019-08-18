@@ -10,9 +10,13 @@
         "eject": "react-scripts eject"
     },
     "dependencies": {
+        "@material-ui/core": "^4.3.2",
+        "@material-ui/icons": "^4.2.1",
         "react": "^16.9.0",
         "react-dom": "^16.9.0",
-        "react-scripts": "3.1.1"
+        "react-router-dom": "^5.0.1",
+        "react-scripts": "3.1.1",
+        "styled-components": "^4.3.2"
     },
     "devDependencies": {
         "eslint-config-prettier": "^6.0.0",
