@@ -14,11 +14,11 @@ function LandingPage(props) {
             <Box
                 display="flex"
                 justifyContent="center"
-				// alignItems="center"
                 height="100%"
+                minHeight={360}
                 style={{ background: 'linear-gradient(45deg, rgba(69, 90, 100, 0.25), rgba(255, 87, 34, 0.25))' }}
             >
-                <Box id="box" style={{ width: '100%', maxWidth: 540 }}>
+                <Box style={{ width: '100%', maxWidth: 540 }}>
                     <Paper
 						square
                         style={{
