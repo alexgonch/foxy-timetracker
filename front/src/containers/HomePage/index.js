@@ -6,6 +6,8 @@ import { withTheme } from '@material-ui/core/styles';
 import NavBar from 'components/NavBar';
 
 function HomePage(props) {
+    // TODO: implement Firebase password change
+    
     return (
         <Box>
             <NavBar />

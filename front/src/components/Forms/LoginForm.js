@@ -11,6 +11,7 @@ import { withTheme } from '@material-ui/core/styles';
 import { Formik, Form } from 'formik';
 
 import { FirebaseContext } from 'utils/firebase';
+import { CustomSnackbarContext } from 'components/CustomSnackbar';
 
 import LandingFormFrame from './LandingFormFrame';
 import ForgotPasswordDialog from 'components/Dialogs/ForgotPasswordDialog';
@@ -21,6 +22,7 @@ function LoginForm(props) {
     const [forgotPasswordDialogOpen, setForgotPasswordDialogOpen] = useState(false);
 
     const firebase = useContext(FirebaseContext);
+    const customSnackbar = useContext(CustomSnackbarContext);
 
     const handleSubmit = (values, { setSubmitting }) => {
         // TODO: rework with async/await syntax
@@ -30,7 +32,22 @@ function LoginForm(props) {
                 props.history.push('/');
             })
             .catch(error => {
-                console.error(error); // TODO: implement error Snackbar
+                switch (error.code) {
+                    case 'auth/invalid-email':
+                        customSnackbar.error('Invalid email.');
+                        break;
+                    case 'auth/user-disabled':
+                        customSnackbar.error('Your account has been disabled.');
+                        break;
+                    case 'auth/user-not-found':
+                        customSnackbar.error('Account with given email was not found.');
+                        break;
+                    case 'auth/wrong-password':
+                        customSnackbar.error('Invalid password.');
+                        break;
+                    default:
+                        customSnackbar.error('An error has happened. Please try again.');
+                }
             })
             .finally(() => {
                 setSubmitting(false);
@@ -53,7 +70,6 @@ function LoginForm(props) {
                         <TextField
                             fullWidth
                             variant="outlined"
-                            type="email"
                             name="email"
                             label="Email"
                             value={values.email}

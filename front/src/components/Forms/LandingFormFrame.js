@@ -1,7 +1,6 @@
 import React from 'react';
 
-import blueGrey from '@material-ui/core/colors/blueGrey';
-import deepOrange from '@material-ui/core/colors/deepOrange';
+import { blueGrey, deepOrange } from '@material-ui/core/colors';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import { withTheme } from '@material-ui/core/styles';

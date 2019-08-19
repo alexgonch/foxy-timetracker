@@ -9,7 +9,7 @@ export const signUpSchema = yup.object().shape({
         .string()
         .required('Password is required')
         .min(6, 'Should be at least 6 characters long')
-        .max(64, 'Should not exceed 64 characters')
+        .max(128, 'Should not exceed 128 characters') // should cover users with crazy password managers
 });
 
 export const forgotPasswordSchema = yup.object().shape({

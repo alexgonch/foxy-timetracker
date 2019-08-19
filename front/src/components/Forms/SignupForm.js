@@ -12,6 +12,7 @@ import { Formik, Form } from 'formik';
 
 import { signUpSchema } from 'utils/validationSchemas';
 import { FirebaseContext } from 'utils/firebase';
+import { CustomSnackbarContext } from 'components/CustomSnackbar';
 
 import LandingFormFrame from './LandingFormFrame';
 
@@ -19,21 +20,35 @@ function SignupForm(props) {
     const { theme } = props;
 
     const firebase = useContext(FirebaseContext);
+    const customSnackbar = useContext(CustomSnackbarContext);
 
     const handleSubmit = (values, { setSubmitting }) => {
-		// TODO: rework with async/await syntax
+        // TODO: rework with async/await syntax
         firebase
-            .doCreateUserWithEmailAndPassword(values.email.toLowerCase(), values.password)
+            .doCreateUserWithEmailAndPassword(values.email, values.password)
             .then(authUser => {
                 props.history.push('/'); // TEMP
                 // props.history.push('/success'); // TODO: display user-friendly success message and let them click "Sign in"
             })
             .catch(error => {
-                console.error(error); // TODO: implement error Snackbar
+                switch (error.code) {
+                    case 'auth/email-already-in-use':
+                        customSnackbar.error('Account with given email already exists.');
+                        break;
+                    case 'auth/invalid-email':
+                        customSnackbar.error('Invalid email.');
+                        break;
+                    case 'auth/weak-password':
+                        // Firebase will reject passwords shorter than 6 characters (should be prevented by yup schema too)
+                        customSnackbar.error('Please choose a stronger password.');
+                        break;
+                    default:
+                        customSnackbar.error('An error has happened. Please try again.');
+                }
             })
-			.finally(() => {
-				setSubmitting(false);
-			});
+            .finally(() => {
+                setSubmitting(false);
+            });
     };
 
     return (
@@ -44,7 +59,6 @@ function SignupForm(props) {
                         <TextField
                             fullWidth
                             variant="outlined"
-                            type="email"
                             name="email"
                             label="Email"
                             value={values.email}

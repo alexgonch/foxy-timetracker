@@ -13,24 +13,36 @@ import { withTheme } from '@material-ui/core/styles';
 
 import { Formik, Form } from 'formik';
 
-import { FirebaseContext } from 'utils/firebase';
 import { forgotPasswordSchema } from 'utils/validationSchemas';
+import { FirebaseContext } from 'utils/firebase';
+import { CustomSnackbarContext } from 'components/CustomSnackbar';
 
 function ForgotPasswordDialog(props) {
-    const { theme, open } = props;
+    const { open } = props;
 
     const firebase = useContext(FirebaseContext);
+    const customSnackbar = useContext(CustomSnackbarContext);
 
     const handleSubmit = (values, { setSubmitting }) => {
-        console.log('values.email', values.email);
+        // TODO: rework with async/await syntax
         firebase
             .doPasswordReset(values.email)
             .then(() => {
-                console.log('success');
-                // TODO: success
+                // REVIEW: we might want a more user-friendly way to indicate success (in future)
+                customSnackbar.success('Check your email for a password reset link.');
+                props.onClose();
             })
             .catch(error => {
-                console.error(error); // TODO: implement error Snackba
+                switch (error.code) {
+                    case 'auth/invalid-email':
+                        customSnackbar.error('Invalid email.');
+                        break;
+                    case 'auth/user-not-found':
+                        customSnackbar.error('Account with given email was not found.');
+                        break;
+                    default:
+                        customSnackbar.error('An error has happened. Please try again.');
+                }
             })
             .finally(() => {
                 setSubmitting(false);
