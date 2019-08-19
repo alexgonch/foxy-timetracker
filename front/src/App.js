@@ -1,14 +1,17 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 import blueGrey from '@material-ui/core/colors/blueGrey';
 import deepOrange from '@material-ui/core/colors/deepOrange';
 
 import NoSsr from '@material-ui/core/NoSsr';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import { ThemeProvider  } from '@material-ui/styles';
+import { ThemeProvider } from '@material-ui/styles';
 import { createMuiTheme } from '@material-ui/core/styles';
 
-import LandingPage from 'containers/LandingPage/LandingPage';
+import { FirebaseContext, useFirebaseAuthentication } from 'utils/firebase';
+import { AuthUserContext } from 'utils/session';
+
+import Navigation from './Navigation';
 
 const theme = createMuiTheme({
     palette: {
@@ -23,13 +26,19 @@ const theme = createMuiTheme({
 });
 
 function App() {
-    console.log('theme', theme);
+    const firebase = useContext(FirebaseContext);
+    const authUser = useFirebaseAuthentication(firebase);
     
+    console.log('theme', theme); // DEBUG
+    console.log('authUser', authUser); // DEBUG
+
     return (
         <NoSsr>
             <CssBaseline />
             <ThemeProvider theme={theme}>
-                <LandingPage />
+                <AuthUserContext.Provider value={authUser}>
+                    <Navigation />
+                </AuthUserContext.Provider>
             </ThemeProvider>
         </NoSsr>
     );
