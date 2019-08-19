@@ -5,7 +5,7 @@ const useFirebaseAuthentication = firebase => {
 
     useEffect(() => {
         const unlisten = firebase.auth.onAuthStateChanged(authUser => {
-            authUser ? setAuthUser(authUser) : setAuthUser(null);
+            authUser ? setAuthUser(authUser) : setAuthUser({});
         });
         return () => {
             unlisten();

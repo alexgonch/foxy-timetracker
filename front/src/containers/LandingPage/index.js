@@ -5,18 +5,13 @@ import Box from '@material-ui/core/Box';
 import Paper from '@material-ui/core/Paper';
 import { withTheme } from '@material-ui/core/styles';
 
+import LandingBackground from 'components/Backgrounds/LandingBackground';
 import LoginForm from 'components/Forms/LoginForm';
 import SignupForm from 'components/Forms/SignupForm';
 
 function LandingPage(props) {
     return (
-        <Box
-            display="flex"
-            justifyContent="center"
-            height="100%"
-            minHeight={360}
-            style={{ background: 'linear-gradient(45deg, rgba(69, 90, 100, 0.25), rgba(255, 87, 34, 0.25))' }}
-        >
+        <LandingBackground justifyContent="center" minHeight={360}>
             <Box style={{ width: '100%', maxWidth: 540 }}>
                 <Paper
                     square
@@ -32,7 +27,7 @@ function LandingPage(props) {
                     <Route path="/signup" component={SignupForm} />
                 </Paper>
             </Box>
-        </Box>
+        </LandingBackground>
     );
 }
 
