@@ -16,7 +16,7 @@ import LandingFormFrame from './LandingFormFrame';
 
 function LoginForm(props) {
     const { theme } = props;
-    
+
     const firebase = useContext(FirebaseContext);
 
     const handleSubmit = (values, { setSubmitting }) => {
@@ -29,10 +29,12 @@ function LoginForm(props) {
             .catch(error => {
                 console.error(error); // TODO: implement error Snackbar
             })
-			.finally(() => {
-				setSubmitting(false);
-			});
+            .finally(() => {
+                setSubmitting(false);
+            });
     };
+    
+    // TODO: forgot password
 
     return (
         <LandingFormFrame>
@@ -69,7 +71,11 @@ function LoginForm(props) {
                             onChange={handleChange}
                             onBlur={handleBlur}
                         />
-                        <Typography variant="body1" align="center" style={{ marginTop: theme.spacing(2), cursor: 'pointer' }}>
+                        <Typography
+                            variant="body1"
+                            align="center"
+                            style={{ marginTop: theme.spacing(2), cursor: 'pointer' }}
+                        >
                             Forgot password?
                         </Typography>
                         <Button
