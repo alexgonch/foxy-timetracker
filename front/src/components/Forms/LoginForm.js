@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 
 import _ from 'lodash';
@@ -13,9 +13,12 @@ import { Formik, Form } from 'formik';
 import { FirebaseContext } from 'utils/firebase';
 
 import LandingFormFrame from './LandingFormFrame';
+import ForgotPasswordDialog from 'components/Dialogs/ForgotPasswordDialog';
 
 function LoginForm(props) {
     const { theme } = props;
+    
+    const [forgotPasswordDialogOpen, setForgotPasswordDialogOpen] = useState(false);
 
     const firebase = useContext(FirebaseContext);
 
@@ -34,7 +37,9 @@ function LoginForm(props) {
             });
     };
     
-    // TODO: forgot password
+    const handleForgotPasswordDialog = state => () => {
+        setForgotPasswordDialogOpen(state);
+    };
 
     return (
         <LandingFormFrame>
@@ -75,6 +80,7 @@ function LoginForm(props) {
                             variant="body1"
                             align="center"
                             style={{ marginTop: theme.spacing(2), cursor: 'pointer' }}
+                            onClick={handleForgotPasswordDialog(true)}
                         >
                             Forgot password?
                         </Typography>
@@ -104,6 +110,8 @@ function LoginForm(props) {
                     </Form>
                 )}
             </Formik>
+            
+            <ForgotPasswordDialog open={forgotPasswordDialogOpen} onClose={handleForgotPasswordDialog(false)} />
         </LandingFormFrame>
     );
 }

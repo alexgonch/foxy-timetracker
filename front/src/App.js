@@ -22,6 +22,11 @@ const theme = createMuiTheme({
             contrastText: '#fff'
         },
         secondary: deepOrange
+    },
+    typography: {
+        h6: {
+            fontWeight: 400
+        }
     }
 });
 

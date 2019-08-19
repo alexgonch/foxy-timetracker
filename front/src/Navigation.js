@@ -1,8 +1,6 @@
 import React, { useContext } from 'react';
 import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
 
-import _ from 'lodash';
-
 import { AuthUserContext } from 'utils/session';
 
 import FullPageLoader from 'components/Loaders/FullPageLoader';
@@ -12,9 +10,10 @@ import HomePage from 'containers/HomePage';
 function Navigation(props) {
     const authUser = useContext(AuthUserContext);
 
-    if (_.isNil(authUser)) {
+    if (authUser === undefined) {
+        // First load (determining authentication state)
         return <FullPageLoader />;
-    } else if (_.isEmpty(authUser)) {
+    } else if (authUser === null) {
         return (
             <Router>
                 <>

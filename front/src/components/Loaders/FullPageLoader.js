@@ -9,7 +9,7 @@ import LandingBackground from 'components/Backgrounds/LandingBackground';
 function FullPageLoader(props) {
     const { theme } = props;
 
-    // NOTE: we don't display the loader unless it takes unusually long time to authenticate (the flashing loader gets annoying for users with fast Internet connection)
+    // NOTE: we don't display the loader unless it takes unusually long time to authenticate (flashing loader would get annoying for users with fast Internet connection)
     const [enableRender, setEnableRender] = useState(false);
 
     useEffect(() => {
