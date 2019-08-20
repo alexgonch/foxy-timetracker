@@ -17,6 +17,7 @@ import SnackbarContent from '@material-ui/core/SnackbarContent';
 import { makeStyles } from '@material-ui/core/styles';
 
 import CustomSnackbarContext from './context';
+import CustomSnackbarProvider from './provider';
 
 function CustomSnackbar(props) {
     const { open, message, variant } = props;
@@ -57,6 +58,7 @@ function CustomSnackbar(props) {
 export default CustomSnackbar;
 
 export { CustomSnackbarContext };
+export { CustomSnackbarProvider };
 
 const variantIcon = {
     success: CheckCircleIcon,
@@ -65,7 +67,7 @@ const variantIcon = {
     info: InfoIcon
 };
 
-const useStyles1 = makeStyles(theme => ({
+const useStyles = makeStyles(theme => ({
     success: {
         backgroundColor: green[600]
     },
@@ -92,7 +94,7 @@ const useStyles1 = makeStyles(theme => ({
 }));
 
 function MySnackbarContentWrapper(props) {
-    const classes = useStyles1();
+    const classes = useStyles();
     const { className, message, onClose, variant, ...other } = props;
     const Icon = variantIcon[variant];
 

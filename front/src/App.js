@@ -9,7 +9,7 @@ import { createMuiTheme } from '@material-ui/core/styles';
 
 import { FirebaseContext, useFirebaseAuthentication } from 'utils/firebase';
 import { AuthUserContext } from 'utils/session';
-import CustomSnackbar, { CustomSnackbarContext } from 'components/CustomSnackbar';
+import { CustomSnackbarProvider } from 'components/CustomSnackbar';
 
 import Navigation from './Navigation';
 
@@ -37,37 +37,14 @@ function App() {
     console.log('theme', theme); // DEBUG
     console.log('authUser', authUser); // DEBUG
 
-    // TODO: rework customSnackbar to use reducer hook and encapsulate logic under components/CustomSnackbar
-    const [open, setOpen] = useState(false);
-    const [message, setMessage] = useState('');
-    const [variant, setVariant] = useState('success');
-
-    const handleClose = () => {
-        setOpen(false);
-    };
-
-    const customSnackbar = {
-        success: message => {
-            setOpen(true);
-            setMessage(message);
-            setVariant('success');
-        },
-        error: message => {
-            setOpen(true);
-            setMessage(message);
-            setVariant('error');
-        }
-    };
-
     return (
         <NoSsr>
             <CssBaseline />
             <ThemeProvider theme={theme}>
                 <AuthUserContext.Provider value={authUser}>
-                    <CustomSnackbarContext.Provider value={customSnackbar}>
+                    <CustomSnackbarProvider>
                         <Navigation />
-                        <CustomSnackbar open={open} message={message} variant={variant} onClose={handleClose} />
-                    </CustomSnackbarContext.Provider>
+                    </CustomSnackbarProvider>
                 </AuthUserContext.Provider>
             </ThemeProvider>
         </NoSsr>
