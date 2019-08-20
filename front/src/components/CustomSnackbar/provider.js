@@ -25,8 +25,6 @@ function CustomSnackbarProvider(props) {
         }
 	};
 	
-	console.log('provider.js is rendering');
-
     return (
         <CustomSnackbarContext.Provider value={customSnackbar}>
 			{props.children}
