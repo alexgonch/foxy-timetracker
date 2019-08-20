@@ -24,7 +24,6 @@ function ForgotPasswordDialog(props) {
     const customSnackbar = useContext(CustomSnackbarContext);
 
     const handleSubmit = (values, { setSubmitting }) => {
-        // TODO: rework with async/await syntax
         firebase
             .doPasswordReset(values.email)
             .then(() => {

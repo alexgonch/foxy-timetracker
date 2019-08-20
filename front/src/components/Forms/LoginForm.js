@@ -25,7 +25,6 @@ function LoginForm(props) {
     const customSnackbar = useContext(CustomSnackbarContext);
 
     const handleSubmit = (values, { setSubmitting }) => {
-        // TODO: rework with async/await syntax
         firebase
             .doSignInWithEmailAndPassword(values.email.toLowerCase(), values.password)
             .then(authUser => {
