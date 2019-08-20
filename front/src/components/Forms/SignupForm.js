@@ -16,6 +16,7 @@ import { CustomSnackbarContext } from 'components/CustomSnackbar';
 
 import LandingFormFrame from './LandingFormFrame';
 
+// TODO: email link verification/sign-in https://firebase.google.com/docs/auth/web/email-link-auth
 function SignupForm(props) {
     const { theme } = props;
 
