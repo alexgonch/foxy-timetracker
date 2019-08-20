@@ -3,13 +3,13 @@ import React from 'react';
 import { blueGrey, deepOrange } from '@material-ui/core/colors';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
-import { withTheme } from '@material-ui/core/styles';
+import { useTheme } from '@material-ui/core/styles';
 
 import { ReactComponent as FoxLogo } from 'resources/images/fox.svg';
 
 // Surrounds child form with Foxy branding
 function LandingFormFrame(props) {
-	const { theme } = props;
+	const theme = useTheme();
 	
     return (
         <Box maxWidth={360} p={2}>
@@ -33,4 +33,4 @@ function LandingFormFrame(props) {
     );
 }
 
-export default withTheme(LandingFormFrame);
+export default LandingFormFrame;

@@ -6,19 +6,18 @@ import _ from 'lodash';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import { withTheme } from '@material-ui/core/styles';
+import { useTheme } from '@material-ui/core/styles';
 
 import { Formik, Form } from 'formik';
 
 import { FirebaseContext } from 'utils/firebase';
 import { CustomSnackbarContext } from 'components/CustomSnackbar';
 
-import LandingFormFrame from './LandingFormFrame';
 import ForgotPasswordDialog from 'components/Dialogs/ForgotPasswordDialog';
 
 function LoginForm(props) {
-    const { theme } = props;
-    
+    const theme = useTheme();
+
     const [forgotPasswordDialogOpen, setForgotPasswordDialogOpen] = useState(false);
 
     const firebase = useContext(FirebaseContext);
@@ -52,13 +51,13 @@ function LoginForm(props) {
                 setSubmitting(false);
             });
     };
-    
+
     const handleForgotPasswordDialog = state => () => {
         setForgotPasswordDialogOpen(state);
     };
 
     return (
-        <LandingFormFrame>
+        <>
             <Formik
                 initialValues={{ email: '', password: '' }}
                 validationSchema={undefined} // no need to validate sign-in form
@@ -125,10 +124,10 @@ function LoginForm(props) {
                     </Form>
                 )}
             </Formik>
-            
+
             <ForgotPasswordDialog open={forgotPasswordDialogOpen} onClose={handleForgotPasswordDialog(false)} />
-        </LandingFormFrame>
+        </>
     );
 }
 
-export default withTheme(LoginForm);
+export default LoginForm;

@@ -1,7 +1,6 @@
 import React from 'react';
 
 import Box from '@material-ui/core/Box';
-import { withTheme } from '@material-ui/core/styles';
 
 function LandingBackground(props) {
     const { style, ...rest } = props;
@@ -18,4 +17,4 @@ function LandingBackground(props) {
     );
 }
 
-export default withTheme(LandingBackground);
+export default LandingBackground;

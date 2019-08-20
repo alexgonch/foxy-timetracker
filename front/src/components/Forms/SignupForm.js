@@ -6,7 +6,7 @@ import _ from 'lodash';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import { withTheme } from '@material-ui/core/styles';
+import { useTheme } from '@material-ui/core/styles';
 
 import { Formik, Form } from 'formik';
 
@@ -14,11 +14,10 @@ import { signUpSchema } from 'utils/validationSchemas';
 import { FirebaseContext } from 'utils/firebase';
 import { CustomSnackbarContext } from 'components/CustomSnackbar';
 
-import LandingFormFrame from './LandingFormFrame';
-
 // TODO: email link verification/sign-in https://firebase.google.com/docs/auth/web/email-link-auth
+// TODO: ToS and Privacy
 function SignupForm(props) {
-    const { theme } = props;
+    const theme = useTheme();
 
     const firebase = useContext(FirebaseContext);
     const customSnackbar = useContext(CustomSnackbarContext);
@@ -52,62 +51,60 @@ function SignupForm(props) {
     };
 
     return (
-        <LandingFormFrame>
-            <Formik initialValues={{ email: '', password: '' }} validationSchema={signUpSchema} onSubmit={handleSubmit}>
-                {({ values, errors, isSubmitting, handleChange, handleBlur }) => (
-                    <Form>
-                        <TextField
-                            fullWidth
-                            variant="outlined"
-                            name="email"
-                            label="Email"
-                            value={values.email}
-                            error={!_.isEmpty(errors.email)}
-                            helperText={errors.email}
-                            style={{ marginTop: theme.spacing(2) }}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                        />
-                        <TextField
-                            fullWidth
-                            variant="outlined"
-                            type="password"
-                            name="password"
-                            label="Password"
-                            value={values.password}
-                            error={!_.isEmpty(errors.password)}
-                            helperText={errors.password}
-                            style={{ marginTop: theme.spacing(2) }}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                        />
-                        <Button
-                            fullWidth
-                            type="submit"
-                            variant="contained"
-                            size="large"
+        <Formik initialValues={{ email: '', password: '' }} validationSchema={signUpSchema} onSubmit={handleSubmit}>
+            {({ values, errors, isSubmitting, handleChange, handleBlur }) => (
+                <Form>
+                    <TextField
+                        fullWidth
+                        variant="outlined"
+                        name="email"
+                        label="Email"
+                        value={values.email}
+                        error={!_.isEmpty(errors.email)}
+                        helperText={errors.email}
+                        style={{ marginTop: theme.spacing(2) }}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                    />
+                    <TextField
+                        fullWidth
+                        variant="outlined"
+                        type="password"
+                        name="password"
+                        label="Password"
+                        value={values.password}
+                        error={!_.isEmpty(errors.password)}
+                        helperText={errors.password}
+                        style={{ marginTop: theme.spacing(2) }}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                    />
+                    <Button
+                        fullWidth
+                        type="submit"
+                        variant="contained"
+                        size="large"
+                        color="primary"
+                        disabled={isSubmitting}
+                        style={{ marginTop: theme.spacing(2) + 20 }} // 20px offsets the form to keep Sign In/Sign Up buttons fixed
+                    >
+                        Sign up
+                    </Button>
+                    <Link to="/login" style={{ textDecoration: 'none' }}>
+                        <Typography
+                            variant="body1"
                             color="primary"
+                            align="center"
                             disabled={isSubmitting}
-                            style={{ marginTop: theme.spacing(2) + 20 }} // 20px offsets the form to keep Sign In/Sign Up buttons fixed
+                            style={{ marginTop: theme.spacing(2) }}
                         >
-                            Sign up
-                        </Button>
-                        <Link to="/login" style={{ textDecoration: 'none' }}>
-                            <Typography
-                                variant="body1"
-                                color="primary"
-                                align="center"
-                                disabled={isSubmitting}
-                                style={{ marginTop: theme.spacing(2) }}
-                            >
-                                Back to sign in
-                            </Typography>
-                        </Link>
-                    </Form>
-                )}
-            </Formik>
-        </LandingFormFrame>
+                            Back to sign in
+                        </Typography>
+                    </Link>
+                </Form>
+            )}
+        </Formik>
     );
 }
 
-export default withTheme(SignupForm);
+export default SignupForm;

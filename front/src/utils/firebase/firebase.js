@@ -1,5 +1,6 @@
 import app from 'firebase/app';
 import 'firebase/auth';
+import 'firebase/firestore';
 
 const config = {
     apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -13,8 +14,11 @@ const config = {
 class Firebase {
     constructor() {
         app.initializeApp(config);
+        
+        this.fieldValue = app.firestore.FieldValue; // REVIEW
 
         this.auth = app.auth();
+        this.db = app.firestore();
     }
 
     doCreateUserWithEmailAndPassword = (email, password) => this.auth.createUserWithEmailAndPassword(email, password);

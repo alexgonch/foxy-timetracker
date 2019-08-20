@@ -9,7 +9,6 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogActions from '@material-ui/core/DialogActions';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import { withTheme } from '@material-ui/core/styles';
 
 import { Formik, Form } from 'formik';
 
@@ -87,4 +86,4 @@ function ForgotPasswordDialog(props) {
     );
 }
 
-export default withTheme(ForgotPasswordDialog);
+export default ForgotPasswordDialog;

@@ -1,13 +1,11 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
 
 import Box from '@material-ui/core/Box';
 import Paper from '@material-ui/core/Paper';
-import { withTheme } from '@material-ui/core/styles';
 
 import LandingBackground from 'components/Backgrounds/LandingBackground';
-import LoginForm from 'components/Forms/LoginForm';
-import SignupForm from 'components/Forms/SignupForm';
+import LandingFormFrame from 'components/Decorations/LandingFormFrame';
+import NoAuthRoutes from 'navigation/NoAuthRoutes';
 
 function LandingPage(props) {
     return (
@@ -23,12 +21,13 @@ function LandingPage(props) {
                         height: '100%'
                     }}
                 >
-                    <Route path="/login" component={LoginForm} />
-                    <Route path="/signup" component={SignupForm} />
+                    <LandingFormFrame>
+                        <NoAuthRoutes />
+                    </LandingFormFrame>
                 </Paper>
             </Box>
         </LandingBackground>
     );
 }
 
-export default withTheme(LandingPage);
+export default LandingPage;

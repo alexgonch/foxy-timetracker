@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
-import { withTheme } from '@material-ui/core/styles';
+import { useTheme } from '@material-ui/core/styles';
 
 import LandingBackground from 'components/Backgrounds/LandingBackground';
 
 function FullPageLoader(props) {
-    const { theme } = props;
+    const theme = useTheme();
 
     // NOTE: we don't display the loader unless it takes unusually long time to authenticate (flashing loader would get annoying for users with fast Internet connection)
     const [enableRender, setEnableRender] = useState(false);
@@ -32,4 +32,4 @@ function FullPageLoader(props) {
     }
 }
 
-export default withTheme(FullPageLoader);
+export default FullPageLoader;

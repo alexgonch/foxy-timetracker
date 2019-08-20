@@ -1,27 +1,58 @@
 import React from 'react';
 
+import { deepOrange } from '@material-ui/core/colors';
+import MenuIcon from '@material-ui/icons/Menu';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
+import Hidden from '@material-ui/core/Hidden';
 import Typography from '@material-ui/core/Typography';
-import { withTheme } from '@material-ui/core/styles';
+import IconButton from '@material-ui/core/IconButton';
+import { useTheme, makeStyles } from '@material-ui/core/styles';
 
-import SignOutButton from 'components/SignOutButton';
-import { ReactComponent as FoxLogo } from 'resources/images/fox.svg';
+import NightModeButton from 'components/NightModeButton';
+
+const useStyles = makeStyles(theme => ({
+    appBar: props => ({
+        [theme.breakpoints.up('sm')]: {
+            width: `calc(100% - ${props.drawerWidth}px)`,
+            marginLeft: props.drawerWidth
+        }
+    })
+}));
 
 function NavBar(props) {
-    const { theme } = props;
+    const { onDrawerToggle } = props;
+
+    const theme = useTheme();
+    const classes = useStyles(props);
 
     return (
-        <AppBar position="static">
+        <AppBar id="appBar" position="static" className={classes.appBar}>
             <Toolbar>
-                <FoxLogo width={32} />
-                <Typography variant="h6" style={{ flexGrow: 1, marginLeft: theme.spacing(2) }}>
-                    Foxy TimeTracker
-                </Typography>
-                <SignOutButton color="inherit" />
+                <Hidden smUp>
+                    <IconButton
+                        edge="start"
+                        color="inherit"
+                        aria-label="menu"
+                        style={{ marginRight: theme.spacing(2) }}
+                        onClick={onDrawerToggle}
+                    >
+                        <MenuIcon />
+                    </IconButton>
+                    <Typography variant="h6" style={{ flexGrow: 1 }}>
+                        Home
+                    </Typography>
+                </Hidden>
+                <Hidden xsDown>
+                    <Typography variant="h4" style={{ flexGrow: 1, fontSize: '1.5rem' }}>
+                        <span style={{ color: deepOrange[500], fontWeight: 300 }}>Foxy</span> Time
+                        <span style={{ color: deepOrange[500], fontWeight: 300 }}>Tracker</span>
+                    </Typography>
+                </Hidden>
+                <NightModeButton />
             </Toolbar>
         </AppBar>
     );
 }
 
-export default withTheme(NavBar);
+export default NavBar;
