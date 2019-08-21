@@ -3,7 +3,7 @@ import { withRouter, Link } from 'react-router-dom';
 
 import FaceIcon from '@material-ui/icons/Face';
 import HomeIcon from '@material-ui/icons/Home';
-import ScheduleIcon from '@material-ui/icons/Schedule';
+import AccessAlarmsIcon from '@material-ui/icons/AccessAlarms';
 import PersonIcon from '@material-ui/icons/Person';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import List from '@material-ui/core/List';
@@ -69,7 +69,7 @@ function DrawerContent(props) {
                     onClick={onDrawerToggle}
                 >
                     <ListItemIcon>
-                        <ScheduleIcon />
+                        <AccessAlarmsIcon />
                     </ListItemIcon>
                     <ListItemText primary="Time" />
                 </ListItem>
