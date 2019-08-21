@@ -27,7 +27,7 @@ function LoginForm(props) {
         firebase
             .doSignInWithEmailAndPassword(values.email.toLowerCase(), values.password)
             .then(authUser => {
-                props.history.push('/');
+                // do nothing
             })
             .catch(error => {
                 switch (error.code) {
@@ -41,7 +41,7 @@ function LoginForm(props) {
                         customSnackbar.error('Account with given email was not found.');
                         break;
                     case 'auth/wrong-password':
-                        customSnackbar.error('Invalid password.');
+                        customSnackbar.error('Wrong password.');
                         break;
                     default:
                         customSnackbar.error('An error has happened. Please try again.');

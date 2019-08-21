@@ -9,7 +9,7 @@ function LandingBackground(props) {
         <Box
             display="flex"
             height="100%"
-            style={{ background: 'linear-gradient(45deg, rgba(69, 90, 100, 0.25), rgba(255, 87, 34, 0.25))', ...style }}
+            style={{ background: 'linear-gradient(0deg, rgba(69, 90, 100, 0.3), rgba(255, 87, 34, 0.2))', ...style }}
             {...rest}
         >
             {props.children}

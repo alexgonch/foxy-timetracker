@@ -12,15 +12,22 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import { useTheme } from '@material-ui/core/styles';
+import { useTheme, makeStyles } from '@material-ui/core/styles';
 
 import { FirebaseContext } from 'utils/firebase';
 
+const useStyles = makeStyles(theme => ({
+    selected: {
+        borderRight: `4px solid ${theme.palette.secondary.light}`
+    }
+}));
+
 function DrawerContent(props) {
     const { location, drawerWidth, onDrawerToggle } = props;
-	
-	const theme = useTheme();
-	const firebase = useContext(FirebaseContext);
+
+    const theme = useTheme();
+    const classes = useStyles();
+    const firebase = useContext(FirebaseContext);
 
     return (
         <>
@@ -31,23 +38,49 @@ function DrawerContent(props) {
                             <FaceIcon />
                         </Avatar>
                     </ListItemAvatar>
-                    <ListItemText primary="John Doe" secondary="Freelancer" />
+                    <ListItemText
+                        primary="John Doe"
+                        secondary="Freelancer"
+                        primaryTypographyProps={{ noWrap: true, component: 'p' }}
+                        secondaryTypographyProps={{ noWrap: true }}
+                    />
                 </ListItem>
             </List>
             <List style={{ width: drawerWidth }}>
-                <ListItem button selected={location.pathname === '/'} component={Link} to={'/'} onClick={onDrawerToggle}>
+                <ListItem
+                    button
+                    classes={{ selected: classes.selected }}
+                    selected={location.pathname === '/'}
+                    component={Link}
+                    to={'/'}
+                    onClick={onDrawerToggle}
+                >
                     <ListItemIcon>
                         <HomeIcon />
                     </ListItemIcon>
                     <ListItemText primary="Dashboard" />
                 </ListItem>
-                <ListItem button selected={location.pathname === '/activities'} component={Link} to={'/activities'} onClick={onDrawerToggle}>
+                <ListItem
+                    button
+                    classes={{ selected: classes.selected }}
+                    selected={location.pathname === '/time'}
+                    component={Link}
+                    to={'/time'}
+                    onClick={onDrawerToggle}
+                >
                     <ListItemIcon>
                         <ScheduleIcon />
                     </ListItemIcon>
-                    <ListItemText primary="Activities" />
+                    <ListItemText primary="Time" />
                 </ListItem>
-                <ListItem button selected={location.pathname === '/account'} component={Link} to={'/account'} onClick={onDrawerToggle}>
+                <ListItem
+                    button
+                    classes={{ selected: classes.selected }}
+                    selected={location.pathname === '/account'}
+                    component={Link}
+                    to={'/account'}
+                    onClick={onDrawerToggle}
+                >
                     <ListItemIcon>
                         <PersonIcon />
                     </ListItemIcon>
