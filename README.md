@@ -1,3 +1,3 @@
 # Foxy TimeTracker
 
-Open source timetracker app.
+Open source timetracker app. Under development.
