@@ -6,7 +6,7 @@ import Typography from '@material-ui/core/Typography';
 function Home(props) {
     return (
         <Box p={2}>
-            <Typography>Home</Typography>
+            <Typography>Projects</Typography>
         </Box>
     );
 }

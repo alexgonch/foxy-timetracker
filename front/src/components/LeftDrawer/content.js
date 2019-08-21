@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { withRouter, Link } from 'react-router-dom';
 
 import PermContactCalendarIcon from '@material-ui/icons/PermContactCalendar';
-import HomeIcon from '@material-ui/icons/Home';
+import WorkIcon from '@material-ui/icons/Work';
 import AccessAlarmsIcon from '@material-ui/icons/AccessAlarms';
 import PersonIcon from '@material-ui/icons/Person';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
@@ -56,9 +56,9 @@ function DrawerContent(props) {
                     onClick={onDrawerToggle}
                 >
                     <ListItemIcon>
-                        <HomeIcon />
+                        <WorkIcon />
                     </ListItemIcon>
-                    <ListItemText primary="Dashboard" />
+                    <ListItemText primary="Projects" />
                 </ListItem>
                 <ListItem
                     button

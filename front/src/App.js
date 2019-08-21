@@ -2,7 +2,6 @@ import React, { useState, useContext } from 'react';
 
 import { blueGrey, deepOrange } from '@material-ui/core/colors';
 
-import NoSsr from '@material-ui/core/NoSsr';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider } from '@material-ui/styles';
 import { createMuiTheme } from '@material-ui/core/styles';
@@ -17,6 +16,7 @@ const lightTheme = createMuiTheme({
     palette: {
         type: 'light',
         primary: {
+            ...blueGrey,
             light: blueGrey[500],
             main: blueGrey[700],
             dark: blueGrey[900],
@@ -35,6 +35,7 @@ const darkTheme = createMuiTheme({
     palette: {
         type: 'dark',
         primary: {
+            ...blueGrey,
             light: blueGrey[500],
             main: blueGrey[700],
             dark: blueGrey[900],
@@ -50,6 +51,7 @@ const darkTheme = createMuiTheme({
 });
 
 // TODO: implement universal loader and connect to all Firebase actions
+// TODO: implement Auth-agnostic routes under navigation (ToS, Privacy, etc)
 function App() {
     const firebase = useContext(FirebaseContext);
     const authUser = useFirebaseAuthentication(firebase);
@@ -64,16 +66,14 @@ function App() {
     console.log('authUser', authUser); // DEBUG
 
     return (
-        <NoSsr>
-            <ThemeProvider theme={theme}>
-                <CssBaseline />
-                <AuthUserContext.Provider value={authUser}>
-                    <CustomSnackbarProvider>
-                        <Multiplexer />
-                    </CustomSnackbarProvider>
-                </AuthUserContext.Provider>
-            </ThemeProvider>
-        </NoSsr>
+        <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <AuthUserContext.Provider value={authUser}>
+                <CustomSnackbarProvider>
+                    <Multiplexer />
+                </CustomSnackbarProvider>
+            </AuthUserContext.Provider>
+        </ThemeProvider>
     );
 }
 

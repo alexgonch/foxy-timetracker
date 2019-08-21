@@ -1,15 +1,18 @@
 import React from 'react';
 
 import Box from '@material-ui/core/Box';
+import { useTheme } from '@material-ui/core/styles';
 
 function LandingBackground(props) {
     const { style, ...rest } = props;
+    
+    const theme = useTheme();
 
     return (
         <Box
             display="flex"
             height="100%"
-            style={{ background: 'linear-gradient(0deg, rgba(69, 90, 100, 0.3), rgba(255, 87, 34, 0.2))', ...style }}
+            style={{ background: theme.palette.secondary[50] }}
             {...rest}
         >
             {props.children}
