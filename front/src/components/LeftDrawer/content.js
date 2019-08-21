@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { withRouter, Link } from 'react-router-dom';
 
-import FaceIcon from '@material-ui/icons/Face';
+import PermContactCalendarIcon from '@material-ui/icons/PermContactCalendar';
 import HomeIcon from '@material-ui/icons/Home';
 import AccessAlarmsIcon from '@material-ui/icons/AccessAlarms';
 import PersonIcon from '@material-ui/icons/Person';
@@ -35,7 +35,7 @@ function DrawerContent(props) {
                 <ListItem>
                     <ListItemAvatar>
                         <Avatar style={{ backgroundColor: theme.palette.secondary[500] }}>
-                            <FaceIcon />
+                            <PermContactCalendarIcon />
                         </Avatar>
                     </ListItemAvatar>
                     <ListItemText
