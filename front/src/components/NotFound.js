@@ -8,7 +8,7 @@ function NotFound(props) {
     const theme = useTheme();
 
     return (
-        <Box display="flex" justifyContent="center" alignItems="center" height="100%">
+        <Box display="flex" justifyContent="center" alignItems="center" height="100%" p={4}>
             <Box>
                 <Typography variant="h5" align="center" color="secondary">
                     Not Found

@@ -76,7 +76,6 @@ function PasswordChangeForm(props) {
                             value={values.passwordCurrent}
                             error={!_.isEmpty(errors.passwordCurrent)}
                             helperText={errors.passwordCurrent}
-                            style={{ marginTop: theme.spacing(1) }}
                             onChange={handleChange}
                             onBlur={handleBlur}
                         />

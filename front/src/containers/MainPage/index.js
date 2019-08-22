@@ -11,8 +11,7 @@ const drawerWidth = 240;
 
 const useStyles = makeStyles(theme => ({
     routerBox: {
-        height: '100%',
-        [theme.breakpoints.up('sm')]: {
+        [theme.breakpoints.up('md')]: {
             width: `calc(100% - ${drawerWidth}px)`,
             marginLeft: drawerWidth
         }
@@ -30,8 +29,8 @@ function MainPage(props) {
 
     return (
         <Box height="100%">
-            <NavBar drawerWidth={drawerWidth} onDrawerToggle={handleDrawerToggle} />
             <LeftDrawer mobileOpen={mobileDrawerOpen} drawerWidth={drawerWidth} onDrawerToggle={handleDrawerToggle} />
+            <NavBar drawerWidth={drawerWidth} onDrawerToggle={handleDrawerToggle} />
             <Box className={classes.routerBox}>
                 <AuthRoutes />
             </Box>

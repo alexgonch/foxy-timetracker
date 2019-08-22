@@ -3,7 +3,7 @@ import { withRouter, Link } from 'react-router-dom';
 
 import PermContactCalendarIcon from '@material-ui/icons/PermContactCalendar';
 import WorkIcon from '@material-ui/icons/Work';
-import AccessAlarmsIcon from '@material-ui/icons/AccessAlarms';
+import TimerIcon from '@material-ui/icons/Timer';
 import PersonIcon from '@material-ui/icons/Person';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import List from '@material-ui/core/List';
@@ -28,7 +28,7 @@ function DrawerContent(props) {
     const theme = useTheme();
     const classes = useStyles();
     const firebase = useContext(FirebaseContext);
-
+    
     return (
         <>
             <List style={{ width: drawerWidth }}>
@@ -63,13 +63,13 @@ function DrawerContent(props) {
                 <ListItem
                     button
                     classes={{ selected: classes.selected }}
-                    selected={location.pathname === '/time'}
+                    selected={location.pathname.startsWith('/time')}
                     component={Link}
                     to={'/time'}
                     onClick={onDrawerToggle}
                 >
                     <ListItemIcon>
-                        <AccessAlarmsIcon />
+                        <TimerIcon />
                     </ListItemIcon>
                     <ListItemText primary="Time" />
                 </ListItem>

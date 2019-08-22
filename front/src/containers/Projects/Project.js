@@ -2,20 +2,30 @@ import React from 'react';
 
 import moment from 'moment';
 
-import Paper from '@material-ui/core/Paper';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import CardActionArea from '@material-ui/core/CardActionArea';
 import Typography from '@material-ui/core/Typography';
-import { useTheme } from '@material-ui/core/styles';
 
 function Project(props) {
-    const { title, createdAt } = props;
-
-    const theme = useTheme();
+    const { title, createdAt, creator, onActionClick } = props;
 
     return (
-        <Paper style={{ width: '100%', padding: theme.spacing(2) }}>
-            <Typography variant="h6">{title}</Typography>
-            <Typography variant="body2" color="textSecondary">Created on {moment(createdAt).format('MMM Do, YYYY')}</Typography>
-        </Paper>
+        <Card style={{ height: '100%' }}>
+            <CardActionArea style={{ height: '100%' }} onClick={onActionClick}>
+                <CardContent>
+                    <Typography variant="h6" noWrap>
+                        {title}
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary">
+                        Created on {moment(createdAt).format('MMM Do, YYYY')}
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary">
+                        {creator}
+                    </Typography>
+                </CardContent>
+            </CardActionArea>
+        </Card>
     );
 }
 

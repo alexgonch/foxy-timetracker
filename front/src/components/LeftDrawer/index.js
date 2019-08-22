@@ -11,7 +11,7 @@ function LeftDrawer(props) {
 	
     return (
         <>
-            <Hidden smUp>
+            <Hidden mdUp>
                 <Drawer
                     variant="temporary"
                     anchor="left"
@@ -25,7 +25,7 @@ function LeftDrawer(props) {
                     <DrawerContent drawerWidth={drawerWidth} onDrawerToggle={onDrawerToggle} />
                 </Drawer>
             </Hidden>
-            <Hidden xsDown>
+            <Hidden smDown>
                 <Drawer open variant="permanent" style={{ width: drawerWidth }}>
                     <DrawerContent drawerWidth={drawerWidth} />
                 </Drawer>

@@ -50,6 +50,8 @@ const darkTheme = createMuiTheme({
     }
 });
 
+// IDEA: global search bar
+
 // TODO: implement universal loader and connect to all Firebase actions
 // TODO: implement Auth-agnostic routes under navigation (ToS, Privacy, etc)
 function App() {

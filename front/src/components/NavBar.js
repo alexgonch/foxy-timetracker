@@ -13,7 +13,7 @@ import NightModeButton from 'components/NightModeButton';
 
 const useStyles = makeStyles(theme => ({
     appBar: props => ({
-        [theme.breakpoints.up('sm')]: {
+        [theme.breakpoints.up('md')]: {
             width: `calc(100% - ${props.drawerWidth}px)`,
             marginLeft: props.drawerWidth
         }
@@ -29,7 +29,7 @@ function NavBar(props) {
     return (
         <AppBar id="appBar" position="static" className={classes.appBar}>
             <Toolbar>
-                <Hidden smUp>
+                <Hidden mdUp>
                     <IconButton
                         edge="start"
                         color="inherit"
@@ -43,7 +43,7 @@ function NavBar(props) {
                         Home
                     </Typography>
                 </Hidden>
-                <Hidden xsDown>
+                <Hidden smDown>
                     <Typography variant="h4" style={{ flexGrow: 1, fontSize: '1.5rem' }}>
                         <span style={{ color: deepOrange[500], fontWeight: 300 }}>Foxy</span> Time
                         <span style={{ color: deepOrange[500], fontWeight: 300 }}>Tracker</span>

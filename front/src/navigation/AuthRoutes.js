@@ -10,7 +10,7 @@ function AuthRoutes(props) {
     return (
         <Switch>
             <Route exact path="/" component={Projects} />
-            <Route exact path="/time" component={Time} />
+            <Route path="/time" component={Time} />
             <Route exact path="/account" component={Account} />
             <Redirect from="/login" to="/" />
             <Route component={NotFound} />
