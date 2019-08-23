@@ -3,8 +3,8 @@ import React, { useState } from 'react';
 import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/core/styles';
 
-import NavBar from 'components/NavBar';
-import LeftDrawer from 'components/LeftDrawer';
+import NavBar from './NavBar';
+import LeftDrawer from './LeftDrawer';
 import AuthRoutes from 'navigation/AuthRoutes';
 
 const drawerWidth = 240;
@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
 
 function MainPage(props) {
     const classes = useStyles();
-
+    
     const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
 
     function handleDrawerToggle() {

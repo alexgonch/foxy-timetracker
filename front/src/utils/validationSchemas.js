@@ -9,7 +9,11 @@ export const signUpSchema = yup.object().shape({
         .string()
         .required('Password is required')
         .min(6, 'Should be at least 6 characters long')
-        .max(128, 'Should not exceed 128 characters') // should cover users with crazy password managers
+        .max(128, 'Should not exceed 128 characters'), // should cover users with crazy password managers
+    name: yup
+        .string()
+        .required('Full name is required')
+        .matches(/^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/, 'Special characters are not allowed')
 });
 
 export const forgotPasswordSchema = yup.object().shape({
@@ -27,4 +31,8 @@ export const passwordChangeSchema = yup.object().shape({
         .min(6, 'Should be at least 6 characters long')
         .max(128, 'Should not exceed 128 characters'),
     passwordConfirmation: yup.string().oneOf([yup.ref('password'), null], 'Passwords must match')
+});
+
+export const projectSchema = yup.object().shape({
+    name: yup.string().required('Project name is required')
 });

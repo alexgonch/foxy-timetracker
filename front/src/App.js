@@ -1,13 +1,12 @@
 import React, { useState, useContext } from 'react';
 
 import { blueGrey, deepOrange } from '@material-ui/core/colors';
-
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider } from '@material-ui/styles';
 import { createMuiTheme } from '@material-ui/core/styles';
 
-import { FirebaseContext, useFirebaseAuthentication } from 'utils/firebase';
-import { AuthUserContext } from 'utils/session';
+import { FirebaseContext, useFirebaseAuthentication, useUser } from 'utils/firebase';
+import { AuthUserContext, UserContext } from 'utils/session'; // TODO: need better naming for this directory
 import { CustomSnackbarProvider } from 'components/CustomSnackbar';
 
 import Multiplexer from 'navigation/Multiplexer';
@@ -57,6 +56,7 @@ const darkTheme = createMuiTheme({
 function App() {
     const firebase = useContext(FirebaseContext);
     const authUser = useFirebaseAuthentication(firebase);
+    const { loading, error, user } = useUser(firebase); // TODO: what can we do with this error?
 
     const [theme, setTheme] = useState(lightTheme);
     const handleToggleNightMode = () => {
@@ -66,14 +66,17 @@ function App() {
 
     console.log('theme', theme); // DEBUG
     console.log('authUser', authUser); // DEBUG
+    console.log('user', user); // DEBUG
 
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
             <AuthUserContext.Provider value={authUser}>
-                <CustomSnackbarProvider>
-                    <Multiplexer />
-                </CustomSnackbarProvider>
+                <UserContext.Provider value={user}>
+                    <CustomSnackbarProvider>
+                        <Multiplexer authUser={authUser} loading={loading} user={user} />
+                    </CustomSnackbarProvider>
+                </UserContext.Provider>
             </AuthUserContext.Provider>
         </ThemeProvider>
     );

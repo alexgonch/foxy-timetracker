@@ -1,37 +1,47 @@
-import React from 'react';
+import React, { useState } from 'react';
+
+import _ from 'lodash';
 
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 
 import NewProject from './NewProject';
 import Project from './Project';
+import ProjectDialog from './ProjectDialog';
 
-// TEMP
+// TEMP faking Firestore data
 const projects = [
     {
         id: 100,
         createdAt: new Date('2019-08-17T04:28:20Z'),
-        title: 'Foxy TimeTracker',
-        creator: 'John Doe',
-        tags: ['Customer Support', 'Software Development', 'Administration']
+        name: 'Foxy TimeTracker',
+        tags: ['Customer Support', 'Software Development', 'Administration'],
+        totalTime: 3600 * 3 + 60 * 24 + 1 * 30 // 3 hr 24 min 30 sec
     },
     {
         id: 200,
         createdAt: new Date('2019-08-21T22:10:04Z'),
-        title: 'Real-time Doggo Map',
-        creator: 'Kevin McDoggo',
-        tags: []
+        name: 'Real-time Doggo Map',
+        tags: [],
+        totalTime: 0
     }
 ];
 
 function Projects(props) {
+    const [projectDialogOpen, setProjectDialogOpen] = useState(false);
+    const [projectSelectedId, setProjectSelectedId] = useState(null);
+    
     const handleCreateProject = () => {
-        // stub
+        setProjectDialogOpen(true);
+        setProjectSelectedId(null);
     };
     
     const handleEditProject = id => {
-        // stub
+        setProjectDialogOpen(true);
+        setProjectSelectedId(id);
     };
+    
+    const projectSelected = _.find(projects, project => project.id === projectSelectedId); // REVIEW: verify how this works with real-time updates in Firestore
 
     return (
         <Box p={2}>
@@ -45,6 +55,8 @@ function Projects(props) {
                     </Grid>
                 ))}
             </Grid>
+            
+            <ProjectDialog open={projectDialogOpen} project={projectSelected} onClose={() => setProjectDialogOpen(false)} />
         </Box>
     );
 }

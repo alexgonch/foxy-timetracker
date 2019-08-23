@@ -51,7 +51,7 @@ function SignupForm(props) {
     };
 
     return (
-        <Formik initialValues={{ email: '', password: '' }} validationSchema={signUpSchema} onSubmit={handleSubmit}>
+        <Formik initialValues={{ email: '', name: '', password: '' }} validationSchema={signUpSchema} onSubmit={handleSubmit}>
             {({ values, errors, isSubmitting, handleChange, handleBlur }) => (
                 <Form>
                     <TextField
@@ -62,6 +62,18 @@ function SignupForm(props) {
                         value={values.email}
                         error={!_.isEmpty(errors.email)}
                         helperText={errors.email}
+                        style={{ marginTop: theme.spacing(2) }}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                    />
+                    <TextField
+                        fullWidth
+                        variant="outlined"
+                        name="name"
+                        label="Full name"
+                        value={values.name}
+                        error={!_.isEmpty(errors.name)}
+                        helperText={errors.name}
                         style={{ marginTop: theme.spacing(2) }}
                         onChange={handleChange}
                         onBlur={handleBlur}

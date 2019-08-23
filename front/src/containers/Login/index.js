@@ -13,7 +13,7 @@ import { Formik, Form } from 'formik';
 import { FirebaseContext } from 'utils/firebase';
 import { CustomSnackbarContext } from 'components/CustomSnackbar';
 
-import ForgotPasswordDialog from 'components/Dialogs/ForgotPasswordDialog';
+import ForgotPasswordDialog from './ForgotPasswordDialog';
 
 function LoginForm(props) {
     const theme = useTheme();

@@ -17,7 +17,7 @@ import { FirebaseContext } from 'utils/firebase';
 import { CustomSnackbarContext } from 'components/CustomSnackbar';
 
 function ForgotPasswordDialog(props) {
-    const { open } = props;
+    const { open, onClose } = props;
 
     const firebase = useContext(FirebaseContext);
     const customSnackbar = useContext(CustomSnackbarContext);
@@ -28,7 +28,7 @@ function ForgotPasswordDialog(props) {
             .then(() => {
                 // REVIEW: we might want a more user-friendly way to indicate success (in future)
                 customSnackbar.success('Check your email for a password reset link.');
-                props.onClose();
+                onClose();
             })
             .catch(error => {
                 switch (error.code) {
@@ -48,14 +48,14 @@ function ForgotPasswordDialog(props) {
     };
 
     return (
-        <Dialog open={open} onClose={props.onClose}>
+        <Dialog fullWidth open={open} aria-labelledby="forgot-password-dialog" onClose={onClose}>
             <Formik initialValues={{ email: '' }} validationSchema={forgotPasswordSchema} onSubmit={handleSubmit}>
                 {({ values, errors, isSubmitting, handleChange, handleBlur, submitForm }) => (
                     <>
                         <DialogTitle>Reset password</DialogTitle>
                         <DialogContent>
                             <DialogContentText>
-                                Enter the email address you used to register your account.
+                                Enter the email address you've used to register your account.
                             </DialogContentText>
                             <Form>
                                 <TextField
@@ -72,9 +72,6 @@ function ForgotPasswordDialog(props) {
                             </Form>
                         </DialogContent>
                         <DialogActions>
-                            <Button onClick={props.onClose} color="primary">
-                                Cancel
-                            </Button>
                             <Button color="secondary" disabled={isSubmitting} onClick={submitForm}>
                                 Reset
                             </Button>

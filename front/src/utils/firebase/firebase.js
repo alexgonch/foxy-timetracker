@@ -16,7 +16,6 @@ class Firebase {
         app.initializeApp(config);
 
         this.emailAuthProvider = app.auth.EmailAuthProvider;
-        this.fieldValue = app.firestore.FieldValue; // REVIEW
 
         this.auth = app.auth();
         this.db = app.firestore();

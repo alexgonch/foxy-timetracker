@@ -9,7 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import { useTheme, makeStyles } from '@material-ui/core/styles';
 
-import NightModeButton from 'components/NightModeButton';
+import NightModeButton from './NightModeButton';
 
 const useStyles = makeStyles(theme => ({
     appBar: props => ({

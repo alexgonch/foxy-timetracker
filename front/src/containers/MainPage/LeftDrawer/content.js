@@ -15,6 +15,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import { useTheme, makeStyles } from '@material-ui/core/styles';
 
 import { FirebaseContext } from 'utils/firebase';
+import { UserContext } from 'utils/session';
 
 const useStyles = makeStyles(theme => ({
     selected: {
@@ -27,7 +28,9 @@ function DrawerContent(props) {
 
     const theme = useTheme();
     const classes = useStyles();
+    
     const firebase = useContext(FirebaseContext);
+    const user = useContext(UserContext);
     
     return (
         <>
@@ -39,7 +42,7 @@ function DrawerContent(props) {
                         </Avatar>
                     </ListItemAvatar>
                     <ListItemText
-                        primary="John Doe"
+                        primary={user.name}
                         secondary="Freelancer"
                         primaryTypographyProps={{ noWrap: true, component: 'p' }}
                         secondaryTypographyProps={{ noWrap: true }}
