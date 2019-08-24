@@ -32,7 +32,6 @@ function MainPage(props) {
     }
 
     console.log('userLoading', userLoading); // DEBUG
-    console.log('userError', userError); // DEBUG
     console.log('user', user); // DEBUG
     
     if (userLoading) {
