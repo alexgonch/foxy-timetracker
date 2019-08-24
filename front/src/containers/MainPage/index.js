@@ -3,9 +3,12 @@ import React, { useState } from 'react';
 import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/core/styles';
 
+import FullPageLoader from 'components/Loaders/FullPageLoader';
 import NavBar from './NavBar';
 import LeftDrawer from './LeftDrawer';
 import AuthRoutes from 'navigation/AuthRoutes';
+
+import { useDbUser, DbUserContext } from 'utils/firebase';
 
 const drawerWidth = 240;
 
@@ -20,21 +23,36 @@ const useStyles = makeStyles(theme => ({
 
 function MainPage(props) {
     const classes = useStyles();
-    
+
     const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
+    const { userLoading, userError, user } = useDbUser();
 
     function handleDrawerToggle() {
         setMobileDrawerOpen(!mobileDrawerOpen);
     }
 
+    console.log('userLoading', userLoading); // DEBUG
+    console.log('userError', userError); // DEBUG
+    console.log('user', user); // DEBUG
+    
+    if (userLoading) {
+        return <FullPageLoader />;
+    }
+
     return (
-        <Box height="100%">
-            <LeftDrawer mobileOpen={mobileDrawerOpen} drawerWidth={drawerWidth} onDrawerToggle={handleDrawerToggle} />
-            <NavBar drawerWidth={drawerWidth} onDrawerToggle={handleDrawerToggle} />
-            <Box className={classes.routerBox}>
-                <AuthRoutes />
+        <DbUserContext.Provider value={{ userLoading, userError, user }}>
+            <Box height="100%">
+                <LeftDrawer
+                    mobileOpen={mobileDrawerOpen}
+                    drawerWidth={drawerWidth}
+                    onDrawerToggle={handleDrawerToggle}
+                />
+                <NavBar drawerWidth={drawerWidth} onDrawerToggle={handleDrawerToggle} />
+                <Box className={classes.routerBox}>
+                    <AuthRoutes />
+                </Box>
             </Box>
-        </Box>
+        </DbUserContext.Provider>
     );
 }
 

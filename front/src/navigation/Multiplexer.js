@@ -1,21 +1,19 @@
 import React, { useContext } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 
-import { AuthUserContext, UserContext } from 'utils/session';
+import { AuthUserContext } from 'utils/firebase';
 
 import FullPageLoader from 'components/Loaders/FullPageLoader';
 import LandingPage from 'containers/LandingPage';
 import MainPage from 'containers/MainPage';
 
-// TODO: implement an initialisation property instead of checking for undefined
 // Handles high-level routing based on authentication state
 function Multiplexer(props) {
-    const authUser = useContext(AuthUserContext);
-    const user = useContext(UserContext);
+    const { authUserLoading, authUser } = useContext(AuthUserContext);
 
-    if (authUser === undefined || !user) {
+    if (authUserLoading) {
         return <FullPageLoader />;
-    } else if (authUser === null) {
+    } else if (!authUser) {
         return (
             <Router>
                 <LandingPage />

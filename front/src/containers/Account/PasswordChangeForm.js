@@ -8,22 +8,23 @@ import { useTheme } from '@material-ui/core/styles';
 
 import { Formik, Form } from 'formik';
 
+import firebase, { generateCredential } from 'utils/firebase';
 import { passwordChangeSchema } from 'utils/validationSchemas';
-import { FirebaseContext } from 'utils/firebase';
 import { CustomSnackbarContext } from 'components/CustomSnackbar';
 
 function PasswordChangeForm(props) {
     const theme = useTheme();
 
-    const firebase = useContext(FirebaseContext);
     const customSnackbar = useContext(CustomSnackbarContext);
 
     const handleSubmit = (values, { setSubmitting, resetForm }) => {
         firebase
-            .doReauthenticateWithCredential(firebase.generateCredential(values.passwordCurrent))
+            .auth()
+            .currentUser.reauthenticateWithCredential(generateCredential(values.passwordCurrent))
             .then(() => {
                 firebase
-                    .doPasswordUpdate(values.password)
+                    .auth()
+                    .currentUser.updatePassword(values.password)
                     .then(() => {
                         resetForm();
                         customSnackbar.success('Password updated.');

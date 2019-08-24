@@ -1,10 +1,34 @@
-import FirebaseContext from './context';
-import Firebase from './firebase';
-import useFirebaseAuthentication from './useFirebaseAuthentication';
-import useUser from './useUser';
+import React from 'react';
 
-export default Firebase;
+import * as firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/firestore';
 
-export { FirebaseContext };
-export { useFirebaseAuthentication };
-export { useUser };
+import useFirebaseAuth from './useFirebaseAuth';
+import useDbUser from './useDbUser';
+
+const firebaseConfig = {
+    apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+    authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+    databaseURL: process.env.REACT_APP_FIREBASE_DATABASE_URL,
+    projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+    storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID
+};
+
+firebase.initializeApp(firebaseConfig);
+console.info('%cFirebase initialized', 'color: blue');
+
+// Firebase
+export default firebase;
+
+// Hooks
+export { useFirebaseAuth };
+export { useDbUser };
+
+// Contexts
+export const AuthUserContext = React.createContext(null);
+export const DbUserContext = React.createContext(null);
+
+// Helper functions
+export const generateCredential = password => firebase.auth.EmailAuthProvider.credential(firebase.auth().currentUser.email, password);

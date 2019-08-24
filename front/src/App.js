@@ -1,12 +1,11 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 
 import { blueGrey, deepOrange } from '@material-ui/core/colors';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider } from '@material-ui/styles';
 import { createMuiTheme } from '@material-ui/core/styles';
 
-import { FirebaseContext, useFirebaseAuthentication, useUser } from 'utils/firebase';
-import { AuthUserContext, UserContext } from 'utils/session'; // TODO: need better naming for this directory
+import { useFirebaseAuth, AuthUserContext } from 'utils/firebase';
 import { CustomSnackbarProvider } from 'components/CustomSnackbar';
 
 import Multiplexer from 'navigation/Multiplexer';
@@ -54,9 +53,7 @@ const darkTheme = createMuiTheme({
 // TODO: implement universal loader and connect to all Firebase actions
 // TODO: implement Auth-agnostic routes under navigation (ToS, Privacy, etc)
 function App() {
-    const firebase = useContext(FirebaseContext);
-    const authUser = useFirebaseAuthentication(firebase);
-    const { loading, error, user } = useUser(firebase); // TODO: what can we do with this error?
+    const { authUserLoading, authUser } = useFirebaseAuth();
 
     const [theme, setTheme] = useState(lightTheme);
     const handleToggleNightMode = () => {
@@ -65,18 +62,16 @@ function App() {
     theme.onToggleNightMode = handleToggleNightMode; // REVIEW: figure out a better way to encapsulate night mode logic
 
     console.log('theme', theme); // DEBUG
+    // console.log('authUserLoading', authUserLoading); // DEBUG
     console.log('authUser', authUser); // DEBUG
-    console.log('user', user); // DEBUG
 
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
-            <AuthUserContext.Provider value={authUser}>
-                <UserContext.Provider value={user}>
-                    <CustomSnackbarProvider>
-                        <Multiplexer authUser={authUser} loading={loading} user={user} />
-                    </CustomSnackbarProvider>
-                </UserContext.Provider>
+            <AuthUserContext.Provider value={{ authUserLoading, authUser }}>
+                <CustomSnackbarProvider>
+                    <Multiplexer />
+                </CustomSnackbarProvider>
             </AuthUserContext.Provider>
         </ThemeProvider>
     );

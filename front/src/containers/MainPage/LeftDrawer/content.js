@@ -14,8 +14,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import { useTheme, makeStyles } from '@material-ui/core/styles';
 
-import { FirebaseContext } from 'utils/firebase';
-import { UserContext } from 'utils/session';
+import firebase, { DbUserContext } from 'utils/firebase';
 
 const useStyles = makeStyles(theme => ({
     selected: {
@@ -29,8 +28,7 @@ function DrawerContent(props) {
     const theme = useTheme();
     const classes = useStyles();
     
-    const firebase = useContext(FirebaseContext);
-    const user = useContext(UserContext);
+    const { user } = useContext(DbUserContext);
     
     return (
         <>
@@ -89,7 +87,7 @@ function DrawerContent(props) {
                     </ListItemIcon>
                     <ListItemText primary="Account" />
                 </ListItem>
-                <ListItem button style={{ marginTop: theme.spacing(2) }} onClick={firebase.doSignOut}>
+                <ListItem button style={{ marginTop: theme.spacing(2) }} onClick={() => firebase.auth().signOut()}>
                     <ListItemIcon>
                         <ExitToAppIcon />
                     </ListItemIcon>

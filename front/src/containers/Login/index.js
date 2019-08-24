@@ -10,7 +10,7 @@ import { useTheme } from '@material-ui/core/styles';
 
 import { Formik, Form } from 'formik';
 
-import { FirebaseContext } from 'utils/firebase';
+import firebase from 'utils/firebase';
 import { CustomSnackbarContext } from 'components/CustomSnackbar';
 
 import ForgotPasswordDialog from './ForgotPasswordDialog';
@@ -20,12 +20,12 @@ function LoginForm(props) {
 
     const [forgotPasswordDialogOpen, setForgotPasswordDialogOpen] = useState(false);
 
-    const firebase = useContext(FirebaseContext);
     const customSnackbar = useContext(CustomSnackbarContext);
 
     const handleSubmit = (values, { setSubmitting }) => {
         firebase
-            .doSignInWithEmailAndPassword(values.email.toLowerCase(), values.password)
+            .auth()
+            .signInWithEmailAndPassword(values.email.toLowerCase(), values.password)
             .then(authUser => {
                 // do nothing
             })

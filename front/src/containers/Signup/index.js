@@ -10,8 +10,8 @@ import { useTheme } from '@material-ui/core/styles';
 
 import { Formik, Form } from 'formik';
 
+import firebase from 'utils/firebase';
 import { signUpSchema } from 'utils/validationSchemas';
-import { FirebaseContext } from 'utils/firebase';
 import { CustomSnackbarContext } from 'components/CustomSnackbar';
 
 // TODO: email link verification/sign-in https://firebase.google.com/docs/auth/web/email-link-auth
@@ -19,12 +19,11 @@ import { CustomSnackbarContext } from 'components/CustomSnackbar';
 function SignupForm(props) {
     const theme = useTheme();
 
-    const firebase = useContext(FirebaseContext);
     const customSnackbar = useContext(CustomSnackbarContext);
 
     const handleSubmit = (values, { setSubmitting }) => {
-        firebase
-            .doCreateUserWithEmailAndPassword(values.email, values.password)
+        firebase.auth()
+            .createUserWithEmailAndPassword(values.email, values.password)
             .then(authUser => {
                 props.history.push('/'); // TEMP
                 // props.history.push('/success'); // TODO: display user-friendly success message and let them click "Sign in"

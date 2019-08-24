@@ -12,19 +12,19 @@ import Button from '@material-ui/core/Button';
 
 import { Formik, Form } from 'formik';
 
+import firebase from 'utils/firebase';
 import { forgotPasswordSchema } from 'utils/validationSchemas';
-import { FirebaseContext } from 'utils/firebase';
 import { CustomSnackbarContext } from 'components/CustomSnackbar';
 
 function ForgotPasswordDialog(props) {
     const { open, onClose } = props;
 
-    const firebase = useContext(FirebaseContext);
     const customSnackbar = useContext(CustomSnackbarContext);
 
     const handleSubmit = (values, { setSubmitting }) => {
         firebase
-            .doPasswordReset(values.email)
+            .auth()
+            .sendPasswordResetEmail(values.email)
             .then(() => {
                 // REVIEW: we might want a more user-friendly way to indicate success (in future)
                 customSnackbar.success('Check your email for a password reset link.');
