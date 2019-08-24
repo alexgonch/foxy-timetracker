@@ -8,7 +8,7 @@ import NavBar from './NavBar';
 import LeftDrawer from './LeftDrawer';
 import AuthRoutes from 'navigation/AuthRoutes';
 
-import { useDbUser, DbUserContext } from 'utils/firebase';
+import { useDbUser, DbUserContext, useDbProjects, DbProjectsContext } from 'utils/firebase';
 
 const drawerWidth = 240;
 
@@ -26,31 +26,34 @@ function MainPage(props) {
 
     const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
     const { userLoading, userError, user } = useDbUser();
+    const { projectsLoading, projectsError, projects } = useDbProjects();
 
     function handleDrawerToggle() {
         setMobileDrawerOpen(!mobileDrawerOpen);
     }
 
-    console.log('userLoading', userLoading); // DEBUG
     console.log('user', user); // DEBUG
-    
-    if (userLoading) {
+    console.log('projects', projects); // DEBUG
+
+    if (userLoading || projectsLoading) {
         return <FullPageLoader />;
     }
 
     return (
         <DbUserContext.Provider value={{ userLoading, userError, user }}>
-            <Box height="100%">
-                <LeftDrawer
-                    mobileOpen={mobileDrawerOpen}
-                    drawerWidth={drawerWidth}
-                    onDrawerToggle={handleDrawerToggle}
-                />
-                <NavBar drawerWidth={drawerWidth} onDrawerToggle={handleDrawerToggle} />
-                <Box className={classes.routerBox}>
-                    <AuthRoutes />
+            <DbProjectsContext.Provider value={{ projectsLoading, projectsError, projects }}>
+                <Box height="100%">
+                    <LeftDrawer
+                        mobileOpen={mobileDrawerOpen}
+                        drawerWidth={drawerWidth}
+                        onDrawerToggle={handleDrawerToggle}
+                    />
+                    <NavBar drawerWidth={drawerWidth} onDrawerToggle={handleDrawerToggle} />
+                    <Box className={classes.routerBox}>
+                        <AuthRoutes />
+                    </Box>
                 </Box>
-            </Box>
+            </DbProjectsContext.Provider>
         </DbUserContext.Provider>
     );
 }

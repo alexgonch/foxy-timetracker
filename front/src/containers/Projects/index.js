@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 
 import _ from 'lodash';
 
@@ -9,27 +9,13 @@ import NewProject from './NewProject';
 import Project from './Project';
 import ProjectDialog from './ProjectDialog';
 
-// TEMP faking Firestore data
-const projects = [
-    {
-        id: 100,
-        createdAt: new Date('2019-08-17T04:28:20Z'),
-        name: 'Foxy TimeTracker',
-        tags: ['Customer Support', 'Software Development', 'Administration'],
-        totalTime: 3600 * 3 + 60 * 24 + 1 * 30 // 3 hr 24 min 30 sec
-    },
-    {
-        id: 200,
-        createdAt: new Date('2019-08-21T22:10:04Z'),
-        name: 'Real-time Doggo Map',
-        tags: [],
-        totalTime: 0
-    }
-];
+import { DbProjectsContext } from 'utils/firebase';
 
 function Projects(props) {
     const [projectDialogOpen, setProjectDialogOpen] = useState(false);
     const [projectSelectedId, setProjectSelectedId] = useState(null);
+    
+    const { projects } = useContext(DbProjectsContext);
     
     const handleCreateProject = () => {
         setProjectDialogOpen(true);
@@ -41,7 +27,7 @@ function Projects(props) {
         setProjectSelectedId(id);
     };
     
-    const projectSelected = _.find(projects, project => project.id === projectSelectedId); // REVIEW: verify how this works with real-time updates in Firestore
+    const projectSelected = _.find(projects, project => project.id === projectSelectedId);
 
     return (
         <Box p={2}>
@@ -49,7 +35,7 @@ function Projects(props) {
                 <Grid item xs={12} sm={6} lg={4} xl={3} zeroMinWidth>
                     <NewProject onActionClick={handleCreateProject} />
                 </Grid>
-                {projects.slice().reverse().map(project => (
+                {_.orderBy(projects, project => project.created_at.toDate(), 'desc').map(project => (
                     <Grid key={project.id} item xs={12} sm={6} lg={4} xl={3} zeroMinWidth>
                         <Project {...project} onActionClick={() => handleEditProject(project.id)} />
                     </Grid>

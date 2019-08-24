@@ -18,6 +18,7 @@ import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import Chip from '@material-ui/core/Chip';
 import Button from '@material-ui/core/Button';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import { useTheme } from '@material-ui/core/styles';
 
 import { Formik, Form } from 'formik';
@@ -28,6 +29,9 @@ import { CustomSnackbarContext } from 'components/CustomSnackbar';
 
 import ConfirmationDialog from 'components/Dialogs/ConfirmationDialog';
 
+// TODO: extend db with common API calls
+import firebase, { db } from 'utils/firebase';
+
 // TODO: if we carry on with tags, we should implement an Autocomplete for tags input
 function ProjectDialog(props) {
     const { open, project, onClose } = props;
@@ -37,11 +41,14 @@ function ProjectDialog(props) {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [deleteConfirmationDialogOpen, setDeleteConfirmationDialogOpen] = React.useState(false);
     const [tags, setTags] = useState(!_.isNil(project) ? project.tags : []); // TEMP: will be ignored for now
+    // IDEA: create "inProgress context" replacement
+    // IDEA: make a reusable CustomButton component that will consume "inProgress context" and disable itself when in progress
+    const [inProgress, setInProgress] = useState(false); // TODO: disable all buttons when true
 
     const theme = useTheme();
     const customSnackbar = useContext(CustomSnackbarContext);
 
-	// TODO: we could make a Menu context to reuse across the entire app
+    // TODO: we could make a Menu context to reuse across the entire app
     const handleMore = event => {
         setAnchorEl(event.currentTarget);
     };
@@ -51,10 +58,41 @@ function ProjectDialog(props) {
     };
 
     const handleArchive = () => {
-        // TODO
-        customSnackbar.success('Project archived.');
-        setAnchorEl(null);
-        onClose();
+        setInProgress(true);
+
+        db.collection('projects')
+            .doc(project.id)
+            .update({
+                archived: true
+            })
+            .then(() => {
+                customSnackbar.success('Project archived.');
+                setAnchorEl(null);
+                onClose();
+            })
+            .catch(error => {
+                customSnackbar.error('An error has happened. Please try again.');
+            })
+            .finally(() => setInProgress(false));
+    };
+
+    const handleReactivate = () => {
+        setInProgress(true);
+
+        db.collection('projects')
+            .doc(project.id)
+            .update({
+                archived: false
+            })
+            .then(() => {
+                customSnackbar.success('Project reactivated.');
+                setAnchorEl(null);
+                onClose();
+            })
+            .catch(error => {
+                customSnackbar.error('An error has happened. Please try again.');
+            })
+            .finally(() => setInProgress(false));
     };
 
     const handleDelete = () => {
@@ -74,9 +112,43 @@ function ProjectDialog(props) {
     };
 
     const handleSubmit = (values, { setSubmitting }) => {
-        // TODO: save to Firestore
-        customSnackbar.success(`Project ${updateMode ? 'updated' : 'created'}.`);
-        onClose();
+        setInProgress(true);
+
+        if (updateMode) {
+            db.collection('projects')
+                .doc(project.id)
+                .update({
+                    name: values.name
+                })
+                .then(() => {
+                    customSnackbar.success('Project updated.');
+                    onClose();
+                })
+                .catch(error => {
+                    customSnackbar.error('An error has happened. Please try again.');
+                })
+                .finally(() => setInProgress(false));
+        } else {
+            const currentUserRef = db.collection('users').doc(firebase.auth().currentUser.uid); // TODO: abstract it away along with db extensions
+            
+            db.collection('projects')
+                .add({
+                    archived: false,
+                    created_at: new Date(), // REVIEW
+                    name: values.name,
+                    owner_uid: currentUserRef,
+                    total_time: 0,
+                    time_entries: []
+                })
+                .then(() => {
+                    customSnackbar.success('Project created.');
+                    onClose();
+                })
+                .catch(error => {
+                    customSnackbar.error('An error has happened. Please try again.');
+                })
+                .finally(() => setInProgress(false));
+        }
     };
 
     return (
@@ -102,11 +174,26 @@ function ProjectDialog(props) {
                                         open={Boolean(anchorEl)}
                                         onClose={handleCloseMore}
                                     >
-                                        <MenuItem onClick={handleArchive}>
-                                            <Typography variant="inherit" style={{ paddingRight: theme.spacing(2) }}>
-                                                Archive
-                                            </Typography>
-                                        </MenuItem>
+                                        {project.archived ? (
+                                            <MenuItem onClick={handleReactivate}>
+                                                <Typography
+                                                    variant="inherit"
+                                                    style={{ paddingRight: theme.spacing(2) }}
+                                                >
+                                                    Reactivate
+                                                </Typography>
+                                            </MenuItem>
+                                        ) : (
+                                            <MenuItem onClick={handleArchive}>
+                                                <Typography
+                                                    variant="inherit"
+                                                    style={{ paddingRight: theme.spacing(2) }}
+                                                >
+                                                    Archive
+                                                </Typography>
+                                            </MenuItem>
+                                        )}
+
                                         <MenuItem
                                             onClick={() => {
                                                 setAnchorEl(null);
@@ -185,6 +272,7 @@ function ProjectDialog(props) {
                                     {updateMode ? 'Update' : 'Create'}
                                 </Button>
                             </DialogActions>
+                            {inProgress ? <LinearProgress color="secondary" /> : <Box height={4} />}
                         </>
                     )}
                 </Formik>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-import firebase from 'utils/firebase';
+import firebase, { db } from 'utils/firebase';
 
 const useDbUser = () => {
     const [userLoading, setUserLoading] = useState(true);
@@ -8,14 +8,14 @@ const useDbUser = () => {
     const [user, setUser] = useState(null);
 
     useEffect(() => {
-        const unsubscribe = firebase
-            .firestore()
+        const unsubscribe = db
             .collection('users')
             .doc(firebase.auth().currentUser.uid)
             .onSnapshot(
-                doc => {
-                    setUser(doc.data());
+                documentSnapshot => {
+                    setUser(documentSnapshot.data());
                     setUserLoading(false);
+                    console.info('%cuseDbUser: 1 document read', 'color: blue');
                 },
                 err => {
                     setUserError(err);

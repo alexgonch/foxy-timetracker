@@ -6,6 +6,7 @@ import 'firebase/firestore';
 
 import useFirebaseAuth from './useFirebaseAuth';
 import useDbUser from './useDbUser';
+import useDbProjects from './useDbProjects';
 
 const firebaseConfig = {
     apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -22,13 +23,19 @@ console.info('%cFirebase initialized', 'color: blue');
 // Firebase
 export default firebase;
 
+// Constants
+export const db = firebase.firestore();
+
 // Hooks
 export { useFirebaseAuth };
 export { useDbUser };
+export { useDbProjects };
 
 // Contexts
 export const AuthUserContext = React.createContext(null);
 export const DbUserContext = React.createContext(null);
+export const DbProjectsContext = React.createContext(null);
 
 // Helper functions
-export const generateCredential = password => firebase.auth.EmailAuthProvider.credential(firebase.auth().currentUser.email, password);
+export const generateCredential = password =>
+    firebase.auth.EmailAuthProvider.credential(firebase.auth().currentUser.email, password);
