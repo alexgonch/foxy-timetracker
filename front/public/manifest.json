@@ -8,12 +8,12 @@
             "sizes": "96x96"
         },
         {
-            "src": "fox192.png",
+            "src": "favicon192.png",
             "type": "image/png",
             "sizes": "192x192"
         },
         {
-            "src": "fox512.png",
+            "src": "favicon512.png",
             "type": "image/png",
             "sizes": "512x512"
         }
