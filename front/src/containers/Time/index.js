@@ -65,6 +65,7 @@ function Time(props) {
     };
 
     // TODO: pull out Tabs into a custom Calendar component
+    // TODO: make Tabs defined through a map of weekdays
     return (
         <Box p={2}>
             <Grid container justify="center">
