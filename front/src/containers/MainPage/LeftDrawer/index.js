@@ -3,7 +3,7 @@ import React from 'react';
 import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
 
-import DrawerContent from './content';
+import DrawerContent from './DrawerContent';
 
 // TODO: make swipeable
 function LeftDrawer(props) {

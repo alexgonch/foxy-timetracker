@@ -8,8 +8,8 @@ const useFirebaseAuth = () => {
 
     useEffect(() => {
         const unsubscribe = firebase.auth().onAuthStateChanged(authUser => {
-            setAuthUserLoading(false);
             authUser ? setAuthUser(authUser) : setAuthUser(null);
+            setAuthUserLoading(false);
         });
         return () => unsubscribe();
     }, []);

@@ -12,7 +12,7 @@ import { Formik, Form } from 'formik';
 
 import firebase from 'utils/firebase';
 import { signUpSchema } from 'utils/validationSchemas';
-import { CustomSnackbarContext } from 'components/CustomSnackbar';
+import { CustomSnackbarContext } from 'components/extensions/CustomSnackbar';
 
 // TODO: email link verification/sign-in https://firebase.google.com/docs/auth/web/email-link-auth
 // TODO: ToS and Privacy

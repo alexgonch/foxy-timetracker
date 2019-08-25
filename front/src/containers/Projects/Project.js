@@ -9,14 +9,13 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import Typography from '@material-ui/core/Typography';
 import { useTheme } from '@material-ui/core/styles';
 
-// TODO: in future, archived projects should go into a separate List and have an un-archive option as action
 function Project(props) {
     const { name, archived, created_at, total_time, onActionClick } = props;
     
     const theme = useTheme();
 
     return (
-        <Card style={{ height: '100%', opacity: archived ? 0.5 : 1 }}>
+        <Card style={{ height: '100%', opacity: archived ? 0.33 : 1 }}>
             <CardActionArea style={{ height: '100%' }} onClick={onActionClick}>
                 <CardContent>
                     <Typography variant="h6" noWrap>

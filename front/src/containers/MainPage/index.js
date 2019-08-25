@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/core/styles';
 
-import FullPageLoader from 'components/Loaders/FullPageLoader';
+import FullPageLoader from 'components/loaders/FullPageLoader';
 import NavBar from './NavBar';
 import LeftDrawer from './LeftDrawer';
 import AuthRoutes from 'navigation/AuthRoutes';

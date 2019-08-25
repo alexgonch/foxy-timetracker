@@ -4,23 +4,25 @@ import { blueGrey, deepOrange } from '@material-ui/core/colors';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider } from '@material-ui/styles';
 import { createMuiTheme } from '@material-ui/core/styles';
+import MomentUtils from '@date-io/moment';
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 
 import { useFirebaseAuth, AuthUserContext } from 'utils/firebase';
-import { CustomSnackbarProvider } from 'components/CustomSnackbar';
+import { CustomSnackbarProvider } from 'components/extensions/CustomSnackbar';
+import { InProgressContext } from 'utils/contexts/InProgressContext';
 
 import Multiplexer from 'navigation/Multiplexer';
 
 const lightTheme = createMuiTheme({
     palette: {
         type: 'light',
-        primary: {
-            ...blueGrey,
-            light: blueGrey[500],
-            main: blueGrey[700],
-            dark: blueGrey[900],
-            contrastText: '#fff'
-        },
-        secondary: deepOrange
+        primary: blueGrey,
+        secondary: {
+            ...deepOrange,
+            light: deepOrange[300],
+            main: deepOrange[500],
+            dark: deepOrange[700]
+        }
     },
     typography: {
         h6: {
@@ -32,14 +34,13 @@ const lightTheme = createMuiTheme({
 const darkTheme = createMuiTheme({
     palette: {
         type: 'dark',
-        primary: {
-            ...blueGrey,
-            light: blueGrey[500],
-            main: blueGrey[700],
-            dark: blueGrey[900],
-            contrastText: '#fff'
-        },
-        secondary: deepOrange
+        primary: blueGrey,
+        secondary: {
+            ...deepOrange,
+            light: deepOrange[300],
+            main: deepOrange[500],
+            dark: deepOrange[700]
+        }
     },
     typography: {
         h6: {
@@ -51,16 +52,28 @@ const darkTheme = createMuiTheme({
 // IDEA: global search bar
 // IDEA: multi-lang support
 
+// TODO: resolve issue with weeks always starting with Sundays in @material-ui/pickers
 // TODO: implement universal loader and connect to all Firebase actions
 // TODO: implement Auth-agnostic routes under navigation (ToS, Privacy, etc)
 function App() {
     const { authUserLoading, authUser } = useFirebaseAuth();
 
-    const [theme, setTheme] = useState(lightTheme);
-    const handleToggleNightMode = () => {
-        theme.palette.type === 'light' ? setTheme(darkTheme) : setTheme(lightTheme);
+    const [theme, setTheme] = useState(getInitialTheme(lightTheme, darkTheme)); // TODO: encapsulate outside of App.js
+    const [inProgress, setInProgress] = useState(false);
+
+    theme.toggleNightMode = () => {
+        if (theme.light()) {
+            setTheme(darkTheme);
+            localStorage['theme'] = 'dark';
+        } else {
+            setTheme(lightTheme);
+            localStorage['theme'] = 'light';
+        }
     };
-    theme.onToggleNightMode = handleToggleNightMode; // REVIEW: figure out a better way to encapsulate night mode logic
+    
+    theme.light = () => {
+        return theme.palette.type === 'light';
+    }
 
     console.log('theme', theme); // DEBUG
     // console.log('authUserLoading', authUserLoading); // DEBUG
@@ -69,13 +82,31 @@ function App() {
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
-            <AuthUserContext.Provider value={{ authUserLoading, authUser }}>
-                <CustomSnackbarProvider>
-                    <Multiplexer />
-                </CustomSnackbarProvider>
-            </AuthUserContext.Provider>
+            <MuiPickersUtilsProvider utils={MomentUtils}>
+                <AuthUserContext.Provider value={{ authUserLoading, authUser }}>
+                    <CustomSnackbarProvider>
+                        <InProgressContext.Provider value={[inProgress, setInProgress]}>
+                            <Multiplexer />
+                        </InProgressContext.Provider>
+                    </CustomSnackbarProvider>
+                </AuthUserContext.Provider>
+            </MuiPickersUtilsProvider>
         </ThemeProvider>
     );
 }
 
 export default App;
+
+function getInitialTheme(lightTheme, darkTheme) {
+    const localTheme = localStorage['theme'];
+    if (localTheme) {
+        if (localTheme === 'light') {
+            return lightTheme;
+        } else {
+            return darkTheme;
+        }
+    } else {
+        // Default
+        return lightTheme;
+    }
+}

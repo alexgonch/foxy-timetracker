@@ -9,7 +9,7 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogTitleWithMenu from 'components/Extensions/DialogTitleWithMenu';
+import DialogTitleWithMenu from 'components/extensions/DialogTitleWithMenu';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import TextField from '@material-ui/core/TextField';
@@ -18,16 +18,17 @@ import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import Chip from '@material-ui/core/Chip';
 import Button from '@material-ui/core/Button';
-import LinearProgress from '@material-ui/core/LinearProgress';
+import ButtonWithProgress from 'components/extensions/ButtonWithProgress';
 import { useTheme } from '@material-ui/core/styles';
 
 import { Formik, Form } from 'formik';
 
 import { projectSchema } from 'utils/validationSchemas';
 import { getInitialValues } from './functions';
-import { CustomSnackbarContext } from 'components/CustomSnackbar';
+import { CustomSnackbarContext } from 'components/extensions/CustomSnackbar';
+import { InProgressContext } from 'utils/contexts/InProgressContext';
 
-import ConfirmationDialog from 'components/Dialogs/ConfirmationDialog';
+import ConfirmationDialog from 'components/dialogs/ConfirmationDialog';
 
 // TODO: extend db with common API calls
 import firebase, { db } from 'utils/firebase';
@@ -41,9 +42,7 @@ function ProjectDialog(props) {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [deleteConfirmationDialogOpen, setDeleteConfirmationDialogOpen] = React.useState(false);
     const [tags, setTags] = useState(!_.isNil(project) ? project.tags : []); // TEMP: will be ignored for now
-    // IDEA: create "inProgress context" replacement
-    // IDEA: make a reusable CustomButton component that will consume "inProgress context" and disable itself when in progress
-    const [inProgress, setInProgress] = useState(false); // TODO: disable all buttons when true
+    const [, setInProgress] = useContext(InProgressContext);
 
     const theme = useTheme();
     const customSnackbar = useContext(CustomSnackbarContext);
@@ -96,14 +95,26 @@ function ProjectDialog(props) {
     };
 
     const handleDelete = () => {
-        // TODO
-        customSnackbar.success('Project deleted.');
-        setDeleteConfirmationDialogOpen(false);
-        setAnchorEl(null);
-        onClose();
+        setInProgress(true);
+
+        db.collection('projects')
+            .doc(project.id)
+            .delete()
+            .then(() => {
+                customSnackbar.success('Project deleted.');
+                setDeleteConfirmationDialogOpen(false);
+                setAnchorEl(null);
+                onClose();
+            })
+            .catch(error => {
+                customSnackbar.error('An error has happened. Please try again.');
+            })
+            .finally(() => setInProgress(false));
     };
 
     const handleAddTag = tag => {
+        if (!tag) return;
+
         setTags([...tags, ...tag.split(',').map(tag => tag.replace(/\s+/g, ' ').trim())]); // remove extra spaces
     };
 
@@ -130,15 +141,14 @@ function ProjectDialog(props) {
                 .finally(() => setInProgress(false));
         } else {
             const currentUserRef = db.collection('users').doc(firebase.auth().currentUser.uid); // TODO: abstract it away along with db extensions
-            
+
             db.collection('projects')
                 .add({
                     archived: false,
                     created_at: new Date(), // REVIEW
                     name: values.name,
                     owner_uid: currentUserRef,
-                    total_time: 0,
-                    time_entries: []
+                    total_time: 0
                 })
                 .then(() => {
                     customSnackbar.success('Project created.');
@@ -268,11 +278,10 @@ function ProjectDialog(props) {
                                 </Box>
                             </DialogContent>
                             <DialogActions>
-                                <Button color="secondary" onClick={submitForm}>
+                                <ButtonWithProgress color="secondary" onClick={submitForm}>
                                     {updateMode ? 'Update' : 'Create'}
-                                </Button>
+                                </ButtonWithProgress>
                             </DialogActions>
-                            {inProgress ? <LinearProgress color="secondary" /> : <Box height={4} />}
                         </>
                     )}
                 </Formik>

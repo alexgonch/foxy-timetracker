@@ -11,7 +11,7 @@ import { useTheme } from '@material-ui/core/styles';
 import { Formik, Form } from 'formik';
 
 import firebase from 'utils/firebase';
-import { CustomSnackbarContext } from 'components/CustomSnackbar';
+import { CustomSnackbarContext } from 'components/extensions/CustomSnackbar';
 
 import ForgotPasswordDialog from './ForgotPasswordDialog';
 

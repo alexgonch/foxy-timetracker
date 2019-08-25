@@ -9,35 +9,28 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Avatar from '@material-ui/core/Avatar';
+import CustomAvatar from 'components/extensions/CustomAvatar';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import { useTheme, makeStyles } from '@material-ui/core/styles';
+import { useTheme } from '@material-ui/core/styles';
 
 import firebase, { DbUserContext } from 'utils/firebase';
-
-const useStyles = makeStyles(theme => ({
-    selected: {
-        borderRight: `4px solid ${theme.palette.secondary.light}`
-    }
-}));
 
 function DrawerContent(props) {
     const { location, drawerWidth, onDrawerToggle } = props;
 
     const theme = useTheme();
-    const classes = useStyles();
-    
+
     const { user } = useContext(DbUserContext);
-    
+
     return (
         <>
             <List style={{ width: drawerWidth }}>
                 <ListItem>
                     <ListItemAvatar>
-                        <Avatar style={{ backgroundColor: theme.palette.secondary[500] }}>
+                        <CustomAvatar>
                             <PermContactCalendarIcon />
-                        </Avatar>
+                        </CustomAvatar>
                     </ListItemAvatar>
                     <ListItemText
                         primary={user.name}
@@ -50,7 +43,6 @@ function DrawerContent(props) {
             <List style={{ width: drawerWidth }}>
                 <ListItem
                     button
-                    classes={{ selected: classes.selected }}
                     selected={location.pathname === '/'}
                     component={Link}
                     to={'/'}
@@ -63,7 +55,6 @@ function DrawerContent(props) {
                 </ListItem>
                 <ListItem
                     button
-                    classes={{ selected: classes.selected }}
                     selected={location.pathname.startsWith('/time')}
                     component={Link}
                     to={'/time'}
@@ -76,7 +67,6 @@ function DrawerContent(props) {
                 </ListItem>
                 <ListItem
                     button
-                    classes={{ selected: classes.selected }}
                     selected={location.pathname === '/account'}
                     component={Link}
                     to={'/account'}

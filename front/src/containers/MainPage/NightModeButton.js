@@ -8,7 +8,7 @@ function NightModeButton(props) {
     const theme = useTheme();
     
     return (
-        <IconButton color="inherit" onClick={() => theme.onToggleNightMode()}>
+        <IconButton color="inherit" onClick={() => theme.toggleNightMode()}>
             <WbIncandescentIcon />
         </IconButton>
     );

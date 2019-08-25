@@ -3,8 +3,8 @@ import React from 'react';
 import Box from '@material-ui/core/Box';
 import Paper from '@material-ui/core/Paper';
 
-import LandingBackground from 'components/Backgrounds/LandingBackground';
-import LandingFormFrame from 'components/Decorations/LandingFormFrame';
+import LandingBackground from 'components/backgrounds/LandingBackground';
+import LandingFormFrame from 'components/decorations/LandingFormFrame';
 import NoAuthRoutes from 'navigation/NoAuthRoutes';
 
 function LandingPage(props) {

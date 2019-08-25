@@ -14,7 +14,7 @@ import { Formik, Form } from 'formik';
 
 import firebase from 'utils/firebase';
 import { forgotPasswordSchema } from 'utils/validationSchemas';
-import { CustomSnackbarContext } from 'components/CustomSnackbar';
+import { CustomSnackbarContext } from 'components/extensions/CustomSnackbar';
 
 function ForgotPasswordDialog(props) {
     const { open, onClose } = props;

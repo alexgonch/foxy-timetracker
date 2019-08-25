@@ -12,7 +12,7 @@ function LandingBackground(props) {
         <Box
             display="flex"
             height="100%"
-            style={{ background: theme.palette.secondary[50] }}
+            style={{ background: theme.palette.background.default }}
             {...rest}
         >
             {props.children}

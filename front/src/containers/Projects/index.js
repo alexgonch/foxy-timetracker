@@ -11,6 +11,7 @@ import ProjectDialog from './ProjectDialog';
 
 import { DbProjectsContext } from 'utils/firebase';
 
+// TODO: in future, archived projects should go into a separate List and have an un-archive option as action
 function Projects(props) {
     const [projectDialogOpen, setProjectDialogOpen] = useState(false);
     const [projectSelectedId, setProjectSelectedId] = useState(null);

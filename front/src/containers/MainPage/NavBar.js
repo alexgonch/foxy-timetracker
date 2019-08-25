@@ -28,7 +28,7 @@ function NavBar(props) {
 
     return (
         <AppBar id="appBar" position="static" className={classes.appBar}>
-            <Toolbar>
+            <Toolbar style={{ backgroundColor: theme.palette.primary[700] }}>
                 <Hidden mdUp>
                     <IconButton
                         edge="start"

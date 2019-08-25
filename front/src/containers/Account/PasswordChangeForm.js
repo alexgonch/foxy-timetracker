@@ -10,7 +10,7 @@ import { Formik, Form } from 'formik';
 
 import firebase, { generateCredential } from 'utils/firebase';
 import { passwordChangeSchema } from 'utils/validationSchemas';
-import { CustomSnackbarContext } from 'components/CustomSnackbar';
+import { CustomSnackbarContext } from 'components/extensions/CustomSnackbar';
 
 function PasswordChangeForm(props) {
     const theme = useTheme();
