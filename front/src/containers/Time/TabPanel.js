@@ -9,15 +9,15 @@ import TimeEntryEmptyState from './TimeEntryEmptyState';
 
 function TabPanel(props) {
     const { timeEntries } = props;
-
+    
     if (_.isEmpty(timeEntries)) {
         return <TimeEntryEmptyState />;
     }
 
     return (
         <List>
-            {timeEntries.map(timeEntry => {
-                return <TimeEntry key={timeEntry.id} {...timeEntry} />;
+            {timeEntries.map((timeEntry, index) => {
+                return <TimeEntry key={timeEntry.id} divider={index < timeEntries.length - 1} {...timeEntry} />;
             })}
         </List>
     );

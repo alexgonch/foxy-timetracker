@@ -4,10 +4,9 @@ import TimerIcon from '@material-ui/icons/Timer';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 
-// TODO: implement "new time entry" button
 function TimeEntryEmptyState(props) {
     return (
-        <Box display="flex" justifyContent="center" alignItems="center" height="100%">
+        <Box display="flex" justifyContent="center" alignItems="center" p={4}>
             <Box textAlign="center">
                 <TimerIcon />
                 <Typography variant="body2">No time logged.</Typography>

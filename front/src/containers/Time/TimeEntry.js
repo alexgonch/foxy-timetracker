@@ -1,29 +1,37 @@
 import React, { useState } from 'react';
 
+import LinesEllipsis from 'react-lines-ellipsis';
+import responsiveHOC from 'react-lines-ellipsis/lib/responsiveHOC';
+
 import TimerIcon from '@material-ui/icons/Timer';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import IconButton from '@material-ui/core/IconButton';
-import { useTheme } from '@material-ui/core/styles';
+import { useTheme, makeStyles } from '@material-ui/core/styles';
 
-import { getHoursFromSeconds, getMinutesFromSeconds } from 'utils/helpers/timeHelper';
+import TimeEntryTime from './TimeEntryTime';
+
+const ResponsiveEllipsis = responsiveHOC()(LinesEllipsis);
+
+const useStyles = makeStyles(theme => ({
+    divider: {
+        paddingLeft: theme.spacing(2),
+        paddingRight: theme.spacing(2)
+    },
+    secondaryAction: {
+        paddingRight: 60
+    }
+}));
 
 // TODO: implement markdown support
-function TimeEntryEmptyState(props) {
-    const { id, projectName, description, time } = props;
+function TimeEntry(props) {
+    const { divider, /*id,*/ projectName, description, time } = props;
 
     const [timerIsRunning, setTimerIsRunning] = useState(false);
 
     const theme = useTheme();
-
-    const getEntryTime = () => {
-        if (timerIsRunning) {
-            return `${getHoursFromSeconds(time)}h ${getMinutesFromSeconds(time)}m 0s`; // TODO: implement real-time timer logic
-        } else {
-            return `${getHoursFromSeconds(time)}h ${getMinutesFromSeconds(time)}m`;
-        }
-    };
+    const classes = useStyles();
 
     // TODO: it should only be possible to active timer on one entry at a time
     const handleToggleTimer = () => {
@@ -32,18 +40,17 @@ function TimeEntryEmptyState(props) {
     };
 
     return (
-        <ListItem>
+        <ListItem classes={{ divider: classes.divider, secondaryAction: classes.secondaryAction }} divider={divider}>
             <ListItemText
                 primary={
                     <span>
-                        {projectName} ·{' '}
-                        <span style={{ color: timerIsRunning ? theme.palette.secondary.main : '' }}>
-                            {getEntryTime()}
-                        </span>
+                        {projectName} · <TimeEntryTime timerIsRunning={timerIsRunning} time={time} />
                     </span>
                 }
-                secondary={description}
-                secondaryTypographyProps={{ style: { marginTop: theme.spacing(0.5) } }}
+                secondary={
+                    <ResponsiveEllipsis text={description} maxLine={3} ellipsis="..." trimRight basedOn="letters" />
+                }
+                secondaryTypographyProps={{ component: 'div', style: { marginTop: theme.spacing(0.5) } }}
             />
             <ListItemSecondaryAction>
                 <IconButton
@@ -59,4 +66,4 @@ function TimeEntryEmptyState(props) {
     );
 }
 
-export default TimeEntryEmptyState;
+export default TimeEntry;

@@ -10,10 +10,11 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import { makeStyles } from '@material-ui/core/styles';
+import { useTheme, makeStyles } from '@material-ui/core/styles';
 
 import TabLabel from './TabLabel';
 import TabPanel from './TabPanel';
+import NewTimeEntry from './NewTimeEntry';
 
 const useStyles = makeStyles(theme => ({
     muiTabsIndicator: props => ({
@@ -57,6 +58,7 @@ function Time(props) {
     const [dateSelected, setDateSelected] = useState(new Date());
     const tabIndex = moment(dateSelected).isoWeekday() - 1;
 
+    const theme = useTheme();
     const classes = useStyles({ tabIndex });
 
     const handleTabChange = (event, newIndex) => {
@@ -70,19 +72,19 @@ function Time(props) {
         <Box p={2}>
             <Grid container justify="center">
                 <Grid item xs={12} md={8} lg={6}>
-                    <DatePicker
-                        margin="normal"
-                        label=""
-                        format="dddd DD MMM"
-                        value={dateSelected}
-                        onChange={date => setDateSelected(date)}
-                    />
+                    <Paper style={{ display: 'inline-block', padding: theme.spacing(0), marginBottom: theme.spacing(2) }}>
+                        <DatePicker
+                            inputVariant="outlined" // TODO: override TextField and add Calendar icon input adornment
+                            label=""
+                            format="dddd DD MMM"
+                            value={dateSelected}
+                            onChange={date => setDateSelected(date)}
+                        />
+                    </Paper>
 
                     <Paper>
                         <Tabs
                             classes={{ indicator: classes.muiTabsIndicator }}
-                            // indicatorColor="primary"
-                            // textColor="primary"
                             value={tabIndex}
                             onChange={handleTabChange}
                         >
@@ -117,16 +119,21 @@ function Time(props) {
                         </Tabs>
                     </Paper>
                     <Paper className={classes.paper}>
-                        <SwipeableViews index={tabIndex} onChangeIndex={newIndex => handleTabChange(null, newIndex)}>
+                        <SwipeableViews
+                            animateHeight
+                            index={tabIndex}
+                            onChangeIndex={newIndex => handleTabChange(null, newIndex)}
+                        >
                             <TabPanel value={tabIndex} index={0} timeEntries={[]} />
                             <TabPanel value={tabIndex} index={1} timeEntries={[]} />
                             <TabPanel value={tabIndex} index={2} timeEntries={[]} />
                             <TabPanel value={tabIndex} index={3} timeEntries={[]} />
                             <TabPanel value={tabIndex} index={4} timeEntries={[]} />
-                            <TabPanel value={tabIndex} index={5} timeEntries={timeEntries} />
-                            <TabPanel value={tabIndex} index={6} timeEntries={[]} />
+                            <TabPanel value={tabIndex} index={5} timeEntries={[]} />
+                            <TabPanel value={tabIndex} index={6} timeEntries={timeEntries} />
                         </SwipeableViews>
                     </Paper>
+                    <NewTimeEntry />
                 </Grid>
             </Grid>
         </Box>

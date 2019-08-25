@@ -6,6 +6,7 @@
         "start": "react-scripts start",
         "build": "react-scripts build",
         "test": "react-scripts test",
+        "analyze": "source-map-explorer 'build/static/js/*.js'",
         "eslint-check": "eslint --print-config src/App.js | eslint-config-prettier-check",
         "eject": "react-scripts eject"
     },
@@ -21,10 +22,12 @@
         "moment": "^2.24.0",
         "react": "^16.9.0",
         "react-dom": "^16.9.0",
+        "react-lines-ellipsis": "^0.14.1",
         "react-router-dom": "^5.0.1",
         "react-scripts": "3.1.1",
         "react-swipeable-views": "^0.13.3",
         "recharts": "^1.7.1",
+        "source-map-explorer": "^2.0.1",
         "styled-components": "^4.3.2",
         "yup": "^0.27.0"
     },
