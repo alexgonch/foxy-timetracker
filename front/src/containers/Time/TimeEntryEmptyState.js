@@ -6,7 +6,7 @@ import Typography from '@material-ui/core/Typography';
 
 function TimeEntryEmptyState(props) {
     return (
-        <Box display="flex" justifyContent="center" alignItems="center" p={4}>
+        <Box display="flex" justifyContent="center" alignItems="center" height="100%" p={4}>
             <Box textAlign="center">
                 <TimerIcon />
                 <Typography variant="body2">No time logged.</Typography>

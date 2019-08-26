@@ -7,6 +7,7 @@ import 'firebase/firestore';
 import useFirebaseAuth from './useFirebaseAuth';
 import useDbUser from './useDbUser';
 import useDbProjects from './useDbProjects';
+import useDbTimeEntries from './useDbTimeEntries';
 
 const firebaseConfig = {
     apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -30,11 +31,13 @@ export const db = firebase.firestore();
 export { useFirebaseAuth };
 export { useDbUser };
 export { useDbProjects };
+export { useDbTimeEntries };
 
 // Contexts
 export const AuthUserContext = React.createContext(null);
 export const DbUserContext = React.createContext(null);
 export const DbProjectsContext = React.createContext(null);
+export const DbTimeEntriesContext = React.createContext(null);
 
 // Helper functions
 export const generateCredential = password =>

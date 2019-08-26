@@ -1,139 +1,54 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useMemo } from 'react';
 
+import _ from 'lodash';
 import moment from 'moment';
-
-import SwipeableViews from 'react-swipeable-views';
 
 import { DatePicker } from '@material-ui/pickers';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import { useTheme, makeStyles } from '@material-ui/core/styles';
+import { useTheme } from '@material-ui/core/styles';
 
-import TabLabel from './TabLabel';
-import TabPanel from './TabPanel';
-import NewTimeEntry from './NewTimeEntry';
+import Calendar from './Calendar';
 
-const useStyles = makeStyles(theme => ({
-    muiTabsIndicator: props => ({
-        backgroundColor: theme.light() ? theme.palette.primary.main : theme.palette.common.white,
-        borderBottomLeftRadius: props.tabIndex === 0 ? theme.shape.borderRadius : 'initial',
-        borderBottomRightRadius: props.tabIndex === 6 ? theme.shape.borderRadius : 'initial'
-    }),
-    muiTabRoot: {
-        flexGrow: 1,
-        minWidth: 'auto'
-    },
-    muiTabSelected: {
-        color: theme.light() ? theme.palette.primary.main : theme.palette.common.white
-    },
-    paper: {
-        marginTop: theme.spacing(2),
-        [theme.breakpoints.up('sm')]: {
-            padding: theme.spacing(2)
-        }
-    }
-}));
-
-// TEMP
-const timeEntries = [
-    {
-        id: 100,
-        projectName: 'Foxy TimeTracker',
-        time: 3600 * 1.5,
-        description:
-            'Here goes a fake description that everybody is so excited about. Cannot think of anything original. Lorem ipsum and whatever goes after. By the way, we need even more text here, so here it goes.'
-    },
-    {
-        id: 200,
-        projectName: 'Real-Time Doggity Map',
-        time: 3600 * 2.75,
-        description: 'Yet another fake text with not a lot of words in it.'
-    }
-];
+import { DbProjectsContext } from 'utils/firebase';
+import { DbTimeEntriesContext } from 'utils/firebase';
 
 function Time(props) {
     const [dateSelected, setDateSelected] = useState(new Date());
-    const tabIndex = moment(dateSelected).isoWeekday() - 1;
+
+    const { projects } = useContext(DbProjectsContext);
+    const { timeEntries } = useContext(DbTimeEntriesContext);
+
+    const timeEntriesPopulated = useMemo(() => populateTimeEntries(timeEntries, projects), [timeEntries, projects]);
+    const timeEntriesFiltered = useMemo(() => filterTimeEntries(timeEntriesPopulated, dateSelected), [
+        timeEntriesPopulated,
+        dateSelected
+    ]);
 
     const theme = useTheme();
-    const classes = useStyles({ tabIndex });
 
-    const handleTabChange = (event, newIndex) => {
-        const newDateSelected = moment(dateSelected).add(newIndex - tabIndex, 'days');
-        setDateSelected(newDateSelected);
-    };
-
-    // TODO: pull out Tabs into a custom Calendar component
-    // TODO: make Tabs defined through a map of weekdays
     return (
         <Box p={2}>
             <Grid container justify="center">
                 <Grid item xs={12} md={8} lg={6}>
-                    <Paper style={{ display: 'inline-block', padding: theme.spacing(0), marginBottom: theme.spacing(2) }}>
+                    <Paper
+                        style={{ display: 'inline-block', padding: theme.spacing(0), marginBottom: theme.spacing(2) }}
+                    >
                         <DatePicker
                             inputVariant="outlined" // TODO: override TextField and add Calendar icon input adornment
                             label=""
-                            format="dddd DD MMM"
+                            format="dddd [·] MMM DD"
                             value={dateSelected}
                             onChange={date => setDateSelected(date)}
                         />
                     </Paper>
 
-                    <Paper>
-                        <Tabs
-                            classes={{ indicator: classes.muiTabsIndicator }}
-                            value={tabIndex}
-                            onChange={handleTabChange}
-                        >
-                            <Tab
-                                classes={{ root: classes.muiTabRoot, selected: classes.muiTabSelected }}
-                                label={<TabLabel label="Monday" />}
-                            />
-                            <Tab
-                                classes={{ root: classes.muiTabRoot, selected: classes.muiTabSelected }}
-                                label={<TabLabel label="Tuesday" />}
-                            />
-                            <Tab
-                                classes={{ root: classes.muiTabRoot, selected: classes.muiTabSelected }}
-                                label={<TabLabel label="Wednesday" />}
-                            />
-                            <Tab
-                                classes={{ root: classes.muiTabRoot, selected: classes.muiTabSelected }}
-                                label={<TabLabel label="Thursday" />}
-                            />
-                            <Tab
-                                classes={{ root: classes.muiTabRoot, selected: classes.muiTabSelected }}
-                                label={<TabLabel label="Friday" />}
-                            />
-                            <Tab
-                                classes={{ root: classes.muiTabRoot, selected: classes.muiTabSelected }}
-                                label={<TabLabel label="Saturday" />}
-                            />
-                            <Tab
-                                classes={{ root: classes.muiTabRoot, selected: classes.muiTabSelected }}
-                                label={<TabLabel label="Sunday" />}
-                            />
-                        </Tabs>
-                    </Paper>
-                    <Paper className={classes.paper}>
-                        <SwipeableViews
-                            animateHeight
-                            index={tabIndex}
-                            onChangeIndex={newIndex => handleTabChange(null, newIndex)}
-                        >
-                            <TabPanel value={tabIndex} index={0} timeEntries={[]} />
-                            <TabPanel value={tabIndex} index={1} timeEntries={[]} />
-                            <TabPanel value={tabIndex} index={2} timeEntries={[]} />
-                            <TabPanel value={tabIndex} index={3} timeEntries={[]} />
-                            <TabPanel value={tabIndex} index={4} timeEntries={[]} />
-                            <TabPanel value={tabIndex} index={5} timeEntries={[]} />
-                            <TabPanel value={tabIndex} index={6} timeEntries={timeEntries} />
-                        </SwipeableViews>
-                    </Paper>
-                    <NewTimeEntry />
+                    <Calendar
+                        dateSelected={dateSelected}
+                        timeEntries={timeEntriesPopulated}
+                        setDateSelected={setDateSelected}
+                    />
                 </Grid>
             </Grid>
         </Box>
@@ -141,3 +56,27 @@ function Time(props) {
 }
 
 export default Time;
+
+function populateTimeEntries(timeEntries, projects) {
+    console.info(`%cpopulateTimeEntries: running`, 'color: green');
+    if (_.isNil(timeEntries) || _.isNil(projects)) {
+        return [];
+    }
+
+    return timeEntries.map(timeEntry => ({
+        ...timeEntry,
+        project: _.find(projects, p => p.id === timeEntry.project_uid.id)
+    }));
+}
+
+function filterTimeEntries(timeEntriesPopulated, dateSelected) {
+    console.info(`%cfilterTimeEntries: running`, 'color: green');
+    const weekStartDate = moment(dateSelected)
+        .startOf('isoWeek')
+        .format('YYYYMMDD');
+    const weekEndDate = moment(dateSelected)
+        .endOf('isoWeek')
+        .format('YYYYMMDD');
+
+    return _.filter(timeEntriesPopulated, t => t.date >= weekStartDate && t.date <= weekEndDate);
+}

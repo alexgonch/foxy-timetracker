@@ -17,7 +17,6 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import Chip from '@material-ui/core/Chip';
-import Button from '@material-ui/core/Button';
 import ButtonWithProgress from 'components/extensions/ButtonWithProgress';
 import { useTheme } from '@material-ui/core/styles';
 

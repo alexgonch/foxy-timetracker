@@ -8,7 +8,14 @@ import NavBar from './NavBar';
 import LeftDrawer from './LeftDrawer';
 import AuthRoutes from 'navigation/AuthRoutes';
 
-import { useDbUser, DbUserContext, useDbProjects, DbProjectsContext } from 'utils/firebase';
+import {
+    useDbUser,
+    DbUserContext,
+    useDbProjects,
+    DbProjectsContext,
+    useDbTimeEntries,
+    DbTimeEntriesContext
+} from 'utils/firebase';
 
 const drawerWidth = 240;
 
@@ -27,6 +34,7 @@ function MainPage(props) {
     const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
     const { userLoading, userError, user } = useDbUser();
     const { projectsLoading, projectsError, projects } = useDbProjects();
+    const { timeEntriesLoading, timeEntriesError, timeEntries } = useDbTimeEntries();
 
     function handleDrawerToggle() {
         setMobileDrawerOpen(!mobileDrawerOpen);
@@ -34,25 +42,30 @@ function MainPage(props) {
 
     console.log('user', user); // DEBUG
     console.log('projects', projects); // DEBUG
+    console.log('timeEntries', timeEntries); // DEBUG
 
-    if (userLoading || projectsLoading) {
+    if (userLoading || projectsLoading || timeEntriesLoading) {
         return <FullPageLoader />;
     }
 
     return (
         <DbUserContext.Provider value={{ userLoading, userError, user }}>
             <DbProjectsContext.Provider value={{ projectsLoading, projectsError, projects }}>
-                <Box height="100%">
-                    <LeftDrawer
-                        mobileOpen={mobileDrawerOpen}
-                        drawerWidth={drawerWidth}
-                        onDrawerToggle={handleDrawerToggle}
-                    />
-                    <NavBar drawerWidth={drawerWidth} onDrawerToggle={handleDrawerToggle} />
-                    <Box className={classes.routerBox}>
-                        <AuthRoutes />
+                <DbTimeEntriesContext.Provider
+                    value={{ timeEntriesLoading, timeEntriesError, timeEntries }}
+                >
+                    <Box height="100%">
+                        <LeftDrawer
+                            mobileOpen={mobileDrawerOpen}
+                            drawerWidth={drawerWidth}
+                            onDrawerToggle={handleDrawerToggle}
+                        />
+                        <NavBar drawerWidth={drawerWidth} onDrawerToggle={handleDrawerToggle} />
+                        <Box className={classes.routerBox}>
+                            <AuthRoutes />
+                        </Box>
                     </Box>
-                </Box>
+                </DbTimeEntriesContext.Provider>
             </DbProjectsContext.Provider>
         </DbUserContext.Provider>
     );
