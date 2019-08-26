@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 
 import moment from 'moment';
 
@@ -27,10 +27,7 @@ const useStyles = makeStyles(theme => ({
         color: theme.light() ? theme.palette.primary.main : theme.palette.common.white
     },
     paper: {
-        marginTop: theme.spacing(2),
-        [theme.breakpoints.up('sm')]: {
-            padding: theme.spacing(2)
-        }
+        marginTop: theme.spacing(2)
     }
 }));
 
@@ -42,16 +39,23 @@ function Calendar(props) {
 
     const tabIndex = moment(dateSelected).isoWeekday() - 1;
 
-    // let swipeableActions;
-    // useEffect(() => {
-    //     function updateSwipeableHeight() {
-    //         swipeableActions.updateHeight();
-    //         console.log('*** RESIZED ***');
-    //     }
-    //
-    //     window.addEventListener('resize', updateSwipeableHeight);
-    //     return () => window.removeEventListener('resize', updateSwipeableHeight);
-    // }, [swipeableActions]);
+    // FIXME BUG: go to Aug 25, then back to Aug 26 -> height is not updated
+    let swipeableActions;
+    useEffect(() => {
+        // HACK: this effect listens for browser resize events and updates swipeable height whenever one is issued
+        function updateSwipeableHeight() {
+            swipeableActions.updateHeight();
+        }
+
+        window.addEventListener('resize', updateSwipeableHeight);
+        return () => window.removeEventListener('resize', updateSwipeableHeight);
+    }, [swipeableActions]);
+    useEffect(() => {
+        // HACK: this effect listens for timeEntries changes and issues a delayed swipeable height update when a change occurs
+        console.log('Second effect is running');
+        const timeout = setTimeout(() => (swipeableActions ? swipeableActions.updateHeight() : undefined), 0);
+        return () => clearTimeout(timeout);
+    }, [swipeableActions, timeEntries]);
 
     const classes = useStyles({ tabIndex });
 
@@ -66,7 +70,7 @@ function Calendar(props) {
                 <Tabs classes={{ indicator: classes.muiTabsIndicator }} value={tabIndex} onChange={handleTabChange}>
                     {weekdays.map(weekday => (
                         <Tab
-							key={weekday}
+                            key={weekday}
                             classes={{ root: classes.muiTabRoot, selected: classes.muiTabSelected }}
                             label={<TabLabel label={weekday} />}
                         />
@@ -75,23 +79,25 @@ function Calendar(props) {
             </Paper>
             <Paper className={classes.paper}>
                 <SwipeableViews
-                    // animateHeight
+                    animateHeight
                     index={tabIndex}
-                    // action={actions => {
-                    //     swipeableActions = actions;
-                    // }}
+                    action={actions => {
+                        swipeableActions = actions;
+                    }}
                     onChangeIndex={newIndex => handleTabChange(null, newIndex)}
                 >
                     {weekdays.map((weekday, index) => {
-                        const dateString = moment(dateSelected)
-                            .add(index - tabIndex, 'days')
-                            .format('YYYYMMDD');
+                        const date = parseInt(
+                            moment(dateSelected)
+                                .add(index - tabIndex, 'days')
+                                .format('YYYYMMDD')
+                        );
                         return (
                             <TabPanel
-								key={weekday}
+                                key={weekday}
                                 value={tabIndex}
                                 index={index}
-                                timeEntries={timeEntries.filter(t => t.date === dateString)}
+                                timeEntries={timeEntries.filter(t => t.date === date)}
                             />
                         );
                     })}

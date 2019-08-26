@@ -1,4 +1,5 @@
-import React, { useState, useContext, useMemo } from 'react';
+import React, { useState, useEffect, useContext, useMemo } from 'react';
+import { withRouter } from 'react-router-dom';
 
 import _ from 'lodash';
 import moment from 'moment';
@@ -9,13 +10,20 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import { useTheme } from '@material-ui/core/styles';
 
+import CustomDatePickerInput from 'components/extensions/CustomDatePickerInput';
 import Calendar from './Calendar';
 
 import { DbProjectsContext } from 'utils/firebase';
 import { DbTimeEntriesContext } from 'utils/firebase';
 
 function Time(props) {
-    const [dateSelected, setDateSelected] = useState(new Date());
+    const { history, match } = props;
+
+    const [dateSelected, setDateSelected] = useState(match.params.date ? match.params.date : new Date());
+
+    useEffect(() => {
+        history.push(`/time/${moment(dateSelected).format('YYYYMMDD')}`);
+    }, [history, dateSelected]);
 
     const { projects } = useContext(DbProjectsContext);
     const { timeEntries } = useContext(DbTimeEntriesContext);
@@ -37,16 +45,18 @@ function Time(props) {
                     >
                         <DatePicker
                             inputVariant="outlined" // TODO: override TextField and add Calendar icon input adornment
+                            autoOk
                             label=""
                             format="dddd [·] MMM DD"
                             value={dateSelected}
+                            TextFieldComponent={CustomDatePickerInput}
                             onChange={date => setDateSelected(date)}
                         />
                     </Paper>
 
                     <Calendar
                         dateSelected={dateSelected}
-                        timeEntries={timeEntriesPopulated}
+                        timeEntries={timeEntriesFiltered}
                         setDateSelected={setDateSelected}
                     />
                 </Grid>
@@ -55,7 +65,7 @@ function Time(props) {
     );
 }
 
-export default Time;
+export default withRouter(Time);
 
 function populateTimeEntries(timeEntries, projects) {
     console.info(`%cpopulateTimeEntries: running`, 'color: green');
@@ -71,12 +81,16 @@ function populateTimeEntries(timeEntries, projects) {
 
 function filterTimeEntries(timeEntriesPopulated, dateSelected) {
     console.info(`%cfilterTimeEntries: running`, 'color: green');
-    const weekStartDate = moment(dateSelected)
-        .startOf('isoWeek')
-        .format('YYYYMMDD');
-    const weekEndDate = moment(dateSelected)
-        .endOf('isoWeek')
-        .format('YYYYMMDD');
+    const weekStartDate = parseInt(
+        moment(dateSelected)
+            .startOf('isoWeek')
+            .format('YYYYMMDD')
+    );
+    const weekEndDate = parseInt(
+        moment(dateSelected)
+            .endOf('isoWeek')
+            .format('YYYYMMDD')
+    );
 
     return _.filter(timeEntriesPopulated, t => t.date >= weekStartDate && t.date <= weekEndDate);
 }

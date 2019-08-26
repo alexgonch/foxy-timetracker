@@ -18,7 +18,7 @@ function TimeEntryTime(props) {
     const minutes = getMinutesFromSeconds(time)
         .toString()
         .padStart(2, 0);
-    const seconds = (0).toString().padStart(2, 0);
+    const seconds = (time % 60).toString().padStart(2, 0);
 
     if (timerIsRunning) {
         return (

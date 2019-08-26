@@ -51,9 +51,7 @@ function MainPage(props) {
     return (
         <DbUserContext.Provider value={{ userLoading, userError, user }}>
             <DbProjectsContext.Provider value={{ projectsLoading, projectsError, projects }}>
-                <DbTimeEntriesContext.Provider
-                    value={{ timeEntriesLoading, timeEntriesError, timeEntries }}
-                >
+                <DbTimeEntriesContext.Provider value={{ timeEntriesLoading, timeEntriesError, timeEntries }}>
                     <Box height="100%">
                         <LeftDrawer
                             mobileOpen={mobileDrawerOpen}

@@ -57,7 +57,7 @@ function DrawerContent(props) {
                     button
                     selected={location.pathname.startsWith('/time')}
                     component={Link}
-                    to={'/time'}
+                    to={location.pathname.startsWith('/time') ? location.pathname : '/time'} // repeated clicks won't change URL
                     onClick={onDrawerToggle}
                 >
                     <ListItemIcon>

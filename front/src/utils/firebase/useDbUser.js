@@ -19,6 +19,7 @@ const useDbUser = () => {
                 },
                 err => {
                     setUserError(err);
+                    console.error(err);
                 }
             );
         return () => {

@@ -70,10 +70,10 @@ function App() {
             localStorage['theme'] = 'light';
         }
     };
-    
+
     theme.light = () => {
         return theme.palette.type === 'light';
-    }
+    };
 
     console.log('theme', theme); // DEBUG
     // console.log('authUserLoading', authUserLoading); // DEBUG

@@ -11,12 +11,24 @@ import TimeEntryTime from './TimeEntryTime';
 import ResponsiveDescription from './ResponsiveDescription';
 
 const useStyles = makeStyles(theme => ({
-    divider: {
-        paddingLeft: theme.spacing(2),
-        paddingRight: theme.spacing(2)
+    button: {
+        paddingTop: theme.spacing(2),
+        paddingBottom: theme.spacing(2),
+        [theme.breakpoints.up('sm')]: {
+            paddingLeft: theme.spacing(4),
+            paddingRight: theme.spacing(4)
+        }
     },
     secondaryAction: {
-        paddingRight: 60
+        paddingRight: 48 + 4 * 2,
+        [theme.breakpoints.up('sm')]: {
+            paddingRight: 48 + 4 * 2 + theme.spacing(2) + 12
+        }
+    },
+    edgeEnd: {
+        [theme.breakpoints.up('sm')]: {
+            marginRight: 12
+        }
     }
 }));
 
@@ -35,23 +47,26 @@ function TimeEntry(props) {
     };
 
     return (
-        <ListItem classes={{ divider: classes.divider, secondaryAction: classes.secondaryAction }} divider={divider} button>
+        <ListItem
+            classes={{ button: classes.button, secondaryAction: classes.secondaryAction }}
+            divider={divider}
+            button
+        >
             <ListItemText
                 primary={
                     <span>
                         {project.name} · <TimeEntryTime timerIsRunning={timerIsRunning} time={time} />
                     </span>
                 }
-                secondary={
-                    <ResponsiveDescription text={description} />
-                }
+                secondary={<ResponsiveDescription text={description} />}
                 secondaryTypographyProps={{ style: { marginTop: theme.spacing(0.5) } }}
             />
             <ListItemSecondaryAction>
                 <IconButton
+                    classes={{ edgeEnd: classes.edgeEnd }}
                     color={timerIsRunning ? 'secondary' : 'default'}
                     edge="end"
-                    aria-label="edit entry"
+                    aria-label="start timer on entry"
                     onClick={handleToggleTimer}
                 >
                     <TimerIcon />

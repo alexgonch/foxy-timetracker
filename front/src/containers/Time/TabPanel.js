@@ -15,7 +15,7 @@ function TabPanel(props) {
     }
 
     return (
-        <List>
+        <List disablePadding>
             {timeEntries.map((timeEntry, index) => {
                 return <TimeEntry key={timeEntry.id} divider={index < timeEntries.length - 1} {...timeEntry} />;
             })}

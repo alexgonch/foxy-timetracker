@@ -1,11 +1,9 @@
-import React, { useState, useContext } from 'react';
+import React, { useContext } from 'react';
 
 import _ from 'lodash';
 
-import AddCircleIcon from '@material-ui/icons/AddCircle';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -13,10 +11,6 @@ import DialogTitleWithMenu from 'components/extensions/DialogTitleWithMenu';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import TextField from '@material-ui/core/TextField';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
-import Chip from '@material-ui/core/Chip';
 import ButtonWithProgress from 'components/extensions/ButtonWithProgress';
 import { useTheme } from '@material-ui/core/styles';
 
@@ -40,7 +34,6 @@ function ProjectDialog(props) {
 
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [deleteConfirmationDialogOpen, setDeleteConfirmationDialogOpen] = React.useState(false);
-    const [tags, setTags] = useState(!_.isNil(project) ? project.tags : []); // TEMP: will be ignored for now
     const [, setInProgress] = useContext(InProgressContext);
 
     const theme = useTheme();
@@ -109,16 +102,6 @@ function ProjectDialog(props) {
                 customSnackbar.error('An error has happened. Please try again.');
             })
             .finally(() => setInProgress(false));
-    };
-
-    const handleAddTag = tag => {
-        if (!tag) return;
-
-        setTags([...tags, ...tag.split(',').map(tag => tag.replace(/\s+/g, ' ').trim())]); // remove extra spaces
-    };
-
-    const handleRemoveTag = tag => {
-        setTags(_.without(tags, tag));
     };
 
     const handleSubmit = (values, { setSubmitting }) => {
@@ -237,44 +220,7 @@ function ProjectDialog(props) {
                                         onChange={handleChange}
                                         onBlur={handleBlur}
                                     />
-                                    <TextField
-                                        fullWidth
-                                        variant="outlined"
-                                        name="tag"
-                                        label="Add tags"
-                                        value={values.tag}
-                                        error={!_.isEmpty(errors.tag)}
-                                        helperText={errors.tag}
-                                        style={{ marginTop: theme.spacing(2) }}
-                                        InputProps={{
-                                            endAdornment: (
-                                                <InputAdornment position="end">
-                                                    <Divider orientation="vertical" style={{ height: 28, margin: 4 }} />
-                                                    <IconButton
-                                                        onClick={() => {
-                                                            handleAddTag(values.tag, handleChange);
-                                                            setFieldValue('tag', '');
-                                                        }}
-                                                    >
-                                                        <AddCircleIcon />
-                                                    </IconButton>
-                                                </InputAdornment>
-                                            )
-                                        }}
-                                        onChange={handleChange}
-                                        onBlur={handleBlur}
-                                    />
                                 </Form>
-                                <Box marginTop={1}>
-                                    {tags.map(tag => (
-                                        <Chip
-                                            key={tag}
-                                            label={tag}
-                                            style={{ margin: theme.spacing(0.5) }}
-                                            onDelete={() => handleRemoveTag(tag)}
-                                        />
-                                    ))}
-                                </Box>
                             </DialogContent>
                             <DialogActions>
                                 <ButtonWithProgress color="secondary" onClick={submitForm}>

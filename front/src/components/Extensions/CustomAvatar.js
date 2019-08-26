@@ -5,15 +5,14 @@ import { useTheme } from '@material-ui/core/styles';
 
 function CustomAvatar(props) {
     const { children } = props;
-	
-	const theme = useTheme();
+
+    const theme = useTheme();
 
     return (
         <Avatar
             style={{
-                backgroundColor:
-                    theme.palette.type === 'light' ? theme.palette.primary[500] : theme.palette.common.white,
-                color: theme.palette.type === 'light' ? theme.palette.common.white : theme.palette.background.paper
+                backgroundColor: theme.light() ? theme.palette.primary[500] : theme.palette.common.white,
+                color: theme.light() ? theme.palette.common.white : theme.palette.background.paper
             }}
         >
             {children}

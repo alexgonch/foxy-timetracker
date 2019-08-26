@@ -27,6 +27,7 @@ const useDbProjects = () => {
                 },
                 err => {
                     setProjectsError(err);
+                    console.error(err);
                 }
             );
         return () => {

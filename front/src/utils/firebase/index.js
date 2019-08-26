@@ -21,6 +21,24 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 console.info('%cFirebase initialized', 'color: blue');
 
+// TODO: test and debug
+// firebase
+//     .firestore()
+//     .enablePersistence()
+//     .catch(err => {
+//         console.error('%cFirestore persistence failed', 'color: red', err);
+//         if (err.code === 'failed-precondition') {
+//             // Multiple tabs open, persistence can only be enabled
+//             // in one tab at a a time.
+//             // TODO
+//         } else if (err.code === 'unimplemented') {
+//             // The current browser does not support all of the
+//             // features required to enable persistence
+//             // TODO
+//         }
+//     });
+// Subsequent queries will use persistence, if it was enabled successfully
+
 // Firebase
 export default firebase;
 

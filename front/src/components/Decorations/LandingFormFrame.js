@@ -5,30 +5,29 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import { useTheme } from '@material-ui/core/styles';
 
-// import { ReactComponent as FoxLogo } from 'resources/images/foxy-timetracker-logo-optimized.svg';
 import FoxyTimeTrackerLogo from 'resources/images/foxy-timetracker-logo-512.png';
+import FoxyTimeTrackerLogoWhite from 'resources/images/foxy-timetracker-logo-white-512.png';
 
-// TODO: generate a second image for night mode usage (replace blueGrey with white)
 // Surrounds child form with Foxy branding
 function LandingFormFrame(props) {
     const theme = useTheme();
 
-    const colors =
-        theme.palette.type === 'light'
-            ? {
-                  text: deepOrange[700],
-                  accent: blueGrey[600]
-              }
-            : {
-                  text: deepOrange[500],
-                  accent: theme.palette.grey[50]
-              };
+    const colors = theme.light()
+        ? {
+              text: deepOrange[700],
+              accent: blueGrey[600]
+          }
+        : {
+              text: deepOrange[500],
+              accent: theme.palette.grey[50]
+          };
+
+    const logo = theme.light() ? FoxyTimeTrackerLogo : FoxyTimeTrackerLogoWhite;
 
     return (
         <Box maxWidth={360} p={2}>
             <Box display="flex" alignItems="center" flexDirection="column">
-                {/* <FoxLogo width={64} /> */}
-                <img src={FoxyTimeTrackerLogo} alt="Foxy TimeTracker logo" style={{ width: 64 }} />
+                <img src={logo} alt="Foxy TimeTracker logo" style={{ width: 64 }} />
                 <Typography
                     variant="h4"
                     style={{
