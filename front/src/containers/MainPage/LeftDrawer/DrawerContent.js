@@ -14,6 +14,8 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import { useTheme } from '@material-ui/core/styles';
 
+import Timer from './Timer';
+
 import firebase, { DbUserContext } from 'utils/firebase';
 
 function DrawerContent(props) {
@@ -26,7 +28,7 @@ function DrawerContent(props) {
     return (
         <>
             <List style={{ width: drawerWidth }}>
-                <ListItem>
+                <ListItem button>
                     <ListItemAvatar>
                         <CustomAvatar>
                             <PermContactCalendarIcon />
@@ -34,9 +36,9 @@ function DrawerContent(props) {
                     </ListItemAvatar>
                     <ListItemText
                         primary={user.name}
-                        secondary="Freelancer"
-                        primaryTypographyProps={{ noWrap: true, component: 'p' }}
-                        secondaryTypographyProps={{ noWrap: true }}
+                        secondary={<Timer />} // TODO: clicking should lead to corresponding Time Entry
+                        primaryTypographyProps={{ noWrap: true }}
+                        secondaryTypographyProps={{ component: 'div' }}
                     />
                 </ListItem>
             </List>

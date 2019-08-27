@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext, useMemo } from 'react';
 import { withRouter } from 'react-router-dom';
 
-import _ from 'lodash';
 import moment from 'moment';
 
 import { DatePicker } from '@material-ui/pickers';
@@ -15,6 +14,9 @@ import Calendar from './Calendar';
 
 import { DbProjectsContext } from 'utils/firebase';
 import { DbTimeEntriesContext } from 'utils/firebase';
+import { filterTimeEntries, populateTimeEntries } from './functions';
+
+const weekFormat = 'GGGG-WW';
 
 function Time(props) {
     const { history, match } = props;
@@ -28,10 +30,14 @@ function Time(props) {
     const { projects } = useContext(DbProjectsContext);
     const { timeEntries } = useContext(DbTimeEntriesContext);
 
-    const timeEntriesPopulated = useMemo(() => populateTimeEntries(timeEntries, projects), [timeEntries, projects]);
-    const timeEntriesFiltered = useMemo(() => filterTimeEntries(timeEntriesPopulated, dateSelected), [
-        timeEntriesPopulated,
-        dateSelected
+    const weekSelected = moment(dateSelected).format(weekFormat);
+    const timeEntriesFiltered = useMemo(() => filterTimeEntries(timeEntries, weekSelected, weekFormat), [
+        timeEntries,
+        weekSelected
+    ]);
+    const timeEntriesPopulated = useMemo(() => populateTimeEntries(timeEntriesFiltered, projects), [
+        timeEntriesFiltered,
+        projects
     ]);
 
     const theme = useTheme();
@@ -39,12 +45,10 @@ function Time(props) {
     return (
         <Box p={2}>
             <Grid container justify="center">
-                <Grid item xs={12} md={8} lg={6}>
-                    <Paper
-                        style={{ display: 'inline-block', padding: theme.spacing(0), marginBottom: theme.spacing(2) }}
-                    >
+                <Grid item xs={12} md={8} xl={6}>
+                    <Paper style={{ display: 'inline-block', marginBottom: theme.spacing(2) }}>
                         <DatePicker
-                            inputVariant="outlined" // TODO: override TextField and add Calendar icon input adornment
+                            inputVariant="outlined"
                             autoOk
                             label=""
                             format="dddd [·] MMM DD"
@@ -56,7 +60,7 @@ function Time(props) {
 
                     <Calendar
                         dateSelected={dateSelected}
-                        timeEntries={timeEntriesFiltered}
+                        timeEntries={timeEntriesPopulated}
                         setDateSelected={setDateSelected}
                     />
                 </Grid>
@@ -66,31 +70,3 @@ function Time(props) {
 }
 
 export default withRouter(Time);
-
-function populateTimeEntries(timeEntries, projects) {
-    console.info(`%cpopulateTimeEntries: running`, 'color: green');
-    if (_.isNil(timeEntries) || _.isNil(projects)) {
-        return [];
-    }
-
-    return timeEntries.map(timeEntry => ({
-        ...timeEntry,
-        project: _.find(projects, p => p.id === timeEntry.project_uid.id)
-    }));
-}
-
-function filterTimeEntries(timeEntriesPopulated, dateSelected) {
-    console.info(`%cfilterTimeEntries: running`, 'color: green');
-    const weekStartDate = parseInt(
-        moment(dateSelected)
-            .startOf('isoWeek')
-            .format('YYYYMMDD')
-    );
-    const weekEndDate = parseInt(
-        moment(dateSelected)
-            .endOf('isoWeek')
-            .format('YYYYMMDD')
-    );
-
-    return _.filter(timeEntriesPopulated, t => t.date >= weekStartDate && t.date <= weekEndDate);
-}

@@ -9,6 +9,9 @@ import { makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles(theme => ({
     notchedOutline: {
         border: 'none'
+    },
+    inputBase: {
+        marginRight: -32
     }
 }));
 
@@ -17,7 +20,7 @@ function CustomDatePickerInput(props) {
 
     return (
         <OutlinedInput
-            classes={{ notchedOutline: classes.notchedOutline }}
+            classes={{ notchedOutline: classes.notchedOutline, input: classes.inputBase }}
             type="text"
             readOnly
             id={props.id}

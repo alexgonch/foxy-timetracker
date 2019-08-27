@@ -26,7 +26,6 @@ import ConfirmationDialog from 'components/dialogs/ConfirmationDialog';
 // TODO: extend db with common API calls
 import firebase, { db } from 'utils/firebase';
 
-// TODO: if we carry on with tags, we should implement an Autocomplete for tags input
 function ProjectDialog(props) {
     const { open, project, onClose } = props;
 
@@ -63,6 +62,7 @@ function ProjectDialog(props) {
             })
             .catch(error => {
                 customSnackbar.error('An error has happened. Please try again.');
+                console.error(error);
             })
             .finally(() => setInProgress(false));
     };
@@ -82,6 +82,7 @@ function ProjectDialog(props) {
             })
             .catch(error => {
                 customSnackbar.error('An error has happened. Please try again.');
+                console.error(error);
             })
             .finally(() => setInProgress(false));
     };
@@ -100,6 +101,7 @@ function ProjectDialog(props) {
             })
             .catch(error => {
                 customSnackbar.error('An error has happened. Please try again.');
+                console.error(error);
             })
             .finally(() => setInProgress(false));
     };
@@ -119,18 +121,19 @@ function ProjectDialog(props) {
                 })
                 .catch(error => {
                     customSnackbar.error('An error has happened. Please try again.');
+                    console.error(error);
                 })
                 .finally(() => setInProgress(false));
         } else {
-            const currentUserRef = db.collection('users').doc(firebase.auth().currentUser.uid); // TODO: abstract it away along with db extensions
+            const currentUserRef = db.collection('users').doc(firebase.auth().currentUser.uid);
 
             db.collection('projects')
                 .add({
+                    created_at: new Date(),
                     archived: false,
-                    created_at: new Date(), // REVIEW
                     name: values.name,
-                    owner_uid: currentUserRef,
-                    total_time: 0
+                    total_time: 0,
+                    owner_uid: currentUserRef
                 })
                 .then(() => {
                     customSnackbar.success('Project created.');
@@ -138,6 +141,7 @@ function ProjectDialog(props) {
                 })
                 .catch(error => {
                     customSnackbar.error('An error has happened. Please try again.');
+                    console.error(error);
                 })
                 .finally(() => setInProgress(false));
         }
@@ -212,7 +216,7 @@ function ProjectDialog(props) {
                                         fullWidth
                                         variant="outlined"
                                         name="name"
-                                        label="Project name"
+                                        label="Name"
                                         value={values.name}
                                         error={!_.isEmpty(errors.name)}
                                         helperText={errors.name}

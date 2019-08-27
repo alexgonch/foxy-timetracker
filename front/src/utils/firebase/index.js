@@ -21,7 +21,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 console.info('%cFirebase initialized', 'color: blue');
 
-// TODO: test and debug
+// Subsequent queries will use persistence, if it was enabled successfully
 firebase
     .firestore()
     .enablePersistence()
@@ -37,7 +37,6 @@ firebase
             // TODO
         }
     });
-// Subsequent queries will use persistence, if it was enabled successfully
 
 // Firebase
 export default firebase;

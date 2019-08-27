@@ -33,7 +33,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function TimeEntry(props) {
-    const { divider, /*id,*/ project, description, time } = props;
+    const { divider, id, project, description, time, onActionClick } = props;
 
     const [timerIsRunning, setTimerIsRunning] = useState(false);
 
@@ -43,6 +43,7 @@ function TimeEntry(props) {
     // TODO: it should only be possible to active timer on one entry at a time
     const handleToggleTimer = () => {
         // TODO: implement db call with id -> store in user
+        // TODO: update swipeable height
         setTimerIsRunning(!timerIsRunning);
     };
 
@@ -51,6 +52,7 @@ function TimeEntry(props) {
             classes={{ button: classes.button, secondaryAction: classes.secondaryAction }}
             divider={divider}
             button
+            onClick={() => onActionClick(id)}
         >
             <ListItemText
                 primary={

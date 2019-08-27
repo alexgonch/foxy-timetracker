@@ -3,9 +3,16 @@ import React from 'react';
 import _ from 'lodash';
 
 import Hidden from '@material-ui/core/Hidden';
+import { useTheme } from '@material-ui/core/styles';
 
 function ResponsiveDescription(props) {
     const { text } = props;
+
+    const theme = useTheme();
+
+    if (_.isEmpty(text)) {
+        return <span style={{ color: theme.palette.text.disabled }}>No description.</span>;
+    }
 
     return (
         <>

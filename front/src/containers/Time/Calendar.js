@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 
 import moment from 'moment';
+import _ from 'lodash';
 
-import SwipeableViews from 'react-swipeable-views';
+import SwipeableViews from 'resources/temp_packages/SwipeableViews';
 
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
@@ -12,6 +13,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import TabLabel from './TabLabel';
 import TabPanel from './TabPanel';
 import NewTimeEntry from './NewTimeEntry';
+import TimeEntryDialog from './TimeEntryDialog';
 
 const useStyles = makeStyles(theme => ({
     muiTabsIndicator: props => ({
@@ -36,34 +38,31 @@ const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Satur
 
 function Calendar(props) {
     const { timeEntries, dateSelected, setDateSelected } = props;
+    
+    const [timeEntryDialogOpen, setTimeEntryDialogOpen] = useState(false);
+    const [timeEntrySelectedId, setTimeEntrySelectedId] = useState(null);
 
     const tabIndex = moment(dateSelected).isoWeekday() - 1;
 
-    // FIXME BUG: go to Aug 25, then back to Aug 26 -> height is not updated
-    let swipeableActions;
-    useEffect(() => {
-        // HACK: this effect listens for browser resize events and updates swipeable height whenever one is issued
-        function updateSwipeableHeight() {
-            swipeableActions.updateHeight();
-        }
-
-        window.addEventListener('resize', updateSwipeableHeight);
-        return () => window.removeEventListener('resize', updateSwipeableHeight);
-    }, [swipeableActions]);
-    useEffect(() => {
-        // HACK: this effect listens for timeEntries changes and issues a delayed swipeable height update when a change occurs
-        console.log('Second effect is running');
-        const timeout = setTimeout(() => (swipeableActions ? swipeableActions.updateHeight() : undefined), 0);
-        return () => clearTimeout(timeout);
-    }, [swipeableActions, timeEntries]);
-
     const classes = useStyles({ tabIndex });
-
+    
     const handleTabChange = (event, newIndex) => {
         const newDateSelected = moment(dateSelected).add(newIndex - tabIndex, 'days');
         setDateSelected(newDateSelected);
     };
+    
+    const handleCreateTimeEntry = () => {
+        setTimeEntryDialogOpen(true);
+        setTimeEntrySelectedId(null);
+    };
 
+    const handleEditTimeEntry = id => {
+        setTimeEntryDialogOpen(true);
+        setTimeEntrySelectedId(id);
+    };
+    
+    const timeEntrySelected = _.find(timeEntries, t => t.id === timeEntrySelectedId);
+    
     return (
         <>
             <Paper>
@@ -81,9 +80,6 @@ function Calendar(props) {
                 <SwipeableViews
                     animateHeight
                     index={tabIndex}
-                    action={actions => {
-                        swipeableActions = actions;
-                    }}
                     onChangeIndex={newIndex => handleTabChange(null, newIndex)}
                 >
                     {weekdays.map((weekday, index) => {
@@ -98,13 +94,21 @@ function Calendar(props) {
                                 value={tabIndex}
                                 index={index}
                                 timeEntries={timeEntries.filter(t => t.date === date)}
+                                onActionClick={handleEditTimeEntry}
                             />
                         );
                     })}
                 </SwipeableViews>
             </Paper>
 
-            <NewTimeEntry />
+            <NewTimeEntry onActionClick={handleCreateTimeEntry} />
+            
+            <TimeEntryDialog
+                open={timeEntryDialogOpen}
+                timeEntry={timeEntrySelected}
+                dateSelected={dateSelected}
+                onClose={() => setTimeEntryDialogOpen(false)}
+            />
         </>
     );
 }

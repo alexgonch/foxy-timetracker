@@ -8,9 +8,9 @@ import Typography from '@material-ui/core/Typography';
 import { useTheme } from '@material-ui/core/styles';
 
 function NewTimeEntry(props) {
+    const { onActionClick } = props;
+    
     const theme = useTheme();
-
-    const onActionClick = () => undefined;
 
     return (
         <Card
@@ -22,7 +22,7 @@ function NewTimeEntry(props) {
                 marginTop: theme.spacing(2)
             }}
         >
-            <CardActionArea style={{ height: '100%' }} onClick={onActionClick}>
+            <CardActionArea style={{ height: '100%' }} onClick={() => onActionClick()}>
                 <Box textAlign="center" p={2}>
                     <AddIcon color="secondary" style={{ fontSize: 36 }} />
                     <Typography variant="subtitle2" color="secondary">

@@ -8,7 +8,7 @@ import TimeEntry from './TimeEntry';
 import TimeEntryEmptyState from './TimeEntryEmptyState';
 
 function TabPanel(props) {
-    const { timeEntries } = props;
+    const { timeEntries, onActionClick } = props;
     
     if (_.isEmpty(timeEntries)) {
         return <TimeEntryEmptyState />;
@@ -16,8 +16,8 @@ function TabPanel(props) {
 
     return (
         <List disablePadding>
-            {timeEntries.map((timeEntry, index) => {
-                return <TimeEntry key={timeEntry.id} divider={index < timeEntries.length - 1} {...timeEntry} />;
+            {_.orderBy(timeEntries, t => t.created_at.toDate(), 'asc').map((timeEntry, index) => {
+                return <TimeEntry key={timeEntry.id} divider={index < timeEntries.length - 1} {...timeEntry} onActionClick={onActionClick} />;
             })}
         </List>
     );

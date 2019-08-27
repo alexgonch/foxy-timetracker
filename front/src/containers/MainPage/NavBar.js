@@ -1,4 +1,5 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 
 import { deepOrange } from '@material-ui/core/colors';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -11,6 +12,8 @@ import { useTheme, makeStyles } from '@material-ui/core/styles';
 
 import NightModeButton from './NightModeButton';
 
+import { getLocationName } from './functions';
+
 const useStyles = makeStyles(theme => ({
     appBar: props => ({
         [theme.breakpoints.up('md')]: {
@@ -21,7 +24,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function NavBar(props) {
-    const { onDrawerToggle } = props;
+    const { location, onDrawerToggle } = props;
 
     const theme = useTheme();
     const classes = useStyles(props);
@@ -40,7 +43,7 @@ function NavBar(props) {
                         <MenuIcon />
                     </IconButton>
                     <Typography variant="h6" style={{ flexGrow: 1 }}>
-                        Home
+                        {getLocationName(location.pathname)}
                     </Typography>
                 </Hidden>
                 <Hidden smDown>
@@ -55,4 +58,4 @@ function NavBar(props) {
     );
 }
 
-export default NavBar;
+export default withRouter(NavBar);

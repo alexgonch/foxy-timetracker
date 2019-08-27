@@ -11,7 +11,7 @@ function NewProject(props) {
 	
     return (
         <Card style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-            <CardActionArea style={{ height: '100%' }} onClick={onActionClick}>
+            <CardActionArea style={{ height: '100%' }} onClick={() => onActionClick()}>
                 <Box textAlign="center" p={2}>
                     <AddIcon color="secondary" style={{ fontSize: 36 }} />
 					<Typography variant="subtitle2" color="secondary">

@@ -36,3 +36,12 @@ export const passwordChangeSchema = yup.object().shape({
 export const projectSchema = yup.object().shape({
     name: yup.string().required('Project name is required')
 });
+
+export const timeEntrySchema = yup.object().shape({
+    description: yup.mixed().notRequired(),
+    hours: yup.number().min(0, 'Hours have to be positive'),
+    minutes: yup
+        .number()
+        .min(0, 'Minutes have to be positive')
+        .max(59, 'Minutes have to be between 0 and 59')
+});
