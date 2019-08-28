@@ -38,6 +38,7 @@ export const projectSchema = yup.object().shape({
 });
 
 export const timeEntrySchema = yup.object().shape({
+    project_uid: yup.string().required('Project is required'),
     description: yup.mixed().notRequired(),
     hours: yup.number().min(0, 'Hours have to be positive'),
     minutes: yup

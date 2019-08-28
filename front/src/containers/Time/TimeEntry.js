@@ -59,9 +59,10 @@ function TimeEntry(props) {
                 timer_ref: null
             });
 
-            const currentTimeEntryRef = db.collection('time_entries').doc(id);
+            // "Previous" time entry
+            const currentTimeEntryRef = db.collection('time_entries').doc(timerRef.id);
             batch.update(currentTimeEntryRef, {
-                time: time + timerValue
+                time: firebase.firestore.FieldValue.increment(timerValue)
             });
 
             batch.commit().catch(error => {
@@ -73,8 +74,7 @@ function TimeEntry(props) {
                 // TODO: merge with the repeated code below
                 const timeEntryRef = db.collection('time_entries').doc(id);
 
-                db.collection('users')
-                    .doc(firebase.auth().currentUser.uid)
+                currentUserRef
                     .update({
                         timer_date: new Date(),
                         timer_ref: timeEntryRef

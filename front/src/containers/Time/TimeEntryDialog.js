@@ -167,6 +167,8 @@ function TimeEntryDialog(props) {
                                         name="project_uid"
                                         label="Project"
                                         value={values.project_uid}
+                                        error={!_.isEmpty(errors.project_uid)}
+                                        helperText={errors.project_uid}
                                         style={{ marginTop: theme.spacing(1) }}
                                         onChange={handleChange}
                                         SelectProps={{
