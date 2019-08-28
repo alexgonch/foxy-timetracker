@@ -17,10 +17,10 @@ function LeftDrawer(props) {
                     anchor="left"
                     open={mobileOpen}
                     onClose={onDrawerToggle}
-                    ModalProps={{
-                        keepMounted: true // better open performance on mobile
-                    }}
                     style={{ width: drawerWidth }}
+					ModalProps={{
+						keepMounted: true // better open performance on mobile
+					}}
                 >
                     <DrawerContent drawerWidth={drawerWidth} onDrawerToggle={onDrawerToggle} />
                 </Drawer>

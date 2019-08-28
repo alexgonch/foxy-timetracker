@@ -2,10 +2,10 @@ import React from 'react';
 
 import { useTheme } from '@material-ui/core/styles';
 
-import { getHoursFromSeconds, getMinutesFromSeconds } from 'utils/helpers/timeHelper';
+import { getPaddedHoursMinutesSeconds } from 'utils/helpers/timeHelper';
 
 function TimeEntryTime(props) {
-    const { timerIsRunning, time } = props;
+    const { timerIsRunning, timerValue, time } = props;
 
     const theme = useTheme();
 
@@ -14,19 +14,17 @@ function TimeEntryTime(props) {
         color: timerIsRunning ? theme.palette.secondary.main : ''
     };
 
-    const hours = getHoursFromSeconds(time);
-    const minutes = getMinutesFromSeconds(time)
-        .toString()
-        .padStart(2, 0);
-    const seconds = (time % 60).toString().padStart(2, 0);
-
     if (timerIsRunning) {
+        const { hours, minutes, seconds } = getPaddedHoursMinutesSeconds(time + timerValue);
+
         return (
             <span style={spanStyle}>
                 {hours}h {minutes}m {seconds}s
             </span>
         );
     } else {
+        const { hours, minutes } = getPaddedHoursMinutesSeconds(time);
+
         return (
             <span style={spanStyle}>
                 {hours}h {minutes}m

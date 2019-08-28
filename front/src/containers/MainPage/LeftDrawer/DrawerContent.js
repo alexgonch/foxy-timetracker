@@ -1,6 +1,8 @@
 import React, { useContext } from 'react';
 import { withRouter, Link } from 'react-router-dom';
 
+import moment from 'moment';
+
 import PermContactCalendarIcon from '@material-ui/icons/PermContactCalendar';
 import WorkIcon from '@material-ui/icons/Work';
 import TimerIcon from '@material-ui/icons/Timer';
@@ -25,10 +27,14 @@ function DrawerContent(props) {
 
     const { user } = useContext(DbUserContext);
 
+    const pathToTimePage = location.pathname.startsWith('/time')
+        ? location.pathname
+        : `/time/${moment().format('YYYYMMDD')}`; // repeated clicks won't change URL
+
     return (
         <>
             <List style={{ width: drawerWidth }}>
-                <ListItem button>
+                <ListItem>
                     <ListItemAvatar>
                         <CustomAvatar>
                             <PermContactCalendarIcon />
@@ -36,7 +42,7 @@ function DrawerContent(props) {
                     </ListItemAvatar>
                     <ListItemText
                         primary={user.name}
-                        secondary={<Timer />} // TODO: clicking should lead to corresponding Time Entry
+                        secondary={<Timer />}
                         primaryTypographyProps={{ noWrap: true }}
                         secondaryTypographyProps={{ component: 'div' }}
                     />
@@ -59,7 +65,7 @@ function DrawerContent(props) {
                     button
                     selected={location.pathname.startsWith('/time')}
                     component={Link}
-                    to={location.pathname.startsWith('/time') ? location.pathname : '/time'} // repeated clicks won't change URL
+                    to={pathToTimePage}
                     onClick={onDrawerToggle}
                 >
                     <ListItemIcon>

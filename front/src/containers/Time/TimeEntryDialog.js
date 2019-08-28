@@ -14,7 +14,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import TextField from '@material-ui/core/TextField';
 import ButtonWithProgress from 'components/extensions/ButtonWithProgress';
-import { useTheme } from '@material-ui/core/styles';
+import { useTheme, makeStyles } from '@material-ui/core/styles';
 
 import { Formik, Form } from 'formik';
 
@@ -24,23 +24,34 @@ import { CustomSnackbarContext } from 'components/extensions/CustomSnackbar';
 import { InProgressContext } from 'utils/contexts/InProgressContext';
 
 // TODO: extend db with common API calls
-import firebase, { db, DbProjectsContext } from 'utils/firebase';
+import firebase, { db, DbUserContext, DbProjectsContext } from 'utils/firebase';
+
+const useStyles = makeStyles(theme => ({
+    selectIcon: {
+        right: 6
+    }
+}));
 
 function TimeEntryDialog(props) {
     const { open, timeEntry, dateSelected, onClose } = props;
 
     const updateMode = !_.isNil(timeEntry);
+    
+    const theme = useTheme();
+    const classes = useStyles();
+
+    const customSnackbar = useContext(CustomSnackbarContext);
 
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [deleteConfirmationDialogOpen, setDeleteConfirmationDialogOpen] = React.useState(false);
 
     const [, setInProgress] = useContext(InProgressContext);
+    const { user } = useContext(DbUserContext);
     const { projects } = useContext(DbProjectsContext);
     const projectsSelectable = useMemo(() => getSelectableProjects(projects), [projects]);
 
-    const theme = useTheme();
-    const customSnackbar = useContext(CustomSnackbarContext);
-
+    const blockedByTimer = !_.isNil(user.timer_date) && user.timer_ref.id === _.get(timeEntry, 'id', null);
+    
     // TODO: we could make a Menu context to reuse across the entire app
     const handleMore = event => {
         setAnchorEl(event.currentTarget);
@@ -113,7 +124,7 @@ function TimeEntryDialog(props) {
                 .finally(() => setInProgress(false));
         }
     };
-
+    
     return (
         <>
             <Dialog
@@ -163,6 +174,11 @@ function TimeEntryDialog(props) {
                                         value={values.project_uid}
                                         style={{ marginTop: theme.spacing(1) }}
                                         onChange={handleChange}
+                                        SelectProps={{
+                                            classes: {
+                                                icon: classes.selectIcon
+                                            }
+                                        }}
                                     >
                                         {projectsSelectable.map(project => (
                                             <MenuItem key={project.id} value={project.id}>
@@ -171,6 +187,7 @@ function TimeEntryDialog(props) {
                                         ))}
                                     </TextField>
                                     <TextField
+                                        multiline
                                         fullWidth
                                         variant="outlined"
                                         name="description"
@@ -184,6 +201,7 @@ function TimeEntryDialog(props) {
                                     />
                                     <Box display="flex">
                                         <TextField
+                                            disabled={blockedByTimer}
                                             type="number"
                                             variant="outlined"
                                             name="hours"
@@ -200,6 +218,7 @@ function TimeEntryDialog(props) {
                                             onBlur={handleBlur}
                                         />
                                         <TextField
+                                            disabled={blockedByTimer}
                                             type="number"
                                             variant="outlined"
                                             name="minutes"
@@ -216,6 +235,15 @@ function TimeEntryDialog(props) {
                                             onBlur={handleBlur}
                                         />
                                     </Box>
+                                    {blockedByTimer && (
+                                        <Typography
+                                            variant="body2"
+                                            color="error"
+                                            style={{ marginTop: theme.spacing(1) }}
+                                        >
+                                            Cannot edit time while timer is running.
+                                        </Typography>
+                                    )}
                                 </Form>
                             </DialogContent>
                             <DialogActions>

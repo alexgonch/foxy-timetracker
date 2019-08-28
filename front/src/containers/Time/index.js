@@ -21,7 +21,7 @@ const weekFormat = 'GGGG-WW';
 function Time(props) {
     const { history, match } = props;
 
-    const [dateSelected, setDateSelected] = useState(match.params.date ? match.params.date : new Date());
+    const [dateSelected, setDateSelected] = useState(moment(match.params.date, 'YYYYMMDD').toDate());
 
     useEffect(() => {
         history.push(`/time/${moment(dateSelected).format('YYYYMMDD')}`);
@@ -49,6 +49,7 @@ function Time(props) {
                     <Paper style={{ display: 'inline-block', marginBottom: theme.spacing(2) }}>
                         <DatePicker
                             inputVariant="outlined"
+                            showTodayButton
                             autoOk
                             label=""
                             format="dddd [·] MMM DD"

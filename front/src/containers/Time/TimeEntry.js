@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext } from 'react';
 
 import TimerIcon from '@material-ui/icons/Timer';
 import ListItem from '@material-ui/core/ListItem';
@@ -9,6 +9,12 @@ import { useTheme, makeStyles } from '@material-ui/core/styles';
 
 import TimeEntryTime from './TimeEntryTime';
 import ResponsiveDescription from './ResponsiveDescription';
+
+// TODO: extend db with common API calls
+import firebase, { db } from 'utils/firebase';
+import { CustomSnackbarContext } from 'components/extensions/CustomSnackbar';
+
+import useTimer from 'utils/hooks/useTimer';
 
 const useStyles = makeStyles(theme => ({
     button: {
@@ -35,17 +41,67 @@ const useStyles = makeStyles(theme => ({
 function TimeEntry(props) {
     const { divider, id, project, description, time, onActionClick } = props;
 
-    const [timerIsRunning, setTimerIsRunning] = useState(false);
-
     const theme = useTheme();
     const classes = useStyles();
 
-    // TODO: it should only be possible to active timer on one entry at a time
+    const customSnackbar = useContext(CustomSnackbarContext);
+
+    const { timerIsRunning, timerRef, timerValue } = useTimer();
+
     const handleToggleTimer = () => {
-        // TODO: implement db call with id -> store in user
-        // TODO: update swipeable height
-        setTimerIsRunning(!timerIsRunning);
+        if (timerIsRunning) {
+            db.collection('users')
+                .doc(firebase.auth().currentUser.uid)
+                .update({
+                    timer_date: null,
+                    timer_ref: null
+                })
+                .catch(error => {
+                    customSnackbar.error('An error has happened. Please try again.');
+                    console.error(error);
+                });
+
+            db.collection('time_entries')
+                .doc(id)
+                .update({
+                    time: time + timerValue
+                })
+                .catch(error => {
+                    customSnackbar.error('An error has happened. Please try again.');
+                    console.error(error);
+                });
+
+            if (timerRef.id !== id) {
+                const timeEntryRef = db.collection('time_entries').doc(id);
+
+                db.collection('users')
+                    .doc(firebase.auth().currentUser.uid)
+                    .update({
+                        timer_date: new Date(),
+                        timer_ref: timeEntryRef
+                    })
+                    .catch(error => {
+                        customSnackbar.error('An error has happened. Please try again.');
+                        console.error(error);
+                    });
+            }
+        } else {
+            const timeEntryRef = db.collection('time_entries').doc(id);
+
+            db.collection('users')
+                .doc(firebase.auth().currentUser.uid)
+                .update({
+                    timer_date: new Date(),
+                    timer_ref: timeEntryRef
+                })
+                .catch(error => {
+                    customSnackbar.error('An error has happened. Please try again.');
+                    console.error(error);
+                });
+        }
     };
+
+    const thisTimerIsRunning = timerIsRunning && timerRef.id === id;
 
     return (
         <ListItem
@@ -57,7 +113,8 @@ function TimeEntry(props) {
             <ListItemText
                 primary={
                     <span>
-                        {project.name} · <TimeEntryTime timerIsRunning={timerIsRunning} time={time} />
+                        {project.name} ·{' '}
+                        <TimeEntryTime timerIsRunning={thisTimerIsRunning} timerValue={timerValue} time={time} />
                     </span>
                 }
                 secondary={<ResponsiveDescription text={description} />}
@@ -66,7 +123,7 @@ function TimeEntry(props) {
             <ListItemSecondaryAction>
                 <IconButton
                     classes={{ edgeEnd: classes.edgeEnd }}
-                    color={timerIsRunning ? 'secondary' : 'default'}
+                    color={thisTimerIsRunning ? 'secondary' : 'default'}
                     edge="end"
                     aria-label="start timer on entry"
                     onClick={handleToggleTimer}
