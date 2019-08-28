@@ -36,7 +36,7 @@ function TimeEntryDialog(props) {
     const { open, timeEntry, dateSelected, onClose } = props;
 
     const updateMode = !_.isNil(timeEntry);
-    
+
     const theme = useTheme();
     const classes = useStyles();
 
@@ -48,10 +48,10 @@ function TimeEntryDialog(props) {
     const [, setInProgress] = useContext(InProgressContext);
     const { user } = useContext(DbUserContext);
     const { projects } = useContext(DbProjectsContext);
-    const projectsSelectable = useMemo(() => getSelectableProjects(projects), [projects]);
+    const projectsSelectable = useMemo(() => getSelectableProjects(timeEntry, projects), [timeEntry, projects]);
 
-    const blockedByTimer = !_.isNil(user.timer_date) && user.timer_ref.id === _.get(timeEntry, 'id', null);
-    
+    const thisTimerIsRunning = !_.isNil(user.timer_date) && user.timer_ref.id === _.get(timeEntry, 'id', null);
+
     // TODO: we could make a Menu context to reuse across the entire app
     const handleMore = event => {
         setAnchorEl(event.currentTarget);
@@ -124,7 +124,7 @@ function TimeEntryDialog(props) {
                 .finally(() => setInProgress(false));
         }
     };
-    
+
     return (
         <>
             <Dialog
@@ -148,11 +148,15 @@ function TimeEntryDialog(props) {
                                         open={Boolean(anchorEl)}
                                         onClose={handleCloseMore}
                                     >
-                                        <MenuItem onClick={handleDelete}>
+                                        <MenuItem button={!thisTimerIsRunning} onClick={thisTimerIsRunning ? () => undefined : handleDelete}>
                                             <Typography
                                                 variant="inherit"
-                                                color="error"
-                                                style={{ paddingRight: theme.spacing(2) }}
+                                                style={{
+                                                    paddingRight: theme.spacing(2),
+                                                    color: thisTimerIsRunning
+                                                        ? theme.palette.text.disabled
+                                                        : theme.palette.error.main
+                                                }}
                                             >
                                                 Delete
                                             </Typography>
@@ -201,7 +205,7 @@ function TimeEntryDialog(props) {
                                     />
                                     <Box display="flex">
                                         <TextField
-                                            disabled={blockedByTimer}
+                                            disabled={thisTimerIsRunning}
                                             type="number"
                                             variant="outlined"
                                             name="hours"
@@ -218,7 +222,7 @@ function TimeEntryDialog(props) {
                                             onBlur={handleBlur}
                                         />
                                         <TextField
-                                            disabled={blockedByTimer}
+                                            disabled={thisTimerIsRunning}
                                             type="number"
                                             variant="outlined"
                                             name="minutes"
@@ -235,13 +239,13 @@ function TimeEntryDialog(props) {
                                             onBlur={handleBlur}
                                         />
                                     </Box>
-                                    {blockedByTimer && (
+                                    {thisTimerIsRunning && (
                                         <Typography
                                             variant="body2"
                                             color="error"
                                             style={{ marginTop: theme.spacing(1) }}
                                         >
-                                            Cannot edit time while timer is running.
+                                            Editing is limited while timer is running.
                                         </Typography>
                                     )}
                                 </Form>

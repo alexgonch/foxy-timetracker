@@ -240,7 +240,7 @@ function ProjectDialog(props) {
                 danger
                 open={deleteConfirmationDialogOpen}
                 dialogTitle="Delete project?"
-                dialogContentText="You will lose all your logged time associated with this project."
+                dialogContentText="Time entries you logged for this project will not be deleted."
                 action="Delete"
                 onClose={() => setDeleteConfirmationDialogOpen(false)}
                 onSubmit={handleDelete}

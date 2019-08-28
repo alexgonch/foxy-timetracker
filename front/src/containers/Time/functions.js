@@ -21,8 +21,8 @@ export function getInitialValues(timeEntry) {
     }
 }
 
-export function getSelectableProjects(projects) {
-    return _.filter(projects, p => !p.archived);
+export function getSelectableProjects(timeEntry, projects) {
+    return _.filter(projects, p => !p.archived || p.id === _.get(timeEntry, 'project_uid.id', null));
 }
 
 export function filterTimeEntries(timeEntries, weekSelected, weekFormat) {

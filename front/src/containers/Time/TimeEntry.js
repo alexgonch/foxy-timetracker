@@ -7,6 +7,7 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import IconButton from '@material-ui/core/IconButton';
 import { useTheme, makeStyles } from '@material-ui/core/styles';
 
+import ProjectName from './ProjectName';
 import TimeEntryTime from './TimeEntryTime';
 import ResponsiveDescription from './ResponsiveDescription';
 
@@ -113,7 +114,7 @@ function TimeEntry(props) {
             <ListItemText
                 primary={
                     <span>
-                        {project.name} ·{' '}
+                        <ProjectName project={project} /> ·{' '}
                         <TimeEntryTime timerIsRunning={thisTimerIsRunning} timerValue={timerValue} time={time} />
                     </span>
                 }
