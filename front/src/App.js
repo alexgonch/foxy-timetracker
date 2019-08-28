@@ -9,7 +9,6 @@ import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 
 import { useFirebaseAuth, AuthUserContext } from 'utils/firebase';
 import { CustomSnackbarProvider } from 'components/extensions/CustomSnackbar';
-import { InProgressContext } from 'utils/contexts/InProgressContext';
 
 import Multiplexer from 'navigation/Multiplexer';
 
@@ -59,7 +58,6 @@ function App() {
     const { authUserLoading, authUser } = useFirebaseAuth();
 
     const [theme, setTheme] = useState(getInitialTheme(lightTheme, darkTheme)); // TODO: encapsulate outside of App.js
-    const [inProgress, setInProgress] = useState(false);
 
     theme.toggleNightMode = () => {
         if (theme.light()) {
@@ -85,9 +83,7 @@ function App() {
             <MuiPickersUtilsProvider utils={MomentUtils}>
                 <AuthUserContext.Provider value={{ authUserLoading, authUser }}>
                     <CustomSnackbarProvider>
-                        <InProgressContext.Provider value={[inProgress, setInProgress]}>
-                            <Multiplexer />
-                        </InProgressContext.Provider>
+                        <Multiplexer />
                     </CustomSnackbarProvider>
                 </AuthUserContext.Provider>
             </MuiPickersUtilsProvider>

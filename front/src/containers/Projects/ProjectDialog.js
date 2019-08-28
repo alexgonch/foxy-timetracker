@@ -11,7 +11,7 @@ import DialogTitleWithMenu from 'components/extensions/DialogTitleWithMenu';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import TextField from '@material-ui/core/TextField';
-import ButtonWithProgress from 'components/extensions/ButtonWithProgress';
+import Button from '@material-ui/core/Button';
 import { useTheme } from '@material-ui/core/styles';
 
 import { Formik, Form } from 'formik';
@@ -19,7 +19,6 @@ import { Formik, Form } from 'formik';
 import { projectSchema } from 'utils/validationSchemas';
 import { getInitialValues } from './functions';
 import { CustomSnackbarContext } from 'components/extensions/CustomSnackbar';
-import { InProgressContext } from 'utils/contexts/InProgressContext';
 
 import ConfirmationDialog from 'components/dialogs/ConfirmationDialog';
 
@@ -33,7 +32,6 @@ function ProjectDialog(props) {
 
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [deleteConfirmationDialogOpen, setDeleteConfirmationDialogOpen] = React.useState(false);
-    const [, setInProgress] = useContext(InProgressContext);
 
     const theme = useTheme();
     const customSnackbar = useContext(CustomSnackbarContext);
@@ -48,82 +46,66 @@ function ProjectDialog(props) {
     };
 
     const handleArchive = () => {
-        setInProgress(true);
-
         db.collection('projects')
             .doc(project.id)
             .update({
                 archived: true
             })
-            .then(() => {
-                customSnackbar.success('Project archived.');
-                setAnchorEl(null);
-                onClose();
-            })
             .catch(error => {
                 customSnackbar.error('An error has happened. Please try again.');
                 console.error(error);
-            })
-            .finally(() => setInProgress(false));
+            });
+
+        customSnackbar.success('Project archived.');
+        setAnchorEl(null);
+        onClose();
     };
 
     const handleReactivate = () => {
-        setInProgress(true);
-
         db.collection('projects')
             .doc(project.id)
             .update({
                 archived: false
             })
-            .then(() => {
-                customSnackbar.success('Project reactivated.');
-                setAnchorEl(null);
-                onClose();
-            })
             .catch(error => {
                 customSnackbar.error('An error has happened. Please try again.');
                 console.error(error);
-            })
-            .finally(() => setInProgress(false));
+            });
+
+        customSnackbar.success('Project reactivated.');
+        setAnchorEl(null);
+        onClose();
     };
 
     const handleDelete = () => {
-        setInProgress(true);
-
         db.collection('projects')
             .doc(project.id)
             .delete()
-            .then(() => {
-                customSnackbar.success('Project deleted.');
-                setDeleteConfirmationDialogOpen(false);
-                setAnchorEl(null);
-                onClose();
-            })
             .catch(error => {
                 customSnackbar.error('An error has happened. Please try again.');
                 console.error(error);
-            })
-            .finally(() => setInProgress(false));
+            });
+
+        customSnackbar.success('Project deleted.');
+        setDeleteConfirmationDialogOpen(false);
+        setAnchorEl(null);
+        onClose();
     };
 
     const handleSubmit = (values, { setSubmitting }) => {
-        setInProgress(true);
-
         if (updateMode) {
             db.collection('projects')
                 .doc(project.id)
                 .update({
                     name: values.name
                 })
-                .then(() => {
-                    customSnackbar.success('Project updated.');
-                    onClose();
-                })
                 .catch(error => {
                     customSnackbar.error('An error has happened. Please try again.');
                     console.error(error);
-                })
-                .finally(() => setInProgress(false));
+                });
+
+            customSnackbar.success('Project updated.');
+            onClose();
         } else {
             const currentUserRef = db.collection('users').doc(firebase.auth().currentUser.uid);
 
@@ -135,15 +117,13 @@ function ProjectDialog(props) {
                     total_time: 0,
                     owner_uid: currentUserRef
                 })
-                .then(() => {
-                    customSnackbar.success('Project created.');
-                    onClose();
-                })
                 .catch(error => {
                     customSnackbar.error('An error has happened. Please try again.');
                     console.error(error);
-                })
-                .finally(() => setInProgress(false));
+                });
+
+            customSnackbar.success('Project created.');
+            onClose();
         }
     };
 
@@ -227,9 +207,9 @@ function ProjectDialog(props) {
                                 </Form>
                             </DialogContent>
                             <DialogActions>
-                                <ButtonWithProgress color="secondary" onClick={submitForm}>
+                                <Button color="secondary" onClick={submitForm}>
                                     {updateMode ? 'Update' : 'Create'}
-                                </ButtonWithProgress>
+                                </Button>
                             </DialogActions>
                         </>
                     )}

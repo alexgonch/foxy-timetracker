@@ -51,28 +51,26 @@ function TimeEntry(props) {
 
     const handleToggleTimer = () => {
         if (timerIsRunning) {
-            db.collection('users')
-                .doc(firebase.auth().currentUser.uid)
-                .update({
-                    timer_date: null,
-                    timer_ref: null
-                })
-                .catch(error => {
-                    customSnackbar.error('An error has happened. Please try again.');
-                    console.error(error);
-                });
+            const batch = db.batch();
 
-            db.collection('time_entries')
-                .doc(id)
-                .update({
-                    time: time + timerValue
-                })
-                .catch(error => {
-                    customSnackbar.error('An error has happened. Please try again.');
-                    console.error(error);
-                });
+            const currentUserRef = db.collection('users').doc(firebase.auth().currentUser.uid);
+            batch.update(currentUserRef, {
+                timer_date: null,
+                timer_ref: null
+            });
+
+            const currentTimeEntryRef = db.collection('time_entries').doc(id);
+            batch.update(currentTimeEntryRef, {
+                time: time + timerValue
+            });
+
+            batch.commit().catch(error => {
+                customSnackbar.error('An error has happened. Please try again.');
+                console.error(error);
+            });
 
             if (timerRef.id !== id) {
+                // TODO: merge with the repeated code below
                 const timeEntryRef = db.collection('time_entries').doc(id);
 
                 db.collection('users')
@@ -87,6 +85,7 @@ function TimeEntry(props) {
                     });
             }
         } else {
+            // TODO: merge with the repeated code above
             const timeEntryRef = db.collection('time_entries').doc(id);
 
             db.collection('users')

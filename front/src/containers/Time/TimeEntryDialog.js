@@ -13,7 +13,7 @@ import DialogTitleWithMenu from 'components/extensions/DialogTitleWithMenu';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import TextField from '@material-ui/core/TextField';
-import ButtonWithProgress from 'components/extensions/ButtonWithProgress';
+import Button from '@material-ui/core/Button';
 import { useTheme, makeStyles } from '@material-ui/core/styles';
 
 import { Formik, Form } from 'formik';
@@ -21,7 +21,6 @@ import { Formik, Form } from 'formik';
 import { timeEntrySchema } from 'utils/validationSchemas';
 import { getInitialValues, getSelectableProjects } from './functions';
 import { CustomSnackbarContext } from 'components/extensions/CustomSnackbar';
-import { InProgressContext } from 'utils/contexts/InProgressContext';
 
 // TODO: extend db with common API calls
 import firebase, { db, DbUserContext, DbProjectsContext } from 'utils/firebase';
@@ -45,7 +44,6 @@ function TimeEntryDialog(props) {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [deleteConfirmationDialogOpen, setDeleteConfirmationDialogOpen] = React.useState(false);
 
-    const [, setInProgress] = useContext(InProgressContext);
     const { user } = useContext(DbUserContext);
     const { projects } = useContext(DbProjectsContext);
     const projectsSelectable = useMemo(() => getSelectableProjects(timeEntry, projects), [timeEntry, projects]);
@@ -62,27 +60,21 @@ function TimeEntryDialog(props) {
     };
 
     const handleDelete = () => {
-        setInProgress(true);
-
         db.collection('time_entries')
             .doc(timeEntry.id)
             .delete()
-            .then(() => {
-                customSnackbar.success('Time entry deleted.');
-                setDeleteConfirmationDialogOpen(false);
-                setAnchorEl(null);
-                onClose();
-            })
             .catch(error => {
                 customSnackbar.error('An error has happened. Please try again.');
                 console.error(error);
-            })
-            .finally(() => setInProgress(false));
+            });
+
+        customSnackbar.success('Time entry deleted.');
+        setDeleteConfirmationDialogOpen(false);
+        setAnchorEl(null);
+        onClose();
     };
 
     const handleSubmit = (values, { setSubmitting }) => {
-        setInProgress(true);
-
         if (updateMode) {
             const projectRef = db.collection('projects').doc(values.project_uid);
 
@@ -93,14 +85,12 @@ function TimeEntryDialog(props) {
                     time: values.hours * 3600 + values.minutes * 60,
                     project_uid: projectRef
                 })
-                .then(() => {
-                    onClose();
-                })
                 .catch(error => {
                     customSnackbar.error('An error has happened. Please try again.');
                     console.error(error);
-                })
-                .finally(() => setInProgress(false));
+                });
+
+            onClose();
         } else {
             const currentUserRef = db.collection('users').doc(firebase.auth().currentUser.uid);
             const projectRef = db.collection('projects').doc(values.project_uid);
@@ -114,14 +104,12 @@ function TimeEntryDialog(props) {
                     project_uid: projectRef,
                     owner_uid: currentUserRef
                 })
-                .then(() => {
-                    onClose();
-                })
                 .catch(error => {
                     customSnackbar.error('An error has happened. Please try again.');
                     console.error(error);
-                })
-                .finally(() => setInProgress(false));
+                });
+
+            onClose();
         }
     };
 
@@ -148,7 +136,10 @@ function TimeEntryDialog(props) {
                                         open={Boolean(anchorEl)}
                                         onClose={handleCloseMore}
                                     >
-                                        <MenuItem button={!thisTimerIsRunning} onClick={thisTimerIsRunning ? () => undefined : handleDelete}>
+                                        <MenuItem
+                                            button={!thisTimerIsRunning}
+                                            onClick={thisTimerIsRunning ? () => undefined : handleDelete}
+                                        >
                                             <Typography
                                                 variant="inherit"
                                                 style={{
@@ -251,9 +242,9 @@ function TimeEntryDialog(props) {
                                 </Form>
                             </DialogContent>
                             <DialogActions>
-                                <ButtonWithProgress color="secondary" onClick={submitForm}>
+                                <Button color="secondary" onClick={submitForm}>
                                     {updateMode ? 'Update' : 'Create'}
-                                </ButtonWithProgress>
+                                </Button>
                             </DialogActions>
                         </>
                     )}

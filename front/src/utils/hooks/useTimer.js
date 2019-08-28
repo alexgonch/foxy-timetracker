@@ -6,8 +6,6 @@ import moment from 'moment';
 import { DbUserContext } from 'utils/firebase';
 import { getPaddedHoursMinutesSeconds } from 'utils/helpers/timeHelper';
 
-const OFF_VALUE = null;
-
 function useTimer() {
     const [timerValue, setTimerValue] = useState(null);
 
@@ -21,7 +19,7 @@ function useTimer() {
             oneSecondInterval = setInterval(() => getAndSetTimerValue(user.timer_date, setTimerValue), 1000);
         } else {
             clearInterval(oneSecondInterval);
-            setTimerValue(OFF_VALUE);
+            setTimerValue(null);
         }
 
         return () => clearInterval(oneSecondInterval);
