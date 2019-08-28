@@ -31,7 +31,7 @@ function NavBar(props) {
 
     return (
         <AppBar id="appBar" position="static" className={classes.appBar}>
-            <Toolbar style={{ backgroundColor: theme.palette.primary[700] }}>
+            <Toolbar style={{ backgroundColor: theme.palette.primary.dark }}>
                 <Hidden mdUp>
                     <IconButton
                         edge="start"

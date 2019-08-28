@@ -11,8 +11,8 @@ import NewProject from './NewProject';
 import Project from './Project';
 import ProjectDialog from './ProjectDialog';
 
-import { DbProjectsContext } from 'utils/firebase';
-import { orderAndFilterProjects } from './functions';
+import { DbProjectsContext, DbTimeEntriesContext } from 'utils/firebase';
+import { orderAndFilterAndPopulateProjects } from './functions';
 
 // TODO: in future, archived projects should go into a separate List and have an un-archive option as action
 function Projects(props) {
@@ -21,6 +21,7 @@ function Projects(props) {
     const [showArchivedProjects, setShowArchivedProjects] = useState(false);
 
     const { projects } = useContext(DbProjectsContext);
+    const { timeEntries } = useContext(DbTimeEntriesContext);
 
     const handleCreateProject = () => {
         setProjectDialogOpen(true);
@@ -33,10 +34,10 @@ function Projects(props) {
     };
 
     const projectSelected = _.find(projects, p => p.id === projectSelectedId);
-    const orderedAndFilteredProjects = useMemo(() => orderAndFilterProjects(projects, showArchivedProjects), [
-        projects,
-        showArchivedProjects
-    ]);
+    const orderedAndFilteredProjects = useMemo(
+        () => orderAndFilterAndPopulateProjects(projects, timeEntries, showArchivedProjects),
+        [projects, timeEntries, showArchivedProjects]
+    );
 
     return (
         <Box p={2}>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-import moment from 'moment';
+// import moment from 'moment';
 
 import firebase, { db } from 'utils/firebase';
 
@@ -11,12 +11,12 @@ const useDbTimeEntries = () => {
     
     useEffect(() => {
         const currentUserRef = db.collection('users').doc(firebase.auth().currentUser.uid);
-        const date30DaysAgo = parseInt(moment().subtract(30, 'days').format('YYYYMMDD'));
+        // const date30DaysAgo = parseInt(moment().subtract(30, 'days').format('YYYYMMDD'));
 		
         const unsubscribe = db
             .collection('time_entries')
             .where('owner_uid', '==', currentUserRef)
-            .where('date', '>=', date30DaysAgo)
+            // .where('date', '>=', date30DaysAgo)
             .onSnapshot(
                 querySnapshot => {
                     let timeEntries = [];

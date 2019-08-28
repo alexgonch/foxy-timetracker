@@ -1,7 +1,7 @@
 import React from 'react';
 
 import moment from 'moment';
-import { getHoursFromSeconds, getMinutesFromSeconds } from 'utils/helpers/timeHelper';
+import { getPaddedHoursMinutesSeconds } from 'utils/helpers/timeHelper';
 
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -11,8 +11,10 @@ import { useTheme } from '@material-ui/core/styles';
 
 function Project(props) {
     const { name, archived, created_at, total_time, onActionClick } = props;
-    
+
     const theme = useTheme();
+
+    const { hours, minutes } = getPaddedHoursMinutesSeconds(total_time);
 
     return (
         <Card style={{ height: '100%', opacity: archived ? 0.33 : 1 }}>
@@ -25,7 +27,7 @@ function Project(props) {
                         Created on {moment(created_at.toDate()).format('MMM Do, YYYY')}
                     </Typography>
                     <Typography variant="body2" color="textSecondary" style={{ marginTop: theme.spacing(2) }}>
-                        {getHoursFromSeconds(total_time)}h {getMinutesFromSeconds(total_time)}m
+                        {hours}h {minutes}m
                     </Typography>
                 </CardContent>
             </CardActionArea>
