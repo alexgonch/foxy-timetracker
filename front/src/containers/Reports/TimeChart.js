@@ -17,20 +17,20 @@ const COLORS = [
     'green',
     'amber',
     // group 2
-    'deepPurple',
     'cyan',
     'lime',
     'deepOrange',
+    'deepPurple',
     // group 3
-    'red',
-    'indigo',
     'teal',
     'yellow',
+    'red',
+    'indigo',
     // group 4
+    'orange',
     'purple',
     'lightBlue',
-    'lightGreen',
-    'orange'
+    'lightGreen'
 ];
 
 const divider = 0;
