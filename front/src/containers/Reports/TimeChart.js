@@ -46,7 +46,7 @@ function TimeChart(props) {
         startDate,
         endDate
     ]);
-
+	
     // TODO: verify how labelFormatter works with non-current year
     return (
         <ResponsiveContainer width="100%" height={400}>
@@ -82,7 +82,7 @@ function TimeChart(props) {
                 <Legend formatter={value => <span style={{ color: theme.palette.text.primary }}>{value}</span>} />
                 {dataKeys.map((dataKey, index) => {
                     const colorIndex = theme.light() ? 500 : 'A200';
-                    const colorName = colorsArray[index];
+                    const colorName = colorsArray[index % colorsArray.length]; // will start looping colors eventually
 
                     return <Bar key={dataKey} dataKey={dataKey} stackId="time" fill={colors[colorName][colorIndex]} />;
                 })}
