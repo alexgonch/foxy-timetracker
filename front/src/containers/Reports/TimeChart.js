@@ -11,22 +11,26 @@ import { convertTimeEntriesToChartData } from './functions';
 import { formatAsHmmExtended } from 'utils/helpers/timeHelper';
 
 const COLORS = [
-    'red',
+    // group 1
     'pink',
-    'purple',
-    'deepPurple',
-    'indigo',
     'blue',
-    'lightBlue',
-    'cyan',
-    'teal',
     'green',
-    'lightGreen',
-    'lime',
-    'yellow',
     'amber',
-    'orange',
-    'deepOrange'
+    // group 2
+    'deepPurple',
+    'cyan',
+    'lime',
+    'deepOrange',
+    // group 3
+    'red',
+    'indigo',
+    'teal',
+    'yellow',
+    // group 4
+    'purple',
+    'lightBlue',
+    'lightGreen',
+    'orange'
 ];
 
 const divider = 0;
