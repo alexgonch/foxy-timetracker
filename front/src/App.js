@@ -59,7 +59,7 @@ const darkTheme = createMuiTheme({
 // IDEA: global search bar
 // IDEA: multi-lang support
 
-// TODO: resolve issue with weeks always starting with Sundays in @material-ui/pickers
+// TODO: create Timer Context
 // TODO: implement universal loader and connect to all Firebase actions
 // TODO: implement Auth-agnostic routes under navigation (ToS, Privacy, etc)
 function App() {

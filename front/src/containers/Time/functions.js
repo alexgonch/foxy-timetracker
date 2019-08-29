@@ -27,7 +27,6 @@ export function getSelectableProjects(timeEntry, projects) {
 }
 
 export function filterTimeEntries(timeEntries, weekSelected, weekFormat) {
-    console.info(`%cfilterTimeEntries: running`, 'color: green');
     if (_.isNil(timeEntries)) {
         return [];
     }

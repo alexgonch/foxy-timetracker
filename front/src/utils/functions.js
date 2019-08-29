@@ -1,7 +1,6 @@
 import _ from 'lodash';
 
 export function populateTimeEntries(timeEntries, projects) {
-    console.info(`%cpopulateTimeEntries: running`, 'color: green');
     if (_.isNil(timeEntries) || _.isNil(projects)) {
         return [];
     }

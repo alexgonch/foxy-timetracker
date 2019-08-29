@@ -8,6 +8,16 @@ export function filterTimeEntries(timeEntries, startDate, endDate) {
     );
 }
 
+export function processTimeEntries(timeEntries) {
+    // Remove seconds and time entries with less than a minute of tracked time
+    const timeEntriesWithoutSeconds = timeEntries.map(timeEntry => ({
+        ...timeEntry,
+        time: timeEntry.time - (timeEntry.time % 60)
+    }));
+    
+    return _.filter(timeEntriesWithoutSeconds, t => t.time > 0);
+}
+
 export function convertTimeEntriesToChartData(timeEntries, startDate, endDate) {
     const data = [];
     const dataKeys = [];
