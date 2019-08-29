@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
 
-import _ from 'lodash';
 import moment from 'moment';
 
 import * as colors from '@material-ui/core/colors';
@@ -33,9 +32,6 @@ const COLORS = [
     'lightGreen'
 ];
 
-const divider = 0;
-const colorsArray = _.slice(COLORS, divider, COLORS.length).concat(_.slice(COLORS, 0, divider));
-
 function TimeChart(props) {
     const { timeEntries, startDate, endDate } = props;
 
@@ -46,7 +42,7 @@ function TimeChart(props) {
         startDate,
         endDate
     ]);
-	
+
     // TODO: verify how labelFormatter works with non-current year
     return (
         <ResponsiveContainer width="100%" height={400}>
@@ -82,7 +78,7 @@ function TimeChart(props) {
                 <Legend formatter={value => <span style={{ color: theme.palette.text.primary }}>{value}</span>} />
                 {dataKeys.map((dataKey, index) => {
                     const colorIndex = theme.light() ? 500 : 'A200';
-                    const colorName = colorsArray[index % colorsArray.length]; // will start looping colors eventually
+                    const colorName = COLORS[index % COLORS.length]; // will start looping colors eventually
 
                     return <Bar key={dataKey} dataKey={dataKey} stackId="time" fill={colors[colorName][colorIndex]} />;
                 })}

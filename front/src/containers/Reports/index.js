@@ -47,7 +47,7 @@ function Reports(props) {
             <Grid container justify="center">
                 <Grid item xs={12} md={8} xl={6}>
                     <Box display="flex" justifyContent="space-between" flexWrap="wrap">
-                        <Paper style={{ display: 'inline-block', marginBottom: theme.spacing(2) }}>
+                        <Paper style={{ display: 'inline-block', marginRight: theme.spacing(2), marginBottom: theme.spacing(2) }}>
                             <DatePicker
                                 inputVariant="outlined"
                                 showTodayButton
