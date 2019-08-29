@@ -46,7 +46,7 @@ function Time(props) {
     return (
         <Box p={2}>
             <Grid container justify="center">
-                <Grid item xs={12} md={8} xl={6}>
+                <Grid item xs={12} md={10} lg={8} xl={6}>
                     <Paper style={{ display: 'inline-block', marginBottom: theme.spacing(2) }}>
                         <DatePicker
                             inputVariant="outlined"

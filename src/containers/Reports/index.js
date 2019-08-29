@@ -52,7 +52,7 @@ function Reports(props) {
     return (
         <Box p={2}>
             <Grid container justify="center">
-                <Grid item xs={12} md={8} xl={6}>
+                <Grid item xs={12} lg={10} xl={8}>
                     <Box display="flex" justifyContent="space-between" flexWrap="wrap">
                         <Paper
                             style={{
