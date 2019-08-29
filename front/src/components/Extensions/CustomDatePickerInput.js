@@ -12,6 +12,9 @@ const useStyles = makeStyles(theme => ({
     },
     inputBase: {
         marginRight: -32
+    },
+    inputAdornment: {
+        marginRight: -6
     }
 }));
 
@@ -27,7 +30,7 @@ function CustomDatePickerInput(props) {
             value={props.value}
             disabled={props.disabled}
             endAdornment={
-                <InputAdornment position="end">
+                <InputAdornment position="end" classes={{ root: classes.inputAdornment }}>
                     <IconButton aria-label="toggle password visibility" onClick={() => undefined}>
                         <EventIcon />
                     </IconButton>

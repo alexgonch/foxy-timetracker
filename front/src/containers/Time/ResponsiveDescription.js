@@ -2,7 +2,7 @@ import React from 'react';
 
 import _ from 'lodash';
 
-import Hidden from '@material-ui/core/Hidden';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
 
 function ResponsiveDescription(props) {
@@ -10,29 +10,30 @@ function ResponsiveDescription(props) {
 
     const theme = useTheme();
 
+    const smUp = useMediaQuery(theme.breakpoints.up('sm'));
+    const mdUp = useMediaQuery(theme.breakpoints.up('md'));
+    const lgUp = useMediaQuery(theme.breakpoints.up('lg'));
+    const xlUp = useMediaQuery(theme.breakpoints.up('xl'));
+    
     if (_.isEmpty(text)) {
         return <span style={{ color: theme.palette.text.disabled }}>No description.</span>;
     }
-
-    return (
-        <>
-            <Hidden only={['sm', 'md', 'lg', 'xl']}>
-                <span>{_.truncate(text, { length: 80, separator: /,? +/ })}</span>
-            </Hidden>
-            <Hidden only={['xs', 'md', 'lg', 'xl']}>
-                <span>{_.truncate(text, { length: 120, separator: /,? +/ })}</span>
-            </Hidden>
-            <Hidden only={['xs', 'sm', 'lg', 'xl']}>
-                <span>{_.truncate(text, { length: 160, separator: /,? +/ })}</span>
-            </Hidden>
-            <Hidden only={['xs', 'sm', 'md', 'xl']}>
-                <span>{_.truncate(text, { length: 160, separator: /,? +/ })}</span>
-            </Hidden>
-            <Hidden only={['xs', 'sm', 'md', 'lg']}>
-                <span>{_.truncate(text, { length: 200, separator: /,? +/ })}</span>
-            </Hidden>
-        </>
-    );
+    
+    if (xlUp) {
+        return <span>{getTruncatedText(text, 280)}</span>;
+    } else if (lgUp) {
+        return <span>{getTruncatedText(text, 220)}</span>;
+    } else if (mdUp) {
+        return <span>{getTruncatedText(text, 160)}</span>;
+    } else if (smUp) {
+        return <span>{getTruncatedText(text, 160)}</span>;
+    } else {
+        return <span>{getTruncatedText(text, 90)}</span>;
+    }
 }
 
 export default ResponsiveDescription;
+
+function getTruncatedText(text, length) {
+    return _.truncate(text, { length, separator: /,? +/ });
+}

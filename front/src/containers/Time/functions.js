@@ -50,15 +50,3 @@ export function filterTimeEntries(timeEntries, weekSelected, weekFormat) {
 
     return _.filter(timeEntries, t => t.date >= previousWeekStartDate && t.date <= nextWeekEndDate);
 }
-
-export function populateTimeEntries(timeEntries, projects) {
-    console.info(`%cpopulateTimeEntries: running`, 'color: green');
-    if (_.isNil(timeEntries) || _.isNil(projects)) {
-        return [];
-    }
-
-    return timeEntries.map(timeEntry => ({
-        ...timeEntry,
-        project: _.find(projects, p => p.id === timeEntry.project_uid.id)
-    }));
-}

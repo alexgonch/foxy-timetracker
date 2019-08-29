@@ -14,7 +14,8 @@ import Calendar from './Calendar';
 
 import { DbProjectsContext } from 'utils/firebase';
 import { DbTimeEntriesContext } from 'utils/firebase';
-import { filterTimeEntries, populateTimeEntries } from './functions';
+import { filterTimeEntries } from './functions';
+import { populateTimeEntries } from 'utils/functions';
 
 const weekFormat = 'GGGG-WW';
 
@@ -51,7 +52,6 @@ function Time(props) {
                             inputVariant="outlined"
                             showTodayButton
                             autoOk
-                            label=""
                             format="dddd [·] MMM DD"
                             value={dateSelected}
                             TextFieldComponent={CustomDatePickerInput}

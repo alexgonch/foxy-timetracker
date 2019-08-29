@@ -68,7 +68,6 @@ function TimeEntryDialog(props) {
                 console.error(error);
             });
 
-        customSnackbar.success('Time entry deleted.');
         setDeleteConfirmationDialogOpen(false);
         setAnchorEl(null);
         onClose();

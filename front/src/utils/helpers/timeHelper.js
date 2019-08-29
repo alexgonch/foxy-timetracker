@@ -15,3 +15,21 @@ export function getPaddedHoursMinutesSeconds(totalSeconds) {
 
     return { hours, minutes, seconds };
 }
+
+export function formatAsHmm(totalSeconds) {
+    const hours = getHoursFromSeconds(totalSeconds);
+    const minutes = getMinutesFromSeconds(totalSeconds)
+        .toString()
+        .padStart(2, 0);
+
+    return `${hours}:${minutes}`;
+}
+
+export function formatAsHmmExtended(totalSeconds) {
+    const hours = getHoursFromSeconds(totalSeconds);
+    const minutes = getMinutesFromSeconds(totalSeconds)
+        .toString()
+        .padStart(2, 0);
+
+    return `${hours}h ${minutes}m`;
+}

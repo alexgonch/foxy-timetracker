@@ -12,7 +12,7 @@ import { useTheme, makeStyles } from '@material-ui/core/styles';
 
 import NightModeButton from './NightModeButton';
 
-import { getLocationName } from './functions';
+import { getLocationTitle } from 'navigation/locations';
 
 const useStyles = makeStyles(theme => ({
     appBar: props => ({
@@ -43,7 +43,7 @@ function NavBar(props) {
                         <MenuIcon />
                     </IconButton>
                     <Typography variant="h6" style={{ flexGrow: 1 }}>
-                        {getLocationName(location.pathname)}
+                        {getLocationTitle(location.pathname)}
                     </Typography>
                 </Hidden>
                 <Hidden smDown>
