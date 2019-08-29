@@ -59,7 +59,7 @@ const darkTheme = createMuiTheme({
 // IDEA: global search bar
 // IDEA: multi-lang support
 
-// TODO: create Timer Context
+// TODO: implement Timer Context
 // TODO: implement universal loader and connect to all Firebase actions
 // TODO: implement Auth-agnostic routes under navigation (ToS, Privacy, etc)
 function App() {
