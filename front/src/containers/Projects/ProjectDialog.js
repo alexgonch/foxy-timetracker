@@ -104,7 +104,6 @@ function ProjectDialog(props) {
                     console.error(error);
                 });
 
-            customSnackbar.success('Project updated.');
             onClose();
         } else {
             const currentUserRef = db.collection('users').doc(firebase.auth().currentUser.uid);

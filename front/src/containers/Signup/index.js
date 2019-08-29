@@ -10,7 +10,7 @@ import { useTheme } from '@material-ui/core/styles';
 
 import { Formik, Form } from 'formik';
 
-import firebase from 'utils/firebase';
+import firebase, { db } from 'utils/firebase';
 import { signUpSchema } from 'utils/validationSchemas';
 import { CustomSnackbarContext } from 'components/extensions/CustomSnackbar';
 
@@ -22,11 +22,23 @@ function SignupForm(props) {
     const customSnackbar = useContext(CustomSnackbarContext);
 
     const handleSubmit = (values, { setSubmitting }) => {
-        firebase.auth()
+        firebase
+            .auth()
             .createUserWithEmailAndPassword(values.email, values.password)
             .then(authUser => {
-                props.history.push('/'); // TEMP
-                // props.history.push('/success'); // TODO: display user-friendly success message and let them click "Sign in"
+                db.collection('users')
+                    .doc(authUser.user.uid)
+                    .set({
+                        name: values.name
+                    })
+                    .then(() => {
+                        // props.history.push('/'); // TEMP
+                        // props.history.push('/success'); // TODO: display user-friendly success message and let them click "Sign in"
+                    })
+                    .catch(error => {
+                        customSnackbar.error('An error has happened. Please try again.');
+                        console.error(error);
+                    });
             })
             .catch(error => {
                 switch (error.code) {
@@ -50,7 +62,11 @@ function SignupForm(props) {
     };
 
     return (
-        <Formik initialValues={{ email: '', name: '', password: '' }} validationSchema={signUpSchema} onSubmit={handleSubmit}>
+        <Formik
+            initialValues={{ email: '', name: '', password: '' }}
+            validationSchema={signUpSchema}
+            onSubmit={handleSubmit}
+        >
             {({ values, errors, isSubmitting, handleChange, handleBlur }) => (
                 <Form>
                     <TextField

@@ -4,7 +4,9 @@ import moment from 'moment';
 export function filterTimeEntries(timeEntries, startDate, endDate) {
     return _.filter(
         timeEntries,
-        t => moment(t.date, 'YYYYMMDD').isSameOrAfter(startDate) && moment(t.date, 'YYYYMMDD').isSameOrBefore(endDate)
+        t =>
+            moment(t.date, 'YYYYMMDD').isSameOrAfter(startDate, 'day') &&
+            moment(t.date, 'YYYYMMDD').isSameOrBefore(endDate, 'day')
     );
 }
 
@@ -14,7 +16,7 @@ export function processTimeEntries(timeEntries) {
         ...timeEntry,
         time: timeEntry.time - (timeEntry.time % 60)
     }));
-    
+
     return _.filter(timeEntriesWithoutSeconds, t => t.time > 0);
 }
 
@@ -23,11 +25,11 @@ export function convertTimeEntriesToChartData(timeEntries, startDate, endDate) {
     const dataKeys = [];
 
     let currentDate = moment(startDate);
-    while (currentDate.isSameOrBefore(endDate)) {
+    while (currentDate.isSameOrBefore(endDate, 'day')) {
         data.push({ _date: currentDate.format('MMM DD') });
         const allTimeEntriesOnDate = _.filter(
             timeEntries,
-            t => moment(t.date, 'YYYYMMDD').isSame(currentDate) && !_.isNil(t.project)
+            t => moment(t.date, 'YYYYMMDD').isSame(currentDate, 'day') && !_.isNil(t.project)
         );
         allTimeEntriesOnDate.forEach(timeEntry => {
             const previousTimeStored = _.get(_.last(data), timeEntry.project.name, 0);

@@ -334,7 +334,7 @@ class SwipeableViews extends React.Component {
         // and has changed children, readjust height
         const { animateHeight, children } = this.props;
         if (animateHeight === true && prevProps.children !== children) {
-            console.log('%cupdateHeight: ran', 'color: purple');
+            // console.log('%cupdateHeight: ran', 'color: purple'); // DEBUG
             // clearTimeout(this.timeout);
             // this.timeout = setTimeout(() => this.updateHeight(), 1);
             this.updateHeight();

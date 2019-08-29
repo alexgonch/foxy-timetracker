@@ -83,7 +83,7 @@ function App() {
 
     console.log('theme', theme); // DEBUG
     // console.log('authUserLoading', authUserLoading); // DEBUG
-    console.log('authUser', authUser); // DEBUG
+    // console.log('authUser', authUser); // DEBUG
 
     return (
         <ThemeProvider theme={theme}>

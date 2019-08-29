@@ -3,7 +3,6 @@ import React, { useState, useContext, useMemo } from 'react';
 import moment from 'moment';
 
 import { DatePicker } from '@material-ui/pickers';
-import WarningIcon from '@material-ui/icons/Warning';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
