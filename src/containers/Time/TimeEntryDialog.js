@@ -111,7 +111,7 @@ function TimeEntryDialog(props) {
             onClose();
         }
     };
-    
+
     return (
         <Formik
             enableReinitialize // will update contents if the time entry is modified from another device
