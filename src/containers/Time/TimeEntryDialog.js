@@ -111,7 +111,7 @@ function TimeEntryDialog(props) {
             onClose();
         }
     };
-
+    
     return (
         <Formik
             enableReinitialize // will update contents if the time entry is modified from another device
@@ -170,6 +170,11 @@ function TimeEntryDialog(props) {
                                     }
                                 }}
                             >
+                                {_.isEmpty(projectsSelectable) && (
+                                    <MenuItem disabled value={null}>
+                                        No active projects found
+                                    </MenuItem>
+                                )}
                                 {projectsSelectable.map(project => (
                                     <MenuItem key={project.id} value={project.id}>
                                         {project.name}
@@ -225,6 +230,11 @@ function TimeEntryDialog(props) {
                                     onBlur={handleBlur}
                                 />
                             </Box>
+                            {_.isEmpty(projectsSelectable) && (
+                                <Typography variant="body2" color="error" style={{ marginTop: theme.spacing(1) }}>
+                                    You need to create a project before logging your time.
+                                </Typography>
+                            )}
                             {thisTimerIsRunning && (
                                 <Typography variant="body2" color="error" style={{ marginTop: theme.spacing(1) }}>
                                     Editing is limited while timer is running.
