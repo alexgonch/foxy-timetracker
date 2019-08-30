@@ -113,145 +113,133 @@ function TimeEntryDialog(props) {
     };
 
     return (
-        <>
-            <Dialog
-                fullWidth
-                open={open && !deleteConfirmationDialogOpen}
-                aria-labelledby="time-entry-dialog"
-                onClose={onClose}
-            >
-                <Formik
-                    initialValues={getInitialValues(timeEntry)}
-                    validationSchema={timeEntrySchema}
-                    onSubmit={handleSubmit}
+        <Formik
+            enableReinitialize // will update contents if the time entry is modified from another device
+            initialValues={getInitialValues(timeEntry)}
+            validationSchema={timeEntrySchema}
+            onSubmit={handleSubmit}
+        >
+            {({ values, errors, isSubmitting, handleChange, handleBlur, setFieldValue, submitForm }) => (
+                <Dialog
+                    fullWidth
+                    open={open && !deleteConfirmationDialogOpen}
+                    aria-labelledby="time-entry-dialog"
+                    onClose={onClose}
                 >
-                    {({ values, errors, isSubmitting, handleChange, handleBlur, setFieldValue, submitForm }) => (
-                        <>
-                            {updateMode ? (
-                                <DialogTitleWithMenu title="Update time entry" onMore={handleMore}>
-                                    <Menu
-                                        anchorEl={anchorEl}
-                                        keepMounted
-                                        open={Boolean(anchorEl)}
-                                        onClose={handleCloseMore}
-                                    >
-                                        <MenuItem
-                                            button={!thisTimerIsRunning}
-                                            onClick={thisTimerIsRunning ? () => undefined : handleDelete}
-                                        >
-                                            <Typography
-                                                variant="inherit"
-                                                style={{
-                                                    paddingRight: theme.spacing(2),
-                                                    color: thisTimerIsRunning
-                                                        ? theme.palette.text.disabled
-                                                        : theme.palette.error.main
-                                                }}
-                                            >
-                                                Delete
-                                            </Typography>
-                                        </MenuItem>
-                                    </Menu>
-                                </DialogTitleWithMenu>
-                            ) : (
-                                <DialogTitle>New time entry</DialogTitle>
-                            )}
-
-                            <DialogContent>
-                                <Form>
-                                    <TextField
-                                        select
-                                        fullWidth
-                                        variant="outlined"
-                                        name="project_uid"
-                                        label="Project"
-                                        value={values.project_uid}
-                                        error={!_.isEmpty(errors.project_uid)}
-                                        helperText={errors.project_uid}
-                                        style={{ marginTop: theme.spacing(1) }}
-                                        onChange={handleChange}
-                                        SelectProps={{
-                                            classes: {
-                                                icon: classes.selectIcon
-                                            }
+                    {updateMode ? (
+                        <DialogTitleWithMenu title="Update time entry" onMore={handleMore}>
+                            <Menu anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleCloseMore}>
+                                <MenuItem
+                                    button={!thisTimerIsRunning}
+                                    onClick={thisTimerIsRunning ? () => undefined : handleDelete}
+                                >
+                                    <Typography
+                                        variant="inherit"
+                                        style={{
+                                            paddingRight: theme.spacing(2),
+                                            color: thisTimerIsRunning
+                                                ? theme.palette.text.disabled
+                                                : theme.palette.error.main
                                         }}
                                     >
-                                        {projectsSelectable.map(project => (
-                                            <MenuItem key={project.id} value={project.id}>
-                                                {project.name}
-                                            </MenuItem>
-                                        ))}
-                                    </TextField>
-                                    <TextField
-                                        multiline
-                                        fullWidth
-                                        variant="outlined"
-                                        name="description"
-                                        label="Description"
-                                        value={values.description}
-                                        error={!_.isEmpty(errors.description)}
-                                        helperText={errors.description}
-                                        style={{ marginTop: theme.spacing(2) }}
-                                        onChange={handleChange}
-                                        onBlur={handleBlur}
-                                    />
-                                    <Box display="flex">
-                                        <TextField
-                                            disabled={thisTimerIsRunning}
-                                            type="number"
-                                            variant="outlined"
-                                            name="hours"
-                                            label="Hours"
-                                            value={parseInt(values.hours || 0).toString()}
-                                            error={!_.isEmpty(errors.hours)}
-                                            helperText={errors.hours}
-                                            style={{
-                                                width: '50%',
-                                                marginRight: theme.spacing(1),
-                                                marginTop: theme.spacing(2)
-                                            }}
-                                            onChange={handleChange}
-                                            onBlur={handleBlur}
-                                        />
-                                        <TextField
-                                            disabled={thisTimerIsRunning}
-                                            type="number"
-                                            variant="outlined"
-                                            name="minutes"
-                                            label="Minutes"
-                                            value={parseInt(values.minutes || 0).toString()}
-                                            error={!_.isEmpty(errors.minutes)}
-                                            helperText={errors.minutes}
-                                            style={{
-                                                width: '50%',
-                                                marginLeft: theme.spacing(1),
-                                                marginTop: theme.spacing(2)
-                                            }}
-                                            onChange={handleChange}
-                                            onBlur={handleBlur}
-                                        />
-                                    </Box>
-                                    {thisTimerIsRunning && (
-                                        <Typography
-                                            variant="body2"
-                                            color="error"
-                                            style={{ marginTop: theme.spacing(1) }}
-                                        >
-                                            Editing is limited while timer is running.
-                                        </Typography>
-                                    )}
-                                </Form>
-                            </DialogContent>
-                            <DialogActions>
-                                <Button color="secondary" onClick={submitForm}>
-                                    {updateMode ? 'Update' : 'Create'}
-                                </Button>
-                            </DialogActions>
-                        </>
+                                        Delete
+                                    </Typography>
+                                </MenuItem>
+                            </Menu>
+                        </DialogTitleWithMenu>
+                    ) : (
+                        <DialogTitle>New time entry</DialogTitle>
                     )}
-                </Formik>
-            </Dialog>
-        </>
+
+                    <DialogContent>
+                        <Form>
+                            <TextField
+                                select
+                                fullWidth
+                                variant="outlined"
+                                name="project_uid"
+                                label="Project"
+                                value={values.project_uid}
+                                error={!_.isEmpty(errors.project_uid)}
+                                helperText={errors.project_uid}
+                                style={{ marginTop: theme.spacing(1) }}
+                                onChange={handleChange}
+                                SelectProps={{
+                                    classes: {
+                                        icon: classes.selectIcon
+                                    }
+                                }}
+                            >
+                                {projectsSelectable.map(project => (
+                                    <MenuItem key={project.id} value={project.id}>
+                                        {project.name}
+                                    </MenuItem>
+                                ))}
+                            </TextField>
+                            <TextField
+                                multiline
+                                fullWidth
+                                variant="outlined"
+                                name="description"
+                                label="Description"
+                                value={values.description}
+                                error={!_.isEmpty(errors.description)}
+                                helperText={errors.description}
+                                style={{ marginTop: theme.spacing(2) }}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                            />
+                            <Box display="flex">
+                                <TextField
+                                    disabled={thisTimerIsRunning}
+                                    type="number"
+                                    variant="outlined"
+                                    name="hours"
+                                    label="Hours"
+                                    value={parseInt(values.hours || 0).toString()}
+                                    error={!_.isEmpty(errors.hours)}
+                                    helperText={errors.hours}
+                                    style={{
+                                        width: '50%',
+                                        marginRight: theme.spacing(1),
+                                        marginTop: theme.spacing(2)
+                                    }}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                />
+                                <TextField
+                                    disabled={thisTimerIsRunning}
+                                    type="number"
+                                    variant="outlined"
+                                    name="minutes"
+                                    label="Minutes"
+                                    value={parseInt(values.minutes || 0).toString()}
+                                    error={!_.isEmpty(errors.minutes)}
+                                    helperText={errors.minutes}
+                                    style={{
+                                        width: '50%',
+                                        marginLeft: theme.spacing(1),
+                                        marginTop: theme.spacing(2)
+                                    }}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                />
+                            </Box>
+                            {thisTimerIsRunning && (
+                                <Typography variant="body2" color="error" style={{ marginTop: theme.spacing(1) }}>
+                                    Editing is limited while timer is running.
+                                </Typography>
+                            )}
+                        </Form>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button color="secondary" onClick={submitForm}>
+                            {updateMode ? 'Update' : 'Create'}
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            )}
+        </Formik>
     );
 }
 
