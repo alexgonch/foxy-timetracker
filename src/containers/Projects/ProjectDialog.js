@@ -22,7 +22,7 @@ import { CustomSnackbarContext } from 'components/extensions/CustomSnackbar';
 
 import ConfirmationDialog from 'components/dialogs/ConfirmationDialog';
 
-// TODO: extend db with common API calls
+// REVIEW: extend db with common API calls
 import firebase, { db } from 'utils/firebase';
 
 function ProjectDialog(props) {
@@ -36,7 +36,7 @@ function ProjectDialog(props) {
     const theme = useTheme();
     const customSnackbar = useContext(CustomSnackbarContext);
 
-    // TODO: we could make a Menu context to reuse across the entire app
+    // REVIEW: we could make a Menu context to reuse across the entire app
     const handleMore = event => {
         setAnchorEl(event.currentTarget);
     };

@@ -32,6 +32,7 @@ const COLORS = [
     'lightGreen'
 ];
 
+// TODO: show weekly/monthly stats when date range reaches particular size
 function TimeChart(props) {
     const { timeEntries, startDate, endDate } = props;
 
@@ -43,7 +44,6 @@ function TimeChart(props) {
         endDate
     ]);
 
-    // TODO: verify how labelFormatter works with non-current year
     return (
         <ResponsiveContainer width="100%" height={400}>
             <BarChart
@@ -59,7 +59,12 @@ function TimeChart(props) {
                     strokeDasharray="2 2"
                     stroke={theme.light() ? theme.palette.grey[300] : theme.palette.grey[700]}
                 />
-                <XAxis dataKey="_date" stroke={theme.palette.text.secondary} tickMargin={4} />
+                <XAxis
+                    dataKey="_date"
+                    stroke={theme.palette.text.secondary}
+                    tickMargin={4}
+                    tickFormatter={tick => moment(tick).format('MMM DD')}
+                />
                 <YAxis
                     type="number"
                     domain={[0, dataMax => Math.ceil(dataMax / 3600) * 3600]}
@@ -72,7 +77,7 @@ function TimeChart(props) {
                     isAnimationActive={false}
                     contentStyle={{ background: theme.palette.background.paper }}
                     labelStyle={{ marginBottom: theme.spacing(1) }}
-                    labelFormatter={value => moment(value, 'MMM DD').format('dddd [·] MMM DD')}
+                    labelFormatter={value => moment(value).format('dddd [·] MMM DD')}
                     formatter={(value, name, props) => formatAsHmmExtended(value)}
                 />
                 <Legend formatter={value => <span style={{ color: theme.palette.text.primary }}>{value}</span>} />

@@ -26,7 +26,7 @@ export function convertTimeEntriesToChartData(timeEntries, startDate, endDate) {
 
     let currentDate = moment(startDate);
     while (currentDate.isSameOrBefore(endDate, 'day')) {
-        data.push({ _date: currentDate.format('MMM DD') });
+        data.push({ _date: currentDate.toISOString() });
         const allTimeEntriesOnDate = _.filter(
             timeEntries,
             t => moment(t.date, 'YYYYMMDD').isSame(currentDate, 'day') && !_.isNil(t.project)

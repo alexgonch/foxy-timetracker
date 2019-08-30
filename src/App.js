@@ -60,7 +60,6 @@ const darkTheme = createMuiTheme({
 // IDEA: multi-lang support
 
 // TODO: implement Timer Context
-// TODO: implement universal loader and connect to all Firebase actions
 // TODO: implement Auth-agnostic routes under navigation (ToS, Privacy, etc)
 function App() {
     const { authUserLoading, authUser } = useFirebaseAuth();

@@ -11,7 +11,7 @@ import ProjectName from './ProjectName';
 import TimeEntryTime from './TimeEntryTime';
 import ResponsiveDescription from './ResponsiveDescription';
 
-// TODO: extend db with common API calls
+// REVIEW: extend db with common API calls
 import firebase, { db } from 'utils/firebase';
 import { CustomSnackbarContext } from 'components/extensions/CustomSnackbar';
 
@@ -51,6 +51,7 @@ function TimeEntry(props) {
 
     const handleToggleTimer = () => {
         if (timerIsRunning) {
+            // If timer is running, stop it and save time to the appropriate time entry first
             const batch = db.batch();
 
             const currentUserRef = db.collection('users').doc(firebase.auth().currentUser.uid);
@@ -59,8 +60,7 @@ function TimeEntry(props) {
                 timer_ref: null
             });
 
-            // "Previous" time entry
-            const currentTimeEntryRef = db.collection('time_entries').doc(timerRef.id);
+            const currentTimeEntryRef = db.collection('time_entries').doc(timerRef.id); // time entry of a now-stopped timer
             batch.update(currentTimeEntryRef, {
                 time: firebase.firestore.FieldValue.increment(timerValue)
             });
@@ -70,8 +70,8 @@ function TimeEntry(props) {
                 console.error(error);
             });
 
+            // If timer was stopped due to assigning it to a different time entry, start it on a new one
             if (timerRef.id !== id) {
-                // TODO: merge with the repeated code below
                 const timeEntryRef = db.collection('time_entries').doc(id);
 
                 currentUserRef
@@ -85,7 +85,7 @@ function TimeEntry(props) {
                     });
             }
         } else {
-            // TODO: merge with the repeated code above
+            // Else just start a new timer
             const timeEntryRef = db.collection('time_entries').doc(id);
 
             db.collection('users')

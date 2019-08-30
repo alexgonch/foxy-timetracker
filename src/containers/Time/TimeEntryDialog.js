@@ -23,7 +23,7 @@ import { timeEntrySchema } from 'utils/validationSchemas';
 import { getInitialValues, getSelectableProjects } from './functions';
 import { CustomSnackbarContext } from 'components/extensions/CustomSnackbar';
 
-// TODO: extend db with common API calls
+// REVIEW: extend db with common API calls
 import firebase, { db, DbUserContext, DbProjectsContext } from 'utils/firebase';
 
 const useStyles = makeStyles(theme => ({
@@ -52,7 +52,7 @@ function TimeEntryDialog(props) {
 
     const thisTimerIsRunning = !_.isNil(user.timer_date) && user.timer_ref.id === _.get(timeEntry, 'id', null);
 
-    // TODO: we could make a Menu context to reuse across the entire app
+    // REVIEW: we could make a Menu context to reuse across the entire app
     const handleMore = event => {
         setAnchorEl(event.currentTarget);
     };
