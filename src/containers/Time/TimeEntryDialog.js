@@ -14,6 +14,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme, makeStyles } from '@material-ui/core/styles';
 
 import { Formik, Form } from 'formik';
@@ -38,6 +39,7 @@ function TimeEntryDialog(props) {
 
     const theme = useTheme();
     const classes = useStyles();
+    const smScreenDetected = useMediaQuery(theme.breakpoints.down('xs'));
 
     const customSnackbar = useContext(CustomSnackbarContext);
 
@@ -121,6 +123,7 @@ function TimeEntryDialog(props) {
         >
             {({ values, errors, isSubmitting, handleChange, handleBlur, setFieldValue, submitForm }) => (
                 <Dialog
+                    fullScreen={smScreenDetected}
                     fullWidth
                     open={open && !deleteConfirmationDialogOpen}
                     aria-labelledby="time-entry-dialog"
@@ -243,6 +246,11 @@ function TimeEntryDialog(props) {
                         </Form>
                     </DialogContent>
                     <DialogActions>
+                        {smScreenDetected && (
+                            <Button style={{ color: theme.palette.text.secondary }} onClick={onClose}>
+                                Cancel
+                            </Button>
+                        )}
                         <Button color="secondary" onClick={submitForm}>
                             {updateMode ? 'Update' : 'Create'}
                         </Button>
