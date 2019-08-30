@@ -29,6 +29,7 @@ function SignupForm(props) {
                 db.collection('users')
                     .doc(authUser.user.uid)
                     .set({
+                        email: values.email,
                         name: values.name
                     })
                     .then(() => {
