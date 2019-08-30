@@ -32,10 +32,6 @@ function SignupForm(props) {
                         email: values.email,
                         name: values.name
                     })
-                    .then(() => {
-                        // props.history.push('/'); // TEMP
-                        // props.history.push('/success'); // TODO: display user-friendly success message and let them click "Sign in"
-                    })
                     .catch(error => {
                         customSnackbar.error('An error has happened. Please try again.');
                         console.error(error);
