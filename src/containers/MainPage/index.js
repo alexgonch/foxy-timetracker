@@ -36,7 +36,7 @@ function MainPage(props) {
     const { projectsLoading, projectsError, projects } = useDbProjects();
     const { timeEntriesLoading, timeEntriesError, timeEntries } = useDbTimeEntries();
 
-    function handleDrawerToggle() {
+    const handleDrawerToggle = () => {
         setMobileDrawerOpen(!mobileDrawerOpen);
     }
 
