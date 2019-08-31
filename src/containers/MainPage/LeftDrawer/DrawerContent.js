@@ -46,7 +46,7 @@ function DrawerContent(props) {
                         button
                         selected={page.isSelected(location.pathname)}
                         component={Link}
-                        to={page.to(location.pathname)}
+                        to={page.to(location)}
                         onClick={onDrawerToggle}
                     >
                         <ListItemIcon>{page.icon}</ListItemIcon>

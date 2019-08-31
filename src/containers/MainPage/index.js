@@ -1,4 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { withRouter } from 'react-router-dom';
+
+import _ from 'lodash';
+import moment from 'moment';
 
 import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/core/styles';
@@ -38,7 +42,7 @@ function MainPage(props) {
 
     const handleDrawerToggle = () => {
         setMobileDrawerOpen(!mobileDrawerOpen);
-    }
+    };
 
     console.log('user', user); // DEBUG
     console.log('projects', projects); // DEBUG
@@ -69,4 +73,4 @@ function MainPage(props) {
     );
 }
 
-export default MainPage;
+export default withRouter(MainPage);

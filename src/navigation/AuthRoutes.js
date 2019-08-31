@@ -11,7 +11,7 @@ function AuthRoutes(props) {
     return (
         <Switch>
             <Route exact path="/" component={Projects} />
-            <Route path="/time/:date" component={Time} />
+            <Route exact path="/time" component={Time} />
             <Route exact path="/reports" component={Reports} />
             <Route exact path="/account" component={Account} />
             <Redirect from="/login" to="/" />

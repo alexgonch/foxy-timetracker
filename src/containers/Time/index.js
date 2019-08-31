@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext, useMemo } from 'react';
 import { withRouter } from 'react-router-dom';
 
 import moment from 'moment';
+import queryString from 'query-string';
 
 import { DatePicker } from '@material-ui/pickers';
 import Box from '@material-ui/core/Box';
@@ -20,12 +21,16 @@ import { populateTimeEntries } from 'utils/functions';
 const weekFormat = 'GGGG-WW';
 
 function Time(props) {
-    const { history, match } = props;
-
-    const [dateSelected, setDateSelected] = useState(moment(match.params.date, 'YYYYMMDD').toDate());
+    const { location, history } = props;
+    
+    const dateUrlParam = queryString.parse(location.search).date;
+    const [dateSelected, setDateSelected] = useState(moment(dateUrlParam, 'YYYYMMDD').toDate());
 
     useEffect(() => {
-        history.push(`/time/${moment(dateSelected).format('YYYYMMDD')}`);
+        const urlParams = {
+            date: moment(dateSelected).format('YYYYMMDD')
+        };
+        history.push('/time?' + queryString.stringify(urlParams));
     }, [history, dateSelected]);
 
     const { projects } = useContext(DbProjectsContext);
