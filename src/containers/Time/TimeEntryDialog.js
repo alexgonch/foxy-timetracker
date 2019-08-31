@@ -48,7 +48,7 @@ function TimeEntryDialog(props) {
 
     const { user } = useContext(DbUserContext);
     const { projects } = useContext(DbProjectsContext);
-    const projectsSelectable = useMemo(() => getSelectableProjects(timeEntry, projects), [timeEntry, projects]);
+    const selectableProjects = useMemo(() => getSelectableProjects(timeEntry, projects), [timeEntry, projects]);
 
     const thisTimerIsRunning = !_.isNil(user.timer_date) && user.timer_ref.id === _.get(timeEntry, 'id', null);
 
@@ -108,7 +108,7 @@ function TimeEntryDialog(props) {
                     console.error(error);
                 });
         }
-        
+
         resetForm();
         onClose();
     };
@@ -173,12 +173,12 @@ function TimeEntryDialog(props) {
                                     }
                                 }}
                             >
-                                {_.isEmpty(projectsSelectable) && (
+                                {_.isEmpty(selectableProjects) && (
                                     <MenuItem disabled value={null}>
                                         No active projects found
                                     </MenuItem>
                                 )}
-                                {projectsSelectable.map(project => (
+                                {selectableProjects.map(project => (
                                     <MenuItem key={project.id} value={project.id}>
                                         {project.name}
                                     </MenuItem>
@@ -233,7 +233,7 @@ function TimeEntryDialog(props) {
                                     onBlur={handleBlur}
                                 />
                             </Box>
-                            {_.isEmpty(projectsSelectable) && (
+                            {_.isEmpty(selectableProjects) && (
                                 <Typography variant="body2" color="error" style={{ marginTop: theme.spacing(1) }}>
                                     You need to create a project before logging your time.
                                 </Typography>

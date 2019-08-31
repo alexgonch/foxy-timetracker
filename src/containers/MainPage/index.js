@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
+
+import _ from 'lodash';
 
 import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/core/styles';
@@ -36,13 +38,16 @@ function MainPage(props) {
     const { projectsLoading, projectsError, projects } = useDbProjects();
     const { timeEntriesLoading, timeEntriesError, timeEntries } = useDbTimeEntries();
 
-    function handleDrawerToggle() {
+    const handleDrawerToggle = () => {
         setMobileDrawerOpen(!mobileDrawerOpen);
-    }
+    };
 
     console.log('user', user); // DEBUG
     console.log('projects', projects); // DEBUG
     console.log('timeEntries', timeEntries); // DEBUG
+
+    const activeProjects = useMemo(() => _.filter(projects, p => !p.archived), [projects]);
+    const activeProjectsExist = !_.isEmpty(activeProjects);
 
     if (userLoading || projectsLoading || timeEntriesLoading) {
         return <FullPageLoader />;
@@ -60,7 +65,7 @@ function MainPage(props) {
                         />
                         <NavBar drawerWidth={drawerWidth} onDrawerToggle={handleDrawerToggle} />
                         <Box className={classes.routerBox}>
-                            <AuthRoutes />
+                            <AuthRoutes activeProjectsExist={activeProjectsExist} />
                         </Box>
                     </Box>
                 </DbTimeEntriesContext.Provider>
