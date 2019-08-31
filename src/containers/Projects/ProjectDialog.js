@@ -92,7 +92,7 @@ function ProjectDialog(props) {
         onClose();
     };
 
-    const handleSubmit = (values, { setSubmitting }) => {
+    const handleSubmit = (values, { resetForm }) => {
         if (updateMode) {
             db.collection('projects')
                 .doc(project.id)
@@ -103,8 +103,6 @@ function ProjectDialog(props) {
                     customSnackbar.error('An error has happened. Please try again.');
                     console.error(error);
                 });
-
-            onClose();
         } else {
             const currentUserRef = db.collection('users').doc(firebase.auth().currentUser.uid);
 
@@ -122,8 +120,10 @@ function ProjectDialog(props) {
                 });
 
             customSnackbar.success('Project created.');
-            onClose();
         }
+
+        resetForm();
+        onClose();
     };
 
     return (

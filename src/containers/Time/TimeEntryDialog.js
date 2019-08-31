@@ -75,7 +75,7 @@ function TimeEntryDialog(props) {
         onClose();
     };
 
-    const handleSubmit = (values, { setSubmitting }) => {
+    const handleSubmit = (values, { resetForm }) => {
         if (updateMode) {
             const projectRef = db.collection('projects').doc(values.project_uid);
 
@@ -90,8 +90,6 @@ function TimeEntryDialog(props) {
                     customSnackbar.error('An error has happened. Please try again.');
                     console.error(error);
                 });
-
-            onClose();
         } else {
             const currentUserRef = db.collection('users').doc(firebase.auth().currentUser.uid);
             const projectRef = db.collection('projects').doc(values.project_uid);
@@ -109,11 +107,13 @@ function TimeEntryDialog(props) {
                     customSnackbar.error('An error has happened. Please try again.');
                     console.error(error);
                 });
-
-            onClose();
         }
+        
+        resetForm();
+        onClose();
     };
 
+    console.log('init', getInitialValues(timeEntry));
     return (
         <Formik
             enableReinitialize // will update contents if the time entry is modified from another device
