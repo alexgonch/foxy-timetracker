@@ -64,4 +64,5 @@ function getLocationTitle(pathname) {
 
 export default locations;
 
+export { generateToTime };
 export { getLocationTitle };

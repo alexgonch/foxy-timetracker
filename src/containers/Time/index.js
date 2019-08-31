@@ -22,7 +22,7 @@ const weekFormat = 'GGGG-WW';
 
 function Time(props) {
     const { location, history } = props;
-    
+
     const dateUrlParam = queryString.parse(location.search).date;
     const [dateSelected, setDateSelected] = useState(moment(dateUrlParam, 'YYYYMMDD').toDate());
 

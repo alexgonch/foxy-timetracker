@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
+import React, { useState, useMemo } from 'react';
 
 import _ from 'lodash';
-import moment from 'moment';
 
 import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/core/styles';
@@ -48,6 +46,9 @@ function MainPage(props) {
     console.log('projects', projects); // DEBUG
     console.log('timeEntries', timeEntries); // DEBUG
 
+    const activeProjects = useMemo(() => _.filter(projects, p => !p.archived), [projects]);
+    const activeProjectsExist = !_.isEmpty(activeProjects);
+
     if (userLoading || projectsLoading || timeEntriesLoading) {
         return <FullPageLoader />;
     }
@@ -64,7 +65,7 @@ function MainPage(props) {
                         />
                         <NavBar drawerWidth={drawerWidth} onDrawerToggle={handleDrawerToggle} />
                         <Box className={classes.routerBox}>
-                            <AuthRoutes />
+                            <AuthRoutes activeProjectsExist={activeProjectsExist} />
                         </Box>
                     </Box>
                 </DbTimeEntriesContext.Provider>
@@ -73,4 +74,4 @@ function MainPage(props) {
     );
 }
 
-export default withRouter(MainPage);
+export default MainPage;
