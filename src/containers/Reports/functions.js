@@ -28,17 +28,6 @@ export function addColorsToProjects(lightThemeEnabled, projects) {
     return projectsWithColors;
 }
 
-export function getProjectWithTotalTime(projects, timeEntries) {
-    const projectsWithTotalTime = _.cloneDeep(projects);
-
-    projectsWithTotalTime.forEach(project => {
-        const projectTimeEntries = _.filter(timeEntries, t => t.project_uid.id === project.id);
-        project.totalTime = projectTimeEntries.reduce((sum, t) => (sum += t.time), 0);
-    });
-
-    return projectsWithTotalTime;
-}
-
 export function filterTimeEntriesByDates(timeEntries, startDate, endDate) {
     return _.filter(
         timeEntries,

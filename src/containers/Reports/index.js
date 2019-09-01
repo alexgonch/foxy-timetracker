@@ -1,7 +1,5 @@
 import React, { useState, useContext, useMemo } from 'react';
 
-// import moment from 'moment';
-
 import { DatePicker } from '@material-ui/pickers';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
@@ -14,21 +12,11 @@ import Stats from './Stats';
 
 import { DbTimeEntriesContext, DbProjectsContext } from 'utils/firebase';
 import { filterTimeEntriesByDates } from './functions';
+import useDates from './hooks/useDates';
 import useProcessedData from './hooks/useProcessedData';
 
 function Reports(props) {
-    const [startDate, setStartDate] = useState(
-        // moment()
-        //     .startOf('month')
-        //     .toDate()
-        '2019-08-15T00:00:00-06:00' // TEMP
-    );
-    const [endDate, setEndDate] = useState(
-        // moment()
-        //     .endOf('month')
-        //     .toDate()
-        '2019-08-31T23:59:59-06:00' // TEMP
-    );
+    const { startDate, handleStartDate, endDate, handleEndDate } = useDates();
     const [projectIdsUnchecked, setProjectIdsUnchecked] = useState([]);
 
     const theme = useTheme();
@@ -51,7 +39,6 @@ function Reports(props) {
         startDate,
         endDate
     );
-    console.log('Reports render');
 
     return (
         <Box p={2}>
@@ -72,7 +59,7 @@ function Reports(props) {
                                 format="dddd [·] MMM DD"
                                 value={startDate}
                                 TextFieldComponent={CustomDatePickerInput}
-                                onChange={date => setStartDate(date)}
+                                onChange={date => handleStartDate(date)}
                             />
                         </Paper>
                         <Paper style={{ display: 'inline-block', marginBottom: theme.spacing(2) }}>
@@ -83,7 +70,7 @@ function Reports(props) {
                                 format="dddd [·] MMM DD"
                                 value={endDate}
                                 TextFieldComponent={CustomDatePickerInput}
-                                onChange={date => setEndDate(date)}
+                                onChange={date => handleEndDate(date)}
                             />
                         </Paper>
                     </Box>
