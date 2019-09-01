@@ -9,36 +9,13 @@ import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Toolti
 import { convertTimeEntriesToChartData } from './functions';
 import { formatAsHmmExtended } from 'utils/helpers/timeHelper';
 
-const COLORS = [
-    // group 1
-    'pink',
-    'blue',
-    'green',
-    'amber',
-    // group 2
-    'cyan',
-    'lime',
-    'deepOrange',
-    'deepPurple',
-    // group 3
-    'teal',
-    'yellow',
-    'red',
-    'indigo',
-    // group 4
-    'orange',
-    'purple',
-    'lightBlue',
-    'lightGreen'
-];
-
 // TODO: show weekly/monthly stats when date range reaches particular size
 function TimeChart(props) {
-    const { timeEntries, startDate, endDate } = props;
+    const { projects, timeEntries, startDate, endDate } = props;
 
     const theme = useTheme();
 
-    const { data, dataKeys } = useMemo(() => convertTimeEntriesToChartData(timeEntries, startDate, endDate), [
+    const { data } = useMemo(() => convertTimeEntriesToChartData(timeEntries, startDate, endDate), [
         timeEntries,
         startDate,
         endDate
@@ -81,11 +58,8 @@ function TimeChart(props) {
                     formatter={(value, name, props) => formatAsHmmExtended(value)}
                 />
                 <Legend formatter={value => <span style={{ color: theme.palette.text.primary }}>{value}</span>} />
-                {dataKeys.map((dataKey, index) => {
-                    const colorIndex = theme.light() ? 500 : 'A200';
-                    const colorName = COLORS[index % COLORS.length]; // will start looping colors eventually
-
-                    return <Bar key={dataKey} dataKey={dataKey} stackId="time" fill={colors[colorName][colorIndex]} />;
+                {projects.map(project => {
+                    return <Bar key={project.id} dataKey={project.name} stackId="projects" fill={project.color} />;
                 })}
             </BarChart>
         </ResponsiveContainer>

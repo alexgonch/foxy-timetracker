@@ -1,12 +1,41 @@
 import _ from 'lodash';
 import moment from 'moment';
 
-export function filterTimeEntries(timeEntries, startDate, endDate) {
+import * as colors from '@material-ui/core/colors';
+
+import { COLORS } from './constants';
+
+export function addColorsToProjects(lightThemeEnabled, projects) {
+    const projectsWithColors = _.cloneDeep(projects);
+
+    projectsWithColors.forEach((project, index) => {
+        const colorIndex = lightThemeEnabled ? 500 : 'A200';
+        const colorName = COLORS[index % COLORS.length]; // will start looping colors eventually
+
+        project.color = colors[colorName][colorIndex];
+    });
+
+    return projectsWithColors;
+}
+
+export function getProjectWithTotalTime(projects, timeEntries) {
+    const projectsWithTotalTime = _.cloneDeep(projects);
+    
+    projectsWithTotalTime.forEach(project => {
+        const projectTimeEntries = _.filter(timeEntries, t => t.project_uid.id === project.id);
+        project.totalTime = projectTimeEntries.reduce((sum, t) => (sum += t.time), 0);
+    });
+    
+    return projectsWithTotalTime;
+}
+
+export function filterTimeEntries(timeEntries, projectIdsUnchecked, startDate, endDate) {
     return _.filter(
         timeEntries,
         t =>
             moment(t.date, 'YYYYMMDD').isSameOrAfter(startDate, 'day') &&
-            moment(t.date, 'YYYYMMDD').isSameOrBefore(endDate, 'day')
+            moment(t.date, 'YYYYMMDD').isSameOrBefore(endDate, 'day') &&
+            !projectIdsUnchecked.includes(t.project_uid.id)
     );
 }
 
@@ -22,7 +51,6 @@ export function processTimeEntries(timeEntries) {
 
 export function convertTimeEntriesToChartData(timeEntries, startDate, endDate) {
     const data = [];
-    const dataKeys = [];
 
     let currentDate = moment(startDate);
     while (currentDate.isSameOrBefore(endDate, 'day')) {
@@ -34,14 +62,10 @@ export function convertTimeEntriesToChartData(timeEntries, startDate, endDate) {
         allTimeEntriesOnDate.forEach(timeEntry => {
             const previousTimeStored = _.get(_.last(data), timeEntry.project.name, 0);
             _.set(_.last(data), timeEntry.project.name, previousTimeStored + timeEntry.time);
-
-            if (!dataKeys.includes(timeEntry.project.name)) {
-                dataKeys.push(timeEntry.project.name);
-            }
         });
 
         currentDate.add(1, 'days');
     }
 
-    return { data, dataKeys };
+    return { data };
 }

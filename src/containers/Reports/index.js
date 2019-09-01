@@ -1,21 +1,21 @@
 import React, { useState, useContext, useMemo } from 'react';
 
+import _ from 'lodash';
 import moment from 'moment';
 
 import { DatePicker } from '@material-ui/pickers';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
 import { useTheme } from '@material-ui/core/styles';
 
 import CustomDatePickerInput from 'components/extensions/CustomDatePickerInput';
 import TimeChart from './TimeChart';
+import Stats from './Stats';
 
 import { DbTimeEntriesContext, DbProjectsContext } from 'utils/firebase';
-import { filterTimeEntries, processTimeEntries } from './functions';
+import { addColorsToProjects, filterTimeEntries, processTimeEntries } from './functions';
 import { populateTimeEntries } from 'utils/functions';
-import { formatAsHmmExtended } from 'utils/helpers/timeHelper';
 
 function Reports(props) {
     const [startDate, setStartDate] = useState(
@@ -28,26 +28,32 @@ function Reports(props) {
             .endOf('month')
             .toDate()
     );
+    const [projectIdsUnchecked, setProjectIdsUnchecked] = useState([]);
 
     const theme = useTheme();
+    const lightThemeEnabled = theme.light();
 
     const { timeEntries } = useContext(DbTimeEntriesContext);
     const { projects } = useContext(DbProjectsContext);
 
-    const timeEntriesFiltered = useMemo(() => filterTimeEntries(timeEntries, startDate, endDate), [
-        timeEntries,
-        startDate,
-        endDate
-    ]);
-    const timeEntriesPopulated = useMemo(() => populateTimeEntries(timeEntriesFiltered, projects), [
-        timeEntriesFiltered,
+    const projectsWithColors = useMemo(() => addColorsToProjects(lightThemeEnabled, projects), [
+        lightThemeEnabled,
         projects
     ]);
-    const timeEntriesProcessed = useMemo(() => processTimeEntries(timeEntriesPopulated), [timeEntriesPopulated]);
+    const projectsWithColorsFiltered = useMemo(
+        () => _.filter(projectsWithColors, p => !projectIdsUnchecked.includes(p.id)),
+        [projectIdsUnchecked, projectsWithColors]
+    );
 
-    const totalTime = useMemo(() => timeEntriesFiltered.reduce((sum, timeEntry) => (sum += timeEntry.time), 0), [
-        timeEntriesFiltered
+    const timeEntriesProcessed = useMemo(() => processTimeEntries(timeEntries), [timeEntries]);
+    const timeEntriesPopulated = useMemo(() => populateTimeEntries(timeEntriesProcessed, projects), [
+        timeEntriesProcessed,
+        projects
     ]);
+    const timeEntriesFiltered = useMemo(
+        () => filterTimeEntries(timeEntriesPopulated, projectIdsUnchecked, startDate, endDate),
+        [timeEntriesPopulated, projectIdsUnchecked, startDate, endDate]
+    );
 
     return (
         <Box p={2}>
@@ -85,13 +91,21 @@ function Reports(props) {
                     </Box>
 
                     <Paper style={{ padding: theme.spacing(2) }}>
-                        <TimeChart timeEntries={timeEntriesProcessed} startDate={startDate} endDate={endDate} />
+                        <TimeChart
+                            projects={projectsWithColorsFiltered}
+                            timeEntries={timeEntriesFiltered}
+                            startDate={startDate}
+                            endDate={endDate}
+                        />
                     </Paper>
 
                     <Paper style={{ marginTop: theme.spacing(2), padding: theme.spacing(2) }}>
-                        <Typography variant="body1" color="textSecondary">
-                            Total time: {formatAsHmmExtended(totalTime)}
-                        </Typography>
+                        <Stats
+                            projects={projectsWithColors}
+                            timeEntries={timeEntriesProcessed}
+                            projectIdsUnchecked={projectIdsUnchecked}
+                            setProjectIdsUnchecked={setProjectIdsUnchecked}
+                        />
                     </Paper>
                 </Grid>
             </Grid>
