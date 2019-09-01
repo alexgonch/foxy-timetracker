@@ -6,11 +6,14 @@ import Grid from '@material-ui/core/Grid';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
+import { useTheme } from '@material-ui/core/styles';
 
 import { formatAsHmmExtended } from 'utils/helpers/timeHelper';
 
 function Stats(props) {
     const { projects, projectIdsUnchecked, setProjectIdsUnchecked } = props;
+    
+    const theme = useTheme();
 
     const handleCheck = (checked, projectId) => {
         if (checked) {
@@ -39,7 +42,7 @@ function Stats(props) {
                                 label={
                                     <span>
                                         {project.name}:{' '}
-                                        <span style={{ display: 'inline-block' }}>
+                                        <span style={{ display: 'inline-block', color: theme.palette.text.secondary }}>
                                             {formatAsHmmExtended(project.totalTime)}
                                         </span>
                                     </span>
