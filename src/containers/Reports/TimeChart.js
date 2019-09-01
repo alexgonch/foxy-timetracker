@@ -2,7 +2,6 @@ import React, { useMemo } from 'react';
 
 import moment from 'moment';
 
-import * as colors from '@material-ui/core/colors';
 import { useTheme } from '@material-ui/core/styles';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 
