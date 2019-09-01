@@ -1,7 +1,6 @@
 import React, { useState, useContext, useMemo } from 'react';
 
-import _ from 'lodash';
-import moment from 'moment';
+// import moment from 'moment';
 
 import { DatePicker } from '@material-ui/pickers';
 import Box from '@material-ui/core/Box';
@@ -14,19 +13,21 @@ import TimeChart from './TimeChart';
 import Stats from './Stats';
 
 import { DbTimeEntriesContext, DbProjectsContext } from 'utils/firebase';
-import { addColorsToProjects, filterTimeEntries, processTimeEntries } from './functions';
-import { populateTimeEntries } from 'utils/functions';
+import { filterTimeEntriesByDates } from './functions';
+import useProcessedData from './hooks/useProcessedData';
 
 function Reports(props) {
     const [startDate, setStartDate] = useState(
-        moment()
-            .startOf('month')
-            .toDate()
+        // moment()
+        //     .startOf('month')
+        //     .toDate()
+        '2019-08-15T00:00:00-06:00' // TEMP
     );
     const [endDate, setEndDate] = useState(
-        moment()
-            .endOf('month')
-            .toDate()
+        // moment()
+        //     .endOf('month')
+        //     .toDate()
+        '2019-08-31T23:59:59-06:00' // TEMP
     );
     const [projectIdsUnchecked, setProjectIdsUnchecked] = useState([]);
 
@@ -36,24 +37,21 @@ function Reports(props) {
     const { timeEntries } = useContext(DbTimeEntriesContext);
     const { projects } = useContext(DbProjectsContext);
 
-    const projectsWithColors = useMemo(() => addColorsToProjects(lightThemeEnabled, projects), [
-        lightThemeEnabled,
-        projects
+    const timeEntriesFilteredByDate = useMemo(() => filterTimeEntriesByDates(timeEntries, startDate, endDate), [
+        timeEntries,
+        startDate,
+        endDate
     ]);
-    const projectsWithColorsFiltered = useMemo(
-        () => _.filter(projectsWithColors, p => !projectIdsUnchecked.includes(p.id)),
-        [projectIdsUnchecked, projectsWithColors]
-    );
 
-    const timeEntriesProcessed = useMemo(() => processTimeEntries(timeEntries), [timeEntries]);
-    const timeEntriesPopulated = useMemo(() => populateTimeEntries(timeEntriesProcessed, projects), [
-        timeEntriesProcessed,
-        projects
-    ]);
-    const timeEntriesFiltered = useMemo(
-        () => filterTimeEntries(timeEntriesPopulated, projectIdsUnchecked, startDate, endDate),
-        [timeEntriesPopulated, projectIdsUnchecked, startDate, endDate]
+    const { timeEntriesInChart, projectsInChart, projectsInStats } = useProcessedData(
+        lightThemeEnabled,
+        timeEntriesFilteredByDate,
+        projects,
+        projectIdsUnchecked,
+        startDate,
+        endDate
     );
+    console.log('Reports render');
 
     return (
         <Box p={2}>
@@ -92,8 +90,8 @@ function Reports(props) {
 
                     <Paper style={{ padding: theme.spacing(2) }}>
                         <TimeChart
-                            projects={projectsWithColorsFiltered}
-                            timeEntries={timeEntriesFiltered}
+                            projects={projectsInChart}
+                            timeEntries={timeEntriesInChart}
                             startDate={startDate}
                             endDate={endDate}
                         />
@@ -101,8 +99,7 @@ function Reports(props) {
 
                     <Paper style={{ marginTop: theme.spacing(2), padding: theme.spacing(2) }}>
                         <Stats
-                            projects={projectsWithColors}
-                            timeEntries={timeEntriesProcessed}
+                            projects={projectsInStats}
                             projectIdsUnchecked={projectIdsUnchecked}
                             setProjectIdsUnchecked={setProjectIdsUnchecked}
                         />

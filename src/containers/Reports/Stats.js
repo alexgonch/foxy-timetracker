@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 
 import _ from 'lodash';
 
@@ -7,13 +7,10 @@ import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 
-import { getProjectWithTotalTime } from './functions';
 import { formatAsHmmExtended } from 'utils/helpers/timeHelper';
 
 function Stats(props) {
-    const { projects, timeEntries, projectIdsUnchecked, setProjectIdsUnchecked } = props;
-
-    const projectWithTotalTime = useMemo(() => getProjectWithTotalTime(projects, timeEntries), [projects, timeEntries]);
+    const { projects, projectIdsUnchecked, setProjectIdsUnchecked } = props;
 
     const handleCheck = (checked, projectId) => {
         if (checked) {
@@ -25,7 +22,7 @@ function Stats(props) {
 
     return (
         <Grid container spacing={2}>
-            {projectWithTotalTime.map(project => {
+            {projects.map(project => {
                 const checked = !projectIdsUnchecked.includes(project.id);
 
                 return (

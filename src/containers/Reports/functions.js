@@ -5,6 +5,16 @@ import * as colors from '@material-ui/core/colors';
 
 import { COLORS } from './constants';
 
+export function processTimeEntries(timeEntries) {
+    // Remove seconds and time entries with less than a minute of tracked time
+    const timeEntriesWithoutSeconds = timeEntries.map(timeEntry => ({
+        ...timeEntry,
+        time: timeEntry.time - (timeEntry.time % 60)
+    }));
+
+    return _.filter(timeEntriesWithoutSeconds, t => t.time > 0);
+}
+
 export function addColorsToProjects(lightThemeEnabled, projects) {
     const projectsWithColors = _.cloneDeep(projects);
 
@@ -20,33 +30,22 @@ export function addColorsToProjects(lightThemeEnabled, projects) {
 
 export function getProjectWithTotalTime(projects, timeEntries) {
     const projectsWithTotalTime = _.cloneDeep(projects);
-    
+
     projectsWithTotalTime.forEach(project => {
         const projectTimeEntries = _.filter(timeEntries, t => t.project_uid.id === project.id);
         project.totalTime = projectTimeEntries.reduce((sum, t) => (sum += t.time), 0);
     });
-    
+
     return projectsWithTotalTime;
 }
 
-export function filterTimeEntries(timeEntries, projectIdsUnchecked, startDate, endDate) {
+export function filterTimeEntriesByDates(timeEntries, startDate, endDate) {
     return _.filter(
         timeEntries,
         t =>
             moment(t.date, 'YYYYMMDD').isSameOrAfter(startDate, 'day') &&
-            moment(t.date, 'YYYYMMDD').isSameOrBefore(endDate, 'day') &&
-            !projectIdsUnchecked.includes(t.project_uid.id)
+            moment(t.date, 'YYYYMMDD').isSameOrBefore(endDate, 'day')
     );
-}
-
-export function processTimeEntries(timeEntries) {
-    // Remove seconds and time entries with less than a minute of tracked time
-    const timeEntriesWithoutSeconds = timeEntries.map(timeEntry => ({
-        ...timeEntry,
-        time: timeEntry.time - (timeEntry.time % 60)
-    }));
-
-    return _.filter(timeEntriesWithoutSeconds, t => t.time > 0);
 }
 
 export function convertTimeEntriesToChartData(timeEntries, startDate, endDate) {
