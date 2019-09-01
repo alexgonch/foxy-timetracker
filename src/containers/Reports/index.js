@@ -1,53 +1,44 @@
 import React, { useState, useContext, useMemo } from 'react';
 
-import moment from 'moment';
-
 import { DatePicker } from '@material-ui/pickers';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
 import { useTheme } from '@material-ui/core/styles';
 
 import CustomDatePickerInput from 'components/extensions/CustomDatePickerInput';
 import TimeChart from './TimeChart';
+import Stats from './Stats';
 
 import { DbTimeEntriesContext, DbProjectsContext } from 'utils/firebase';
-import { filterTimeEntries, processTimeEntries } from './functions';
-import { populateTimeEntries } from 'utils/functions';
-import { formatAsHmmExtended } from 'utils/helpers/timeHelper';
+import { filterTimeEntriesByDates } from './functions';
+import useDates from './hooks/useDates';
+import useProcessedData from './hooks/useProcessedData';
 
 function Reports(props) {
-    const [startDate, setStartDate] = useState(
-        moment()
-            .startOf('month')
-            .toDate()
-    );
-    const [endDate, setEndDate] = useState(
-        moment()
-            .endOf('month')
-            .toDate()
-    );
+    const { startDate, handleStartDate, endDate, handleEndDate } = useDates();
+    const [projectIdsUnchecked, setProjectIdsUnchecked] = useState([]);
 
     const theme = useTheme();
+    const lightThemeEnabled = theme.light();
 
     const { timeEntries } = useContext(DbTimeEntriesContext);
     const { projects } = useContext(DbProjectsContext);
 
-    const timeEntriesFiltered = useMemo(() => filterTimeEntries(timeEntries, startDate, endDate), [
+    const timeEntriesFilteredByDate = useMemo(() => filterTimeEntriesByDates(timeEntries, startDate, endDate), [
         timeEntries,
         startDate,
         endDate
     ]);
-    const timeEntriesPopulated = useMemo(() => populateTimeEntries(timeEntriesFiltered, projects), [
-        timeEntriesFiltered,
-        projects
-    ]);
-    const timeEntriesProcessed = useMemo(() => processTimeEntries(timeEntriesPopulated), [timeEntriesPopulated]);
 
-    const totalTime = useMemo(() => timeEntriesFiltered.reduce((sum, timeEntry) => (sum += timeEntry.time), 0), [
-        timeEntriesFiltered
-    ]);
+    const { timeEntriesInChart, projectsInChart, projectsInStats } = useProcessedData(
+        lightThemeEnabled,
+        timeEntriesFilteredByDate,
+        projects,
+        projectIdsUnchecked,
+        startDate,
+        endDate
+    );
 
     return (
         <Box p={2}>
@@ -68,7 +59,7 @@ function Reports(props) {
                                 format="dddd [·] MMM DD"
                                 value={startDate}
                                 TextFieldComponent={CustomDatePickerInput}
-                                onChange={date => setStartDate(date)}
+                                onChange={date => handleStartDate(date)}
                             />
                         </Paper>
                         <Paper style={{ display: 'inline-block', marginBottom: theme.spacing(2) }}>
@@ -79,19 +70,26 @@ function Reports(props) {
                                 format="dddd [·] MMM DD"
                                 value={endDate}
                                 TextFieldComponent={CustomDatePickerInput}
-                                onChange={date => setEndDate(date)}
+                                onChange={date => handleEndDate(date)}
                             />
                         </Paper>
                     </Box>
 
                     <Paper style={{ padding: theme.spacing(2) }}>
-                        <TimeChart timeEntries={timeEntriesProcessed} startDate={startDate} endDate={endDate} />
+                        <TimeChart
+                            projects={projectsInChart}
+                            timeEntries={timeEntriesInChart}
+                            startDate={startDate}
+                            endDate={endDate}
+                        />
                     </Paper>
 
                     <Paper style={{ marginTop: theme.spacing(2), padding: theme.spacing(2) }}>
-                        <Typography variant="body1" color="textSecondary">
-                            Total time: {formatAsHmmExtended(totalTime)}
-                        </Typography>
+                        <Stats
+                            projects={projectsInStats}
+                            projectIdsUnchecked={projectIdsUnchecked}
+                            setProjectIdsUnchecked={setProjectIdsUnchecked}
+                        />
                     </Paper>
                 </Grid>
             </Grid>
