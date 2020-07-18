@@ -20,7 +20,7 @@
         "firebase": "^6.4.0",
         "formik": "^1.5.8",
         "json2csv": "^4.5.2",
-        "lodash": "^4.17.15",
+        "lodash": "^4.17.19",
         "moment": "^2.24.0",
         "query-string": "^6.8.3",
         "react": "^16.9.0",
