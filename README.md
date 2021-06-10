@@ -4,7 +4,7 @@ Open source & completely free online time-tracking app with strong emphasis on u
 
 ### Who is this for
 
-Foxy TimeTracker is designed with individuals in mind (freelancers, contractors, etc). If enough traction will be gained, it might be extended to support organizations as well.
+Foxy TimeTracker is designed with individuals in mind (freelancers, contractors, etc). If enough traction will be gained, it might be extended to support organizations as well. Additionally, it makes a great sample React & Firebase project for learning.
 
 ### What makes it special
 
@@ -16,13 +16,7 @@ Foxy TimeTracker is designed with individuals in mind (freelancers, contractors,
 
 ### Features
 
-Foxy TimeTracker currently only provides the solution for efficient time-tracking for individuals. There is no invoicing, budgets, or teams.
-
-These features are on the short-term roadmap and are to be implemented by the end of 2019:
-
-* Data export (PSD, csv)
-* Shareable reports (reports will be shared via securely generated URLs)
-* User account settings (persistent theme, first day of the week, name & email change, and more)
+Foxy TimeTracker currently only provides the solution for efficient time-tracking for individuals. There is no invoicing, budgets, or teams. The development is halted with no current plans to continue.
 
 ## Technology used
 
