@@ -1,6 +1,6 @@
 # Foxy TimeTracker
 
-Open source & completely free online time-tracking app with strong emphasis on user experience. Currently under active development. Feel free to try out latest development build here: https://foxytimetracker.com
+Open source & completely free online time-tracking app with strong emphasis on user experience. Try here: https://foxytimetracker.com
 
 ### Who is this for
 
